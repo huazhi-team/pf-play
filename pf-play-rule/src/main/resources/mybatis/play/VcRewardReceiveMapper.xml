@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.VcRewardReceiveMapper">
+
+  <sql id="Base_Column_List">
+    member_id, is_level0, is_level1, is_level2, is_level3, is_level4, is_level5, create_time, 
+    update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.pf.play.rule.core.model.VcRewardReceive">
+    select 
+    <include refid="Base_Column_List" />
+    from vc_reward_receive
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from vc_reward_receive
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
+    insert into vc_reward_receive (member_id, is_level0, is_level1, 
+      is_level2, is_level3, is_level4, is_level5, 
+      create_time, update_time, is_valid
+      )
+    values (#{memberId,jdbcType=INTEGER}, #{isLevel0,jdbcType=BIT}, #{isLevel1,jdbcType=BIT}, 
+      #{isLevel2,jdbcType=BIT}, #{isLevel3,jdbcType=BIT}, #{isLevel4,jdbcType=BIT}, #{isLevel5,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
+    insert into vc_reward_receive
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="isLevel0 != null">
+        is_level0,
+      </if>
+      <if test="isLevel1 != null">
+        is_level1,
+      </if>
+      <if test="isLevel2 != null">
+        is_level2,
+      </if>
+      <if test="isLevel3 != null">
+        is_level3,
+      </if>
+      <if test="isLevel4 != null">
+        is_level4,
+      </if>
+      <if test="isLevel5 != null">
+        is_level5,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="isLevel0 != null">
+        #{isLevel0,jdbcType=BIT},
+      </if>
+      <if test="isLevel1 != null">
+        #{isLevel1,jdbcType=BIT},
+      </if>
+      <if test="isLevel2 != null">
+        #{isLevel2,jdbcType=BIT},
+      </if>
+      <if test="isLevel3 != null">
+        #{isLevel3,jdbcType=BIT},
+      </if>
+      <if test="isLevel4 != null">
+        #{isLevel4,jdbcType=BIT},
+      </if>
+      <if test="isLevel5 != null">
+        #{isLevel5,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
+    update vc_reward_receive
+    <set>
+      <if test="isLevel0 != null">
+        is_level0 = #{isLevel0},
+      </if>
+      <if test="isLevel1 != null">
+        is_level1 = #{isLevel1},
+      </if>
+      <if test="isLevel2 != null">
+        is_level2 = #{isLevel2},
+      </if>
+      <if test="isLevel3 != null">
+        is_level3 = #{isLevel3},
+      </if>
+      <if test="isLevel4 != null">
+        is_level4 = #{isLevel4},
+      </if>
+      <if test="isLevel5 != null">
+        is_level5 = #{isLevel5},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
+    update vc_reward_receive
+    set is_level0 = #{isLevel0,jdbcType=BIT},
+      is_level1 = #{isLevel1,jdbcType=BIT},
+      is_level2 = #{isLevel2,jdbcType=BIT},
+      is_level3 = #{isLevel3,jdbcType=BIT},
+      is_level4 = #{isLevel4,jdbcType=BIT},
+      is_level5 = #{isLevel5,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.SysTypeDictionaryMapper" >
+  <resultMap id="BaseResultMap" type="com.pf.play.rule.core.model.SysTypeDictionary" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_value" property="typeValue" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="is_valid" property="isValid" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_value, type_name, value, name, create_date, update_date, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.SysTypeDictionary">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_type_dictionary
+    where is_valid=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_type_dictionary
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.SysTypeDictionary" >
+    insert into sys_type_dictionary (id, type_value, type_name, 
+      value, name, create_date, 
+      update_date, is_valid)
+    values (#{id,jdbcType=BIGINT}, #{typeValue,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, 
+      #{value,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.SysTypeDictionary" >
+    insert into sys_type_dictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeValue != null" >
+        type_value,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="typeValue != null" >
+        #{typeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.SysTypeDictionary" >
+    update sys_type_dictionary
+    <set >
+      <if test="typeValue != null" >
+        type_value = #{typeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.SysTypeDictionary" >
+    update sys_type_dictionary
+    set type_value = #{typeValue,jdbcType=VARCHAR},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      value = #{value,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

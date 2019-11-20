@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UserInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.pf.play.rule.core.model.UserInfoModel" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    </resultMap>
+  <sql id="Base_Column_List" >
+       b.token ,
+       b.token_expire ,
+       b.jpush_token ,
+       b.wx_access   ,
+       b.wx_refresh ,
+       b.wx_openid  ,
+       b.wx_unionid ,
+       a.member_id ,
+       a.owner_member_id,
+       a.member_add,
+       a.nickname,
+       a.password ,
+       a.member_code ,
+       a.member_type ,
+       a.invite_code ,
+       a.trading_address,
+       a.is_certification ,
+       a.create_time ,
+       a.is_active ,
+       a.login_time ,
+       a.device_id  ,
+       a.is_sett    ,
+       a.superior_id ,
+       a.extension_member_id ,
+       c.is_level0,
+       c.is_level1,
+       c.is_level2,
+       c.is_level3,
+       c.is_level4,
+       c.is_level5,
+       c.create_time,
+       c.update_time,
+       d.produce_masonry_count,
+       d.extension_masonry_count ,
+       d.day_masonry  ,
+       d.day_ext_masonry  ,
+       d.frozen_masonry,
+       d.empirical_value,
+       d.active_value,
+       d.empirical_level ,
+       d.daren_level ,
+       d.is_vitality_value,
+       d.push_people
+  </sql>
+
+
+  <sql id="Example_Where_Clause">
+    where 1=1
+      <if test="token != null and token != '' " >
+          and b.token = #{token}
+      </if>
+      <if test="tradingAddress != null and tradingAddress != '' " >
+          and a.trading_address = #{tradingAddress}
+      </if>
+      <if test="memberId != null and memberId != '' " >
+          and a.member_id = #{memberId}
+      </if>
+      <if test="deviceId != null and deviceId != '' " >
+          and a.device_id = #{deviceId}
+      </if>
+      <if test="wxOpenid != null and wxOpenid != '' " >
+          and b.wx_openid = #{wxOpenid}
+      </if>
+      and a.is_certification = 1
+  </sql>
+
+
+  <select id="selectByUserInfo" parameterType="Object" resultType="com.pf.play.rule.core.model.UserInfoModel"  >
+    select
+    <include refid="Base_Column_List" />
+    from vc_member  a
+      inner  JOIN vc_third_party b
+      on  a.member_id = b.member_id
+      inner JOIN  vc_reward_receive c
+      on  a.member_id =c.member_id
+      inner JOIN vc_member_resource d
+      on a.member_id = d.member_id
+    <include refid="Example_Where_Clause" />
+  </select>
+
+</mapper>

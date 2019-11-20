@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UMasonryListLogMapper" >
+  <sql id="Base_Column_List" >
+    id, member_id, type, symbol_type, masonry_num, give_member_id, collect_member_id, 
+    curday, curhour, curminute, order_num, create_time, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UMasonryListLog" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_masonry_list_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_masonry_list_log
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.UMasonryListLog" >
+    insert into u_masonry_list_log (id, member_id, type, 
+      symbol_type, masonry_num, give_member_id, 
+      collect_member_id, curday, curhour, 
+      curminute, order_num, create_time, 
+      update_time, is_valid)
+    values (#{id}, #{memberId}, #{type},
+      #{symbolType}, #{masonryNum}, #{giveMemberId},
+      #{collectMemberId}, #{curday}, #{curhour},
+      #{curminute}, #{orderNum}, #{createTime},
+      #{updateTime}, #{isValid})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UMasonryListLog" >
+    insert into u_masonry_list_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="symbolType != null" >
+        symbol_type,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="masonryNum != null" >
+        masonry_num,
+      </if>
+      <if test="giveMemberId != null" >
+        give_member_id,
+      </if>
+      <if test="collectMemberId != null" >
+        collect_member_id,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="type != null" >
+        #{type},
+      </if>
+      <if test="symbolType != null" >
+        #{symbolType},
+      </if>
+      <if test="taskId != null" >
+        #{taskId},
+      </if>
+      <if test="masonryNum != null" >
+        #{masonryNum},
+      </if>
+      <if test="giveMemberId != null" >
+        #{giveMemberId},
+      </if>
+      <if test="collectMemberId != null" >
+        #{collectMemberId},
+      </if>
+      <if test="curday != null" >
+        #{curday},
+      </if>
+      <if test="curhour != null" >
+        #{curhour},
+      </if>
+      <if test="curminute != null" >
+        #{curminute},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UMasonryListLog" >
+    update u_masonry_list_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="type != null" >
+        type = #{type},
+      </if>
+      <if test="symbolType != null" >
+        symbol_type = #{symbolType},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId},
+      </if>
+      <if test="masonryNum != null" >
+        masonry_num = #{masonryNum},
+      </if>
+      <if test="giveMemberId != null" >
+        give_member_id = #{giveMemberId},
+      </if>
+      <if test="collectMemberId != null" >
+        collect_member_id = #{collectMemberId},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.UMasonryListLog" >
+    update u_masonry_list_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      type = #{type,jdbcType=TINYINT},
+      symbol_type = #{symbolType,jdbcType=BIT},
+      masonry_num = #{masonryNum,jdbcType=REAL},
+      give_member_id = #{giveMemberId,jdbcType=INTEGER},
+      collect_member_id = #{collectMemberId,jdbcType=INTEGER},
+      curday = #{curday,jdbcType=INTEGER},
+      curhour = #{curhour,jdbcType=BIT},
+      curminute = #{curminute,jdbcType=BIT},
+      order_num = #{orderNum,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByInfo" resultType="com.pf.play.rule.core.model.UMasonryListLog" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from u_masonry_list_log
+    where 1=1
+    <if test="memberId != null" >
+      and  member_id = #{memberId}
+    </if>
+    order by  create_time
+  </select>
+</mapper>

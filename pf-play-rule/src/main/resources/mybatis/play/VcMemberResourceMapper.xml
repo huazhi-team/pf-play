@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.VcMemberResourceMapper" >
+
+  <sql id="Base_Column_List" >
+    id, member_id, produce_masonry_count, extension_masonry_count, day_masonry, day_ext_masonry, 
+    frozen_masonry, empirical_value, active_value, push_people, create_time, update_time,
+    empirical_level,daren_level,is_vitality_value
+    is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMemberResource"  >
+    select 
+    <include refid="Base_Column_List" />
+    from vc_member_resource
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from vc_member_resource
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    insert into vc_member_resource (id, member_id, produce_masonry_count, 
+      extension_masonry_count, day_masonry, day_ext_masonry, 
+      frozen_masonry, empirical_value, active_value, 
+      push_people, create_time, update_time,
+      is_valid)
+    values (#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER}, #{produceMasonryCount,jdbcType=REAL}, 
+      #{extensionMasonryCount,jdbcType=REAL}, #{dayMasonry,jdbcType=REAL}, #{dayExtMasonry,jdbcType=REAL}, 
+      #{frozenMasonry,jdbcType=REAL}, #{empiricalValue,jdbcType=REAL}, #{activeValue,jdbcType=REAL}, 
+      #{pushPeople,jdbcType=INTEGER}, #{createTime}, #{updateTime},
+      #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    insert into vc_member_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="produceMasonryCount != null" >
+        produce_masonry_count,
+      </if>
+      <if test="extensionMasonryCount != null" >
+        extension_masonry_count,
+      </if>
+      <if test="dayMasonry != null" >
+        day_masonry,
+      </if>
+      <if test="dayExtMasonry != null" >
+        day_ext_masonry,
+      </if>
+      <if test="frozenMasonry != null" >
+        frozen_masonry,
+      </if>
+      <if test="empiricalValue != null" >
+        empirical_value,
+      </if>
+      <if test="activeValue != null" >
+        active_value,
+      </if>
+      <if test="pushPeople != null" >
+        push_people,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="empiricalLevel != null" >
+        empirical_level,
+      </if>
+      <if test="isVitalityValue != null" >
+        is_vitality_value,
+      </if>
+      <if test="darenLevel != null" >
+        daren_level,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="produceMasonryCount != null" >
+        #{produceMasonryCount},
+      </if>
+      <if test="extensionMasonryCount != null" >
+        #{extensionMasonryCount},
+      </if>
+      <if test="dayMasonry != null" >
+        #{dayMasonry},
+      </if>
+      <if test="dayExtMasonry != null" >
+        #{dayExtMasonry},
+      </if>
+      <if test="frozenMasonry != null" >
+        #{frozenMasonry},
+      </if>
+      <if test="empiricalValue != null" >
+        #{empiricalValue},
+      </if>
+      <if test="activeValue != null" >
+        #{activeValue},
+      </if>
+      <if test="pushPeople != null" >
+        #{pushPeople},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="empiricalLevel != null" >
+        #{empiricalLevel},
+      </if>
+      <if test="isVitalityValue != null" >
+        #{isVitalityValue},
+      </if>
+      <if test="darenLevel != null" >
+        #{darenLevel},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="produceMasonryCount != null" >
+        produce_masonry_count = #{produceMasonryCount},
+      </if>
+      <if test="extensionMasonryCount != null" >
+        extension_masonry_count = #{extensionMasonryCount},
+      </if>
+      <if test="dayMasonry != null" >
+        day_masonry = #{dayMasonry},
+      </if>
+      <if test="dayExtMasonry != null" >
+        day_ext_masonry = #{dayExtMasonry},
+      </if>
+      <if test="frozenMasonry != null" >
+        frozen_masonry = #{frozenMasonry},
+      </if>
+      <if test="empiricalValue != null" >
+        empirical_value = #{empiricalValue},
+      </if>
+      <if test="activeValue != null" >
+        active_value = #{activeValue},
+      </if>
+      <if test="pushPeople != null" >
+        push_people = #{pushPeople},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+      <if test="empiricalLevel != null" >
+        empirical_level = #{empiricalLevel},
+      </if>
+      <if test="isVitalityValue != null" >
+        is_vitality_value = #{isVitalityValue},
+      </if>
+      <if test="darenLevel != null" >
+        daren_level = #{darenLevel},
+      </if>
+      <if test="teamPeople != null" >
+        team_people = #{teamPeople},
+      </if>
+      <if test="teamActive != null" >
+        team_active = #{teamActive},
+      </if>
+      <if test="heroActive != null" >
+        hero_active = #{heroActive},
+      </if>
+      <if test="allianceActive != null" >
+        alliance_active = #{allianceActive},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    set member_id = #{memberId,jdbcType=INTEGER},
+      produce_masonry_count = #{produceMasonryCount,jdbcType=REAL},
+      extension_masonry_count = #{extensionMasonryCount,jdbcType=REAL},
+      day_masonry = #{dayMasonry,jdbcType=REAL},
+      day_ext_masonry = #{dayExtMasonry,jdbcType=REAL},
+      frozen_masonry = #{frozenMasonry,jdbcType=REAL},
+      empirical_value = #{empiricalValue,jdbcType=REAL},
+      active_value = #{activeValue,jdbcType=REAL},
+      push_people = #{pushPeople,jdbcType=INTEGER},
+      create_time = #{createTime},
+      update_time = #{updateTime},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

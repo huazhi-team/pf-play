@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UvitalityValueListMapper" >
+  <sql id="Base_Column_List" >
+    id, member_id, reward_type, symbol_type, empiric_value, curday, curhour, curminute, 
+    create_time, update_time, is_valid, is_count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="com.pf.play.rule.core.model.UvitalityValueList"  >
+    select 
+    <include refid="Base_Column_List" />
+    from u_vitality_value_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_vitality_value_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.UvitalityValueList" >
+    insert into u_vitality_value_list (id, member_id, reward_type, 
+      symbol_type, empiric_value, curday, 
+      curhour, curminute, create_time, 
+      update_time, is_valid, is_count
+      )
+    values (#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER}, #{rewardType,jdbcType=BIT}, 
+      #{symbolType,jdbcType=BIT}, #{empiricValue,jdbcType=REAL}, #{curday,jdbcType=INTEGER}, 
+      #{curhour,jdbcType=BIT}, #{curminute,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}, #{isCount,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UvitalityValueList" >
+    insert into u_vitality_value_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="rewardType != null" >
+        reward_type,
+      </if>
+      <if test="symbolType != null" >
+        symbol_type,
+      </if>
+      <if test="empiricValue != null" >
+        empiric_value,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isCount != null" >
+        is_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="rewardType != null" >
+        #{rewardType},
+      </if>
+      <if test="symbolType != null" >
+        #{symbolType},
+      </if>
+      <if test="empiricValue != null" >
+        #{empiricValue},
+      </if>
+      <if test="curday != null" >
+        #{curday},
+      </if>
+      <if test="curhour != null" >
+        #{curhour},
+      </if>
+      <if test="curminute != null" >
+        #{curminute},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+      <if test="isCount != null" >
+        #{isCount},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UvitalityValueList" >
+    update u_vitality_value_list
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="rewardType != null" >
+        reward_type = #{rewardType},
+      </if>
+      <if test="symbolType != null" >
+        symbol_type = #{symbolType},
+      </if>
+      <if test="empiricValue != null" >
+        empiric_value = #{empiricValue},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+      <if test="isCount != null" >
+        is_count = #{isCount},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.UvitalityValueList" >
+    update u_vitality_value_list
+    set member_id = #{memberId},
+      reward_type = #{rewardType},
+      symbol_type = #{symbolType},
+      empiric_value = #{empiricValue},
+      curday = #{curday},
+      curhour = #{curhour},
+      curminute = #{curminute},
+      create_time = #{createTime},
+      update_time = #{updateTime},
+      is_valid = #{isValid},
+      is_count = #{isCount}
+    where id = #{id}
+  </update>
+</mapper>

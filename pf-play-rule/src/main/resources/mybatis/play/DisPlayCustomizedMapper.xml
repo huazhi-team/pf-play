@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.DisPlayCustomizedMapper" >
+  <sql id="Base_Column_List" >
+    id, play_id, play_name, play_remarks, play_keyword, create_date, update_date, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisPlayCustomized" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dis_play_customized
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dis_play_customized
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.DisPlayCustomized" >
+    insert into dis_play_customized (id, play_id, play_name, 
+      play_remarks, play_keyword, create_date, 
+      update_date, is_valid)
+    values (#{id,jdbcType=BIGINT}, #{playId,jdbcType=VARCHAR}, #{playName,jdbcType=VARCHAR}, 
+      #{playRemarks,jdbcType=VARCHAR}, #{playKeyword,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisPlayCustomized" >
+    insert into dis_play_customized
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="playId != null" >
+        play_id,
+      </if>
+      <if test="playName != null" >
+        play_name,
+      </if>
+      <if test="playRemarks != null" >
+        play_remarks,
+      </if>
+      <if test="playKeyword != null" >
+        play_keyword,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="playId != null" >
+        #{playId,jdbcType=VARCHAR},
+      </if>
+      <if test="playName != null" >
+        #{playName,jdbcType=VARCHAR},
+      </if>
+      <if test="playRemarks != null" >
+        #{playRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="playKeyword != null" >
+        #{playKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisPlayCustomized" >
+    update dis_play_customized
+    <set >
+      <if test="playId != null" >
+        play_id = #{playId,jdbcType=VARCHAR},
+      </if>
+      <if test="playName != null" >
+        play_name = #{playName,jdbcType=VARCHAR},
+      </if>
+      <if test="playRemarks != null" >
+        play_remarks = #{playRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="playKeyword != null" >
+        play_keyword = #{playKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.DisPlayCustomized" >
+    update dis_play_customized
+    set play_id = #{playId,jdbcType=VARCHAR},
+      play_name = #{playName,jdbcType=VARCHAR},
+      play_remarks = #{playRemarks,jdbcType=VARCHAR},
+      play_keyword = #{playKeyword,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

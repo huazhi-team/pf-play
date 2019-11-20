@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UTaskHaveMapper" >
+  <sql id="Base_Column_List" >
+    id, member_id, task_id, surplus_time, surplus_day, start_time, end_time, already_num, 
+    surplus_num, curday, current_state, curhour, curminute, DATE_FORMAT(start_time, '%Y-%m-%d %k:%i:%s') start_time_str, task_level,
+    give_type,  DATE_FORMAT(end_time, '%Y-%m-%d %k:%i:%s') end_time_str , is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UTaskHave"  >
+    select 
+    <include refid="Base_Column_List" />
+    from u_task_have
+    where 1=1
+
+    <if test="memberId != null and memberId != '' " >
+      and member_id = #{memberId}
+    </if>
+    <if test="currentState != null and currentState != '' " >
+      and current_state = #{currentState}
+    </if>
+    and   is_valid=1
+    order by task_level desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_task_have
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    insert into u_task_have (id, member_id, task_id, 
+      surplus_time, surplus_day, start_time, 
+      end_time, already_num, surplus_num, 
+      curday, current_state, curhour, 
+      curminute, create_time, task_level, 
+      give_type, update_time, is_valid
+      )
+    values (#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, 
+      #{surplusTime,jdbcType=INTEGER}, #{surplusDay,jdbcType=INTEGER}, #{startTime,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=INTEGER}, #{alreadyNum,jdbcType=REAL}, #{surplusNum,jdbcType=REAL}, 
+      #{curday,jdbcType=INTEGER}, #{currentState,jdbcType=BIT}, #{curhour,jdbcType=BIT}, 
+      #{curminute,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{taskLevel,jdbcType=BIT}, 
+      #{giveType,jdbcType=BIT}, #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    insert into u_task_have
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="surplusTime != null" >
+        surplus_time,
+      </if>
+      <if test="surplusDay != null" >
+        surplus_day,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="alreadyNum != null" >
+        already_num,
+      </if>
+      <if test="surplusNum != null" >
+        surplus_num,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="currentState != null" >
+        current_state,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="taskLevel != null" >
+        task_level,
+      </if>
+      <if test="giveType != null" >
+        give_type,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="giveActiveNum != null" >
+        give_active_num,
+      </if>
+      <if test="totalNum != null" >
+        total_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="taskId != null" >
+        #{taskId},
+      </if>
+      <if test="surplusTime != null" >
+        #{surplusTime},
+      </if>
+      <if test="surplusDay != null" >
+        #{surplusDay},
+      </if>
+      <if test="startTime != null" >
+        #{startTime},
+      </if>
+      <if test="endTime != null" >
+        #{endTime},
+      </if>
+      <if test="alreadyNum != null" >
+        #{alreadyNum},
+      </if>
+      <if test="surplusNum != null" >
+        #{surplusNum},
+      </if>
+      <if test="curday != null" >
+        #{curday},
+      </if>
+      <if test="currentState != null" >
+        #{currentState},
+      </if>
+      <if test="curhour != null" >
+        #{curhour},
+      </if>
+      <if test="curminute != null" >
+        #{curminute},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="taskLevel != null" >
+        #{taskLevel},
+      </if>
+      <if test="giveType != null" >
+        #{giveType},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum},
+      </if>
+      <if test="giveActiveNum != null" >
+        #{giveActiveNum},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    update u_task_have
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId},
+      </if>
+      <if test="surplusTime != null" >
+        surplus_time = #{surplusTime},
+      </if>
+      <if test="surplusDay != null" >
+        surplus_day = #{surplusDay},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime},
+      </if>
+      <if test="alreadyNum != null" >
+        already_num = #{alreadyNum},
+      </if>
+      <if test="surplusNum != null" >
+        surplus_num = #{surplusNum},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday},
+      </if>
+      <if test="currentState != null" >
+        current_state = #{currentState},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="taskLevel != null" >
+        task_level = #{taskLevel},
+      </if>
+      <if test="giveType != null" >
+        give_type = #{giveType},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+      <if test="totalNum != null" >
+        total_num = #{totalNum},
+      </if>
+      <if test="giveActiveNum != null" >
+        give_active_num = #{giveActiveNum},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    update u_task_have
+    set
+      surplus_day = surplus_day-1,
+      already_num = already_num+1,
+      surplus_num = surplus_num-1,
+      update_time = now()
+    where id = #{id}
+  </update>
+
+
+
+  <select id="selectValidTask" resultType="com.pf.play.rule.core.model.UTaskHave">
+    select
+      distinct task_id,count(id) as task_count
+    from u_task_have
+    where 1=1
+    <if test="memberId != null and memberId != '' " >
+      and member_id = #{memberId}
+    </if>
+    and   is_valid=1
+    and   current_state=1
+    order by task_id desc
+  </select>
+
+  <select id="selectNoValidTask" resultType="com.pf.play.rule.core.model.UTaskHave"  >
+    select
+    <include refid="Base_Column_List" />
+    from u_task_have
+    where 1=1
+    and   is_valid=1
+    <if test="memberId != null and memberId != '' " >
+      and member_id != #{memberId}
+    </if>
+    <if test="currentState != null and currentState != '' " >
+      and current_state != #{currentState}
+    </if>
+    order by task_level desc
+  </select>
+
+
+</mapper>

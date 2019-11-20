@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UEmpiricalValueListMapper" >
+
+  <sql id="Base_Column_List" >
+    id, member_id, pro_member_id, reward_type, empiric_value, curday, curhour, curminute, 
+    create_time, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UEmpiricalValueList"  >
+    select 
+    <include refid="Base_Column_List" />
+    from u_empirical_value_list
+    where 1=1
+    and    is_valid=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_empirical_value_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.UEmpiricalValueList" >
+    insert into u_empirical_value_list (id, member_id, pro_member_id, 
+      reward_type, empiric_value, curday, 
+      curhour, curminute, create_time, 
+      update_time, is_valid)
+    values (#{id}, #{memberId}, #{proMemberId},
+      #{rewardType}, #{empiricValue}, #{curday},
+      #{curhour}, #{curminute}, #{createTime},
+      #{updateTime}, #{isValid})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UEmpiricalValueList" >
+    insert into u_empirical_value_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="proMemberId != null" >
+        pro_member_id,
+      </if>
+      <if test="rewardType != null" >
+        reward_type,
+      </if>
+      <if test="empiricValue != null" >
+        empiric_value,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="proMemberId != null" >
+        #{proMemberId},
+      </if>
+      <if test="rewardType != null" >
+        #{rewardType},
+      </if>
+      <if test="empiricValue != null" >
+        #{empiricValue},
+      </if>
+      <if test="curday != null" >
+        #{curday},
+      </if>
+      <if test="curhour != null" >
+        #{curhour},
+      </if>
+      <if test="curminute != null" >
+        #{curminute},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UEmpiricalValueList" >
+    update u_empirical_value_list
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="proMemberId != null" >
+        pro_member_id = #{proMemberId},
+      </if>
+      <if test="rewardType != null" >
+        reward_type = #{rewardType},
+      </if>
+      <if test="empiricValue != null" >
+        empiric_value = #{empiricValue},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.UEmpiricalValueList" >
+    update u_empirical_value_list
+    set member_id = #{memberId,jdbcType=INTEGER},
+      pro_member_id = #{proMemberId,jdbcType=INTEGER},
+      reward_type = #{rewardType,jdbcType=BIT},
+      empiric_value = #{empiricValue,jdbcType=REAL},
+      curday = #{curday,jdbcType=INTEGER},
+      curhour = #{curhour,jdbcType=BIT},
+      curminute = #{curminute,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

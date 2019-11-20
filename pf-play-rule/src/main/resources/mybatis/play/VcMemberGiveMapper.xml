@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.VcMemberGiveMapper" >
+
+  <sql id="Base_Column_List" >
+    active_value
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMemberGive" parameterType="java.lang.Object" >
+    select
+    <include refid="Base_Column_List"/>
+    from vc_member_give
+    where 1=1
+  </select>
+
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.VcMemberGive" >
+    insert into vc_member_give (active_value)
+    values (#{activeValue,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.VcMemberGive" >
+    insert into vc_member_give
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="activeValue != null" >
+        active_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="activeValue != null" >
+        #{activeValue,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

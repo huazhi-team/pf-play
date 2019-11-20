@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.VcThirdPartyMapper" >
+
+  <sql id="Base_Column_List" >
+    id, member_id, token, token_expire, jpush_token, wx_access, wx_refresh, wx_openid, 
+    wx_unionid, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcThirdParty">
+    select 
+    <include refid="Base_Column_List" />
+    from vc_third_party
+    where 1=1
+    <if test="wxOpenid != null and wxOpenid != '' " >
+      and wx_openid = #{wxOpenid}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from vc_third_party
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
+    insert into vc_third_party (id, member_id, token,
+      token_expire, jpush_token, wx_access,
+      wx_refresh, wx_openid, wx_unionid,
+      is_valid)
+    values (#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR},
+      #{tokenExpire,jdbcType=INTEGER}, #{jpushToken,jdbcType=VARCHAR}, #{wxAccess,jdbcType=VARCHAR},
+      #{wxRefresh,jdbcType=VARCHAR}, #{wxOpenid,jdbcType=VARCHAR}, #{wxUnionid,jdbcType=VARCHAR},
+      #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
+    insert into vc_third_party
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="tokenExpire != null" >
+        token_expire,
+      </if>
+      <if test="jpushToken != null" >
+        jpush_token,
+      </if>
+      <if test="wxAccess != null" >
+        wx_access,
+      </if>
+      <if test="wxRefresh != null" >
+        wx_refresh,
+      </if>
+      <if test="wxOpenid != null" >
+        wx_openid,
+      </if>
+      <if test="wxUnionid != null" >
+        wx_unionid,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpire != null" >
+        #{tokenExpire,jdbcType=INTEGER},
+      </if>
+      <if test="jpushToken != null" >
+        #{jpushToken,jdbcType=VARCHAR},
+      </if>
+      <if test="wxAccess != null" >
+        #{wxAccess,jdbcType=VARCHAR},
+      </if>
+      <if test="wxRefresh != null" >
+        #{wxRefresh,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenid != null" >
+        #{wxOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUnionid != null" >
+        #{wxUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
+    update vc_third_party
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpire != null" >
+        token_expire = #{tokenExpire,jdbcType=INTEGER},
+      </if>
+      <if test="jpushToken != null" >
+        jpush_token = #{jpushToken,jdbcType=VARCHAR},
+      </if>
+      <if test="wxAccess != null" >
+        wx_access = #{wxAccess,jdbcType=VARCHAR},
+      </if>
+      <if test="wxRefresh != null" >
+        wx_refresh = #{wxRefresh,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenid != null" >
+        wx_openid = #{wxOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUnionid != null" >
+        wx_unionid = #{wxUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
+    update vc_third_party
+    set member_id = #{memberId,jdbcType=INTEGER},
+      token = #{token,jdbcType=VARCHAR},
+      token_expire = #{tokenExpire,jdbcType=INTEGER},
+      jpush_token = #{jpushToken,jdbcType=VARCHAR},
+      wx_access = #{wxAccess,jdbcType=VARCHAR},
+      wx_refresh = #{wxRefresh,jdbcType=VARCHAR},
+      wx_openid = #{wxOpenid,jdbcType=VARCHAR},
+      wx_unionid = #{wxUnionid,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

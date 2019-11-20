@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.DisTaskAttributeMapper" >
+
+  <sql id="Base_Column_List" >
+    id, task_id, attribute_type, key1, key2, key3, key4, key5, key6, key7, key8, key9, 
+    key10, create_date, update_date, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisTaskAttribute">
+    select 
+    <include refid="Base_Column_List" />
+    from dis_task_attribute
+    where 1=1
+    <if test="taskId != null and taskId != '' " >
+      and task_id = #{taskId}
+    </if>
+    <if test="attributeType != null and attributeType != '' " >
+      and attribute_type = #{attributeType}
+    </if>
+    and   is_valid  =1
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dis_task_attribute
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.DisTaskAttribute" >
+    insert into dis_task_attribute (id, task_id, attribute_type, 
+      key1, key2, key3, key4, 
+      key5, key6, key7, key8, 
+      key9, key10, create_date, 
+      update_date, is_valid)
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=INTEGER}, #{attributeType,jdbcType=BIT}, 
+      #{key1,jdbcType=VARCHAR}, #{key2,jdbcType=VARCHAR}, #{key3,jdbcType=VARCHAR}, #{key4,jdbcType=VARCHAR}, 
+      #{key5,jdbcType=VARCHAR}, #{key6,jdbcType=VARCHAR}, #{key7,jdbcType=VARCHAR}, #{key8,jdbcType=VARCHAR}, 
+      #{key9,jdbcType=VARCHAR}, #{key10,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisTaskAttribute" >
+    insert into dis_task_attribute
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="attributeType != null" >
+        attribute_type,
+      </if>
+      <if test="key1 != null" >
+        key1,
+      </if>
+      <if test="key2 != null" >
+        key2,
+      </if>
+      <if test="key3 != null" >
+        key3,
+      </if>
+      <if test="key4 != null" >
+        key4,
+      </if>
+      <if test="key5 != null" >
+        key5,
+      </if>
+      <if test="key6 != null" >
+        key6,
+      </if>
+      <if test="key7 != null" >
+        key7,
+      </if>
+      <if test="key8 != null" >
+        key8,
+      </if>
+      <if test="key9 != null" >
+        key9,
+      </if>
+      <if test="key10 != null" >
+        key10,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="taskId != null" >
+        #{taskId},
+      </if>
+      <if test="attributeType != null" >
+        #{attributeType},
+      </if>
+      <if test="key1 != null" >
+        #{key1},
+      </if>
+      <if test="key2 != null" >
+        #{key2},
+      </if>
+      <if test="key3 != null" >
+        #{key3},
+      </if>
+      <if test="key4 != null" >
+        #{key4},
+      </if>
+      <if test="key5 != null" >
+        #{key5},
+      </if>
+      <if test="key6 != null" >
+        #{key6},
+      </if>
+      <if test="key7 != null" >
+        #{key7},
+      </if>
+      <if test="key8 != null" >
+        #{key8},
+      </if>
+      <if test="key9 != null" >
+        #{key9},
+      </if>
+      <if test="key10 != null" >
+        #{key10},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisTaskAttribute" >
+    update dis_task_attribute
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="attributeType != null" >
+        attribute_type = #{attributeType,jdbcType=BIT},
+      </if>
+      <if test="key1 != null" >
+        key1 = #{key1},
+      </if>
+      <if test="key2 != null" >
+        key2 = #{key2},
+      </if>
+      <if test="key3 != null" >
+        key3 = #{key3},
+      </if>
+      <if test="key4 != null" >
+        key4 = #{key4},
+      </if>
+      <if test="key5 != null" >
+        key5 = #{key5},
+      </if>
+      <if test="key6 != null" >
+        key6 = #{key6},
+      </if>
+      <if test="key7 != null" >
+        key7 = #{key7},
+      </if>
+      <if test="key8 != null" >
+        key8 = #{key8},
+      </if>
+      <if test="key9 != null" >
+        key9 = #{key9},
+      </if>
+      <if test="key10 != null" >
+        key10 = #{key10},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.DisTaskAttribute" >
+    update dis_task_attribute
+    set task_id = #{taskId,jdbcType=INTEGER},
+      attribute_type = #{attributeType,jdbcType=BIT},
+      key1 = #{key1,jdbcType=VARCHAR},
+      key2 = #{key2,jdbcType=VARCHAR},
+      key3 = #{key3,jdbcType=VARCHAR},
+      key4 = #{key4,jdbcType=VARCHAR},
+      key5 = #{key5,jdbcType=VARCHAR},
+      key6 = #{key6,jdbcType=VARCHAR},
+      key7 = #{key7,jdbcType=VARCHAR},
+      key8 = #{key8,jdbcType=VARCHAR},
+      key9 = #{key9,jdbcType=VARCHAR},
+      key10 = #{key10,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

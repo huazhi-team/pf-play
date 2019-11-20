@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.DisTaskTypeMapper" >
+
+  <sql id="Base_Column_List" >
+    id, task_id, task_name, hold_number, need_resource, task_circle_day, task_validity_day, 
+    provide_type, every_num, total_num, create_time, task_level, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisTaskType">
+    select 
+    <include refid="Base_Column_List" />
+    from dis_task_type
+    where 1=1
+    <if test="taskId != null" >
+     and  task_id = #{taskId}
+    </if>
+    and   is_valid=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dis_task_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.DisTaskType" >
+    insert into dis_task_type (id, task_id, task_name, 
+      hold_number, need_resource, task_circle_day, 
+      task_validity_day, provide_type, every_num, 
+      total_num, create_time, task_level, 
+      update_time, is_valid)
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=INTEGER}, #{taskName,jdbcType=VARCHAR}, 
+      #{holdNumber,jdbcType=REAL}, #{needResource,jdbcType=REAL}, #{taskCircleDay,jdbcType=INTEGER}, 
+      #{taskValidityDay,jdbcType=INTEGER}, #{provideType,jdbcType=BIT}, #{everyNum,jdbcType=REAL}, 
+      #{totalNum,jdbcType=REAL}, #{createTime,jdbcType=INTEGER}, #{taskLevel,jdbcType=BIT}, 
+      #{updateTime,jdbcType=INTEGER}, #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisTaskType" >
+    insert into dis_task_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="taskName != null" >
+        task_name,
+      </if>
+      <if test="holdNumber != null" >
+        hold_number,
+      </if>
+      <if test="needResource != null" >
+        need_resource,
+      </if>
+      <if test="taskCircleDay != null" >
+        task_circle_day,
+      </if>
+      <if test="taskValidityDay != null" >
+        task_validity_day,
+      </if>
+      <if test="provideType != null" >
+        provide_type,
+      </if>
+      <if test="everyNum != null" >
+        every_num,
+      </if>
+      <if test="totalNum != null" >
+        total_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="taskLevel != null" >
+        task_level,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="taskId != null" >
+        #{taskId},
+      </if>
+      <if test="taskName != null" >
+        #{taskName},
+      </if>
+      <if test="holdNumber != null" >
+        #{holdNumber},
+      </if>
+      <if test="needResource != null" >
+        #{needResource},
+      </if>
+      <if test="taskCircleDay != null" >
+        #{taskCircleDay},
+      </if>
+      <if test="taskValidityDay != null" >
+        #{taskValidityDay},
+      </if>
+      <if test="provideType != null" >
+        #{provideType},
+      </if>
+      <if test="everyNum != null" >
+        #{everyNum},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="taskLevel != null" >
+        #{taskLevel},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisTaskType" >
+    update dis_task_type
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId},
+      </if>
+      <if test="taskName != null" >
+        task_name = #{taskName},
+      </if>
+      <if test="holdNumber != null" >
+        hold_number = #{holdNumber},
+      </if>
+      <if test="needResource != null" >
+        need_resource = #{needResource},
+      </if>
+      <if test="taskCircleDay != null" >
+        task_circle_day = #{taskCircleDay},
+      </if>
+      <if test="taskValidityDay != null" >
+        task_validity_day = #{taskValidityDay},
+      </if>
+      <if test="provideType != null" >
+        provide_type = #{provideType},
+      </if>
+      <if test="everyNum != null" >
+        every_num = #{everyNum},
+      </if>
+      <if test="totalNum != null" >
+        total_num = #{totalNum},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="taskLevel != null" >
+        task_level = #{taskLevel},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.DisTaskType" >
+    update dis_task_type
+    set task_id = #{taskId,jdbcType=INTEGER},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      hold_number = #{holdNumber,jdbcType=REAL},
+      need_resource = #{needResource,jdbcType=REAL},
+      task_circle_day = #{taskCircleDay,jdbcType=INTEGER},
+      task_validity_day = #{taskValidityDay,jdbcType=INTEGER},
+      provide_type = #{provideType,jdbcType=BIT},
+      every_num = #{everyNum,jdbcType=REAL},
+      total_num = #{totalNum,jdbcType=REAL},
+      create_time = #{createTime,jdbcType=INTEGER},
+      task_level = #{taskLevel,jdbcType=BIT},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

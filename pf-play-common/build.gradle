@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.pf.play.common'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+description = 'gd-play-common'
+dependencies {
+    implementation('com.alibaba:fastjson:1.1.15')
+    compile group: 'org.springframework', name: 'spring-core', version: '5.2.0.RELEASE'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha1'
+    compile group: 'commons-net', name: 'commons-net', version: '3.6'
+    implementation('commons-beanutils:commons-beanutils:1.8.3')
+    implementation('commons-lang:commons-lang:2.6')
+    implementation('commons-io:commons-io:2.6')
+    implementation('commons-fileupload:commons-fileupload:1.4')
+//    implementation('org.springframework.boot:spring-boot-starter-log4j2')
+    implementation('org.apache.httpcomponents:httpcore:4.4.10')
+    implementation('org.apache.httpcomponents:httpclient:4.5.6')
+    compile group: 'commons-net', name: 'commons-net', version: '3.6'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.0.1'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0'
+    implementation('commons-codec:commons-codec:1.10')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

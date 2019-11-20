@@ -1,0 +1,5 @@
+rootProject.name = 'pf-play'
+include 'pf-play-model'
+include 'pf-play-common'
+include 'pf-play-rule'
+

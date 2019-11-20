@@ -5,7 +5,7 @@
     id, member_id, reward_type, symbol_type, empiric_value, curday, curhour, curminute, 
     create_time, update_time, is_valid, is_count
   </sql>
-  <select id="selectByPrimaryKey" resultMap="com.pf.play.rule.core.model.UvitalityValueList"  >
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UvitalityValueList"  >
     select 
     <include refid="Base_Column_List" />
     from u_vitality_value_list

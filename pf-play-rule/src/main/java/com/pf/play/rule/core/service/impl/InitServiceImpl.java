@@ -11,6 +11,7 @@ import com.pf.play.rule.core.service.InitService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
  * @Date 2019/11/20 10:33
  * @Version 1.0
  */
+@Service
 public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitService<T> {
 
     @Autowired

@@ -12,7 +12,7 @@ public interface UvitalityValueListMapper<T> extends BaseDao<T> {
 
     int insertSelective(UvitalityValueList record);
 
-    UvitalityValueList selectByPrimaryKey(Long id);
+    UvitalityValueList selectByPrimaryKey(UvitalityValueList record);
 
     int updateByPrimaryKeySelective(UvitalityValueList record);
 

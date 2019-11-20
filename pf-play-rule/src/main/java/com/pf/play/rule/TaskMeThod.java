@@ -1,4 +1,4 @@
-package com.pf.play.rule.util;
+package com.pf.play.rule;
 
 import com.pf.play.rule.core.model.UvitalityValueList;
 

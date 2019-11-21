@@ -4,6 +4,8 @@ import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.model.UvitalityValueList;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface UvitalityValueListMapper<T> extends BaseDao<T> {
     int deleteByPrimaryKey(Long id);
@@ -13,6 +15,8 @@ public interface UvitalityValueListMapper<T> extends BaseDao<T> {
     int insertSelective(UvitalityValueList record);
 
     UvitalityValueList selectByPrimaryKey(UvitalityValueList record);
+
+    List<UvitalityValueList> selectNeedHandle();
 
     int updateByPrimaryKeySelective(UvitalityValueList record);
 

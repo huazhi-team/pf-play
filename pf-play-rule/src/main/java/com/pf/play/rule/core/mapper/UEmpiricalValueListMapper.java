@@ -14,6 +14,9 @@ public interface UEmpiricalValueListMapper<T> extends BaseDao<T> {
 
     UEmpiricalValueList selectByPrimaryKey(Long id);
 
+
+
+
     int updateByPrimaryKeySelective(UEmpiricalValueList record);
 
     int updateByPrimaryKey(UEmpiricalValueList record);

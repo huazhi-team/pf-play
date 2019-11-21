@@ -2,8 +2,8 @@ package com.pf.play.rule.core.service.impl;
 
 import com.pf.play.common.utils.*;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
-import com.pf.play.model.protocol.response.task.uesr.RegisterResp;
-import com.pf.play.model.protocol.response.task.uesr.UserInfoResp;
+import com.pf.play.model.protocol.response.uesr.RegisterResp;
+import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
@@ -11,10 +11,8 @@ import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
-import com.pf.play.rule.core.controller.SpCodeController;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
-import com.pf.play.rule.core.model.redis.RegisterModel;
 import com.pf.play.rule.core.service.RegisterService;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.util.ComponentUtil;
@@ -23,9 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,7 +71,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
     /**
      * @Description: 注册方法
      * @param registerReq
-     * @return com.pf.play.model.protocol.response.task.uesr.RegisterResp
+     * @return RegisterResp
      * @author long
      * @date 2019/11/12 19:34
      */
@@ -269,7 +265,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
     /**
      * @Description: 根据手机生成验证码
      * @param phone
-     * @return com.pf.play.model.protocol.response.task.uesr.RegisterResp
+     * @return RegisterResp
      * @author long
      * @date 2019/11/12 23:05
      */

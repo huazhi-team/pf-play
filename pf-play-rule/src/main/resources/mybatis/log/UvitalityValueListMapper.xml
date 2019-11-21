@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.pf.play.rule.core.mapper.UvitalityValueListMapper" >
   <sql id="Base_Column_List" >
-    id, member_id, reward_type, symbol_type, empiric_value, curday, curhour, curminute, 
+    id, member_id, reward_type, symbol_type, active_value, curday, curhour, curminute,
     create_time, update_time, is_valid, is_count
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UvitalityValueList"  >
@@ -17,7 +17,7 @@
   </delete>
   <insert id="insert" parameterType="com.pf.play.rule.core.model.UvitalityValueList" >
     insert into u_vitality_value_list (id, member_id, reward_type, 
-      symbol_type, empiric_value, curday, 
+      symbol_type, active_value, curday,
       curhour, curminute, create_time, 
       update_time, is_valid, is_count
       )
@@ -42,8 +42,8 @@
       <if test="symbolType != null" >
         symbol_type,
       </if>
-      <if test="empiricValue != null" >
-        empiric_value,
+      <if test="activeValue != null" >
+        active_value,
       </if>
       <if test="curday != null" >
         curday,
@@ -118,8 +118,8 @@
       <if test="symbolType != null" >
         symbol_type = #{symbolType},
       </if>
-      <if test="empiricValue != null" >
-        empiric_value = #{empiricValue},
+      <if test="activeValue != null" >
+        active_value = #{activeValue},
       </if>
       <if test="curday != null" >
         curday = #{curday},
@@ -150,7 +150,7 @@
     set member_id = #{memberId},
       reward_type = #{rewardType},
       symbol_type = #{symbolType},
-      empiric_value = #{empiricValue},
+      active_value = #{activeValue},
       curday = #{curday},
       curhour = #{curhour},
       curminute = #{curminute},
@@ -160,4 +160,17 @@
       is_count = #{isCount}
     where id = #{id}
   </update>
+
+
+  <select id="selectNeedHandle" resultType="com.pf.play.rule.core.model.UvitalityValueList"  >
+    select
+    <include refid="Base_Column_List" />
+    from u_vitality_value_list
+    where 1=1
+    and   is_count=1
+    and   is_valid=1
+    order by create_time   asc
+    LIMIT 10
+  </select>
+
 </mapper>

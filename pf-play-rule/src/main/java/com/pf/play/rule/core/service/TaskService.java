@@ -1,9 +1,7 @@
 package com.pf.play.rule.core.service;
 
 import com.pf.play.rule.core.common.service.BaseService;
-import com.pf.play.rule.core.model.DisTaskType;
-import com.pf.play.rule.core.model.UTaskHave;
-import com.pf.play.rule.core.model.UTaskHaveModel;
+import com.pf.play.rule.core.model.*;
 
 import java.util.List;
 
@@ -41,6 +39,16 @@ public interface TaskService  <T> extends BaseService<T> {
     boolean   addUserTask(Integer memberId,Integer taskId)throws Exception;
     //奖励发放
     boolean   addUserGrantReward(Integer memberId,Integer taskId)throws Exception;
+
+    void  updateUserVitalityValue(List<UvitalityValueList>  uvitalityValueList);
+
+    void  updateUserVitalityValueType(List<UvitalityValueList> list, Integer type);
+
+     int  updateUserInfoToVitalityValue(VcMemberResource vcMemberResource,UvitalityValueList uvitalityValueList);
+
+     void  openUpdateTask();
+
+
 
 
 

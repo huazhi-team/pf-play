@@ -16,6 +16,6 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  updateTask(UDayTaskReward record,UTaskHave uTaskHave);
 
-    void  buyTaskUpdateInfo(UTaskHave uTaskHave,VcMemberResource resource,UMasonryListLog   uMasonryLog);
+    void  buyTaskUpdateInfo(UTaskHave uTaskHave,VcMemberResource resource,UMasonryListLog   uMasonryLog,UvitalityValueList my,UvitalityValueList uq);
 
 }

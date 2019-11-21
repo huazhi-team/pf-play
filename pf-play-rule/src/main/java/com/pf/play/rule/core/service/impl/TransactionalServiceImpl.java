@@ -42,6 +42,9 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     private VcRewardReceiveMapper  vcRewardReceiveMapper ;
     @Autowired
     private UMasonryListLogMapper  uMasonryListLogMapper ;
+    @Autowired
+    private UvitalityValueListMapper  uVitalityValueListMapper ;
+
 
     @Override
     public BaseDao<T> getDao() {
@@ -86,9 +89,15 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
 
 
     @Override
-    public void buyTaskUpdateInfo(UTaskHave uTaskHave, VcMemberResource resource, UMasonryListLog uMasonryLog) {
+    public void buyTaskUpdateInfo(UTaskHave uTaskHave, VcMemberResource resource,
+                                        UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq) {
         uTaskHaveMapper.insertSelective(uTaskHave);
         vcMemberResourceMapper.updateByPrimaryKeySelective(resource);
         uMasonryListLogMapper.insertSelective(uMasonryLog);
+        uVitalityValueListMapper.insertSelective(my);
+        uVitalityValueListMapper.insertSelective(uq);
     }
+
+
+
 }

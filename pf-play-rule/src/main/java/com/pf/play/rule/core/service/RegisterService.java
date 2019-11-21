@@ -1,12 +1,10 @@
 package com.pf.play.rule.core.service;
 
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
-import com.pf.play.model.protocol.response.task.uesr.RegisterResp;
-import com.pf.play.model.protocol.response.task.uesr.UserInfoResp;
-import com.pf.play.rule.core.common.exception.ServiceException;
+import com.pf.play.model.protocol.response.uesr.RegisterResp;
+import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.core.common.service.BaseService;
 import com.pf.play.rule.core.model.VcMember;
-import com.pf.play.rule.core.model.redis.RegisterModel;
 
 /**
  * @Description TODO

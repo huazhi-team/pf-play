@@ -42,7 +42,7 @@ public interface TaskService  <T> extends BaseService<T> {
 
     void  updateUserVitalityValue(List<UvitalityValueList>  uvitalityValueList);
 
-    void  updateUserVitalityValueType(List<UvitalityValueList> list, Integer type);
+    void  updateUserVitalityValueType(UvitalityValueList uvitalityValueList, Integer type);
 
      int  updateUserInfoToVitalityValue(VcMemberResource vcMemberResource,UvitalityValueList uvitalityValueList);
 

@@ -6,6 +6,7 @@ import com.pf.play.rule.TaskMeThod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
@@ -314,7 +315,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
         //用户是否有足够的金额
         VcMemberResource record  =  new VcMemberResource();
-
+        record.setMemberId(memberId);
         VcMemberResource   vcMemberResource  =  vcMemberResourceMapper.selectByPrimaryKey(record);
 
         if(vcMemberResource==null){
@@ -345,39 +346,14 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public boolean addUserTask(Integer memberId, Integer taskId)throws Exception {
-        List<DisTaskType>  taskList  = TaskSingleton.getInstance().getDisTaskTypeList();
-        if(taskList.size()==0){
+        DisTaskType   taskType=TaskMeThod.changeDisTaskType(taskId);
+        if(taskType==null){
             return false;
         }
-        Date   date  = new Date();
-        Date endTime = DateUtil.getDateBetween(date,taskList.get(0).getTaskValidityDay());
-        //添加一条用户拥有表数据
-        UTaskHave   uTaskHave =new  UTaskHave();
-        uTaskHave.setMemberId(memberId);
-        uTaskHave.setTaskId(taskId);
-        uTaskHave.setSurplusDay(taskList.get(0).getTaskValidityDay());
-        uTaskHave.setStartTime(date);
-        uTaskHave.setEndTime(endTime);
-        uTaskHave.setSurplusNum(taskList.get(0).getTotalNum());
-        uTaskHave.setCurday(DateUtil.getDayNumber(date));
-        uTaskHave.setCurhour(DateUtil.getHour(date));
-        uTaskHave.setCurminute(DateUtil.getCurminute(date));
-        uTaskHave.setGiveType(0);
-        uTaskHave.setTaskLevel(taskList.get(0).getTaskLevel());
-        uTaskHave.setCreateTime(date);
-        uTaskHave.setUpdateTime(date);
-        //修改用户砖石金额
 
-        DisTaskAttribute disTaskAttribute = new DisTaskAttribute();
+        UTaskHave   uTaskHave =TaskMeThod.changeAddUTaskHave(memberId,taskId,taskType.getTaskValidityDay(),taskType.getTotalNum(),taskType.getTaskLevel());
 
-        List<DisTaskAttribute>  buteList = TaskSingleton.getInstance().getAttributeTypeList2();
-
-        for(DisTaskAttribute disTaskAttribute1:buteList){
-            if(disTaskAttribute1.getTaskId()==taskId){
-                BeanUtils.copy(disTaskAttribute1,disTaskAttribute);
-                break;
-            }
-        }
+        DisTaskAttribute disTaskAttribute = TaskMeThod.taskIdChangeDisTaskAttribute(taskId);
 
         VcMemberResource  vcMemberResource  =new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
@@ -385,35 +361,22 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         record.setMemberId(memberId);
         VcMemberResource  resourceRs = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
         VcMember record1 = vcMemberMapper.selectByPrimaryKey(record);
-        Float  masonry=resourceRs.getDayMasonry()-taskList.get(0).getNeedResource();
+        Float  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource();
         Float  myActiveValue=Float.parseFloat(disTaskAttribute.getKey1());
         Float  upActiveValue=Float.parseFloat(disTaskAttribute.getKey2());
         if(masonry<0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteDesc());
         }
-        vcMemberResource.setDayMasonry(masonry);
-//        vcMemberResource.setActiveValue(activeValue);
-        vcMemberResource.setUpdateTime(date);
 
         //用户砖石明细表添加一条记录
-        UMasonryListLog   uMasonryListLog  =  new UMasonryListLog();
-        uMasonryListLog.setMemberId(memberId);
-        uMasonryListLog.setTaskId(taskId);
-        uMasonryListLog.setType(9);
-        uMasonryListLog.setSymbolType(2);
-        uMasonryListLog.setMasonryNum(taskList.get(0).getNeedResource());
-        uMasonryListLog.setCurday(DateUtil.getDayNumber(date));
-        uMasonryListLog.setCurhour(DateUtil.getHour(date));
-        uMasonryListLog.setCurminute(DateUtil.getCurminute(date));
-        uMasonryListLog.setUpdateTime(date);
-        uMasonryListLog.setCreateTime(date);
-
-        UvitalityValueList myUvitalityValueList =TaskMeThod.pottingVitalityValue(memberId,1,1,myActiveValue);
-        UvitalityValueList uqUvitalityValueList =TaskMeThod.pottingVitalityValue(record1.getSuperiorId(),1,1,upActiveValue);
-
+        UMasonryListLog   uMasonryListLog = TaskMeThod.changeUMasonryListLog(memberId,taskId, Constant.TASK_TYPE9,Constant.TASK_SYMBOL_TYPE2,taskType.getNeedResource());
+        UvitalityValueList myUvitalityValueList =TaskMeThod.pottingVitalityValue(memberId,Constant.REWARD_TYPE2,Constant.TASK_SYMBOL_TYPE1,myActiveValue);
+        UvitalityValueList uqUvitalityValueList =TaskMeThod.pottingVitalityValue(record1.getSuperiorId(),Constant.REWARD_TYPE1,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
+        VcMemberResource insertResource =TaskMeThod.changeUpdateResource(memberId,masonry);
         try{
-            ComponentUtil.transactionalService.buyTaskUpdateInfo(uTaskHave,vcMemberResource,uMasonryListLog,myUvitalityValueList,uqUvitalityValueList);
+            ComponentUtil.transactionalService.buyTaskUpdateInfo(uTaskHave,insertResource,uMasonryListLog,myUvitalityValueList,uqUvitalityValueList);
         }catch (Exception e){
+            e.printStackTrace();
             throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR6.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR6.geteDesc());
         }
         return true;
@@ -435,12 +398,12 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     public void updateUserVitalityValue(List<UvitalityValueList>  uvitalityValueList ) {
         List<UvitalityValueList>  successObject=new ArrayList<>();
         List<UvitalityValueList>  failObject=new ArrayList<>();
-        updateUserVitalityValueType(uvitalityValueList,2);//更新处理状态
+
         for(UvitalityValueList uvitalityValue:uvitalityValueList){
+            updateUserVitalityValueType(uvitalityValue,2);//更新处理状态
             //更新用户经验值
-            VcMemberResource vcMemberResource = new VcMemberResource();
-            vcMemberResource.setMemberId(uvitalityValue.getMemberId());
-            VcMemberResource vcMemberResource1 = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
+
+            VcMemberResource vcMemberResource1 = vcMemberResourceMapper.selectByPrimaryKey(TaskMeThod.changeQueryMemberResource(uvitalityValue.getMemberId()));
             if(vcMemberResource1==null){
                 failObject.add(uvitalityValue);
                 continue;
@@ -455,30 +418,18 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             }
         }
 
-        if(successObject.size()==uvitalityValueList.size()){
-            for(UvitalityValueList uvitalityValue:successObject){
-                updateUserVitalityValueType(uvitalityValueList,4);
-            }
-        }else{
-            for(UvitalityValueList uvitalityValue:uvitalityValueList){
-                updateUserVitalityValueType(uvitalityValueList,3);
-            }
-            for(UvitalityValueList uvitalityValue:failObject){
-                updateUserVitalityValueType(uvitalityValueList,2);
-            }
-        }
+        TaskMeThod.exeUserVitalityValueType(uvitalityValueList,successObject,failObject);
+
     }
 
     @Override
-    public void updateUserVitalityValueType(List<UvitalityValueList> list, Integer type) {
-        if(list.size()==0){
+    public void updateUserVitalityValueType(UvitalityValueList uvitalityValueList, Integer type) {
+        if(uvitalityValueList==null){
             return;
         }
-        for(UvitalityValueList uvitalityValueList:list){
-            uvitalityValueList.setIsCount(type);
-            UvitalityValueList  bean  =  TaskMeThod.toUqdateInfo(uvitalityValueList);
-            uvitalityValueListMapper.updateByPrimaryKey(bean);
-        }
+        uvitalityValueList.setIsCount(type);
+        UvitalityValueList  bean  =  TaskMeThod.toUqdateInfo(uvitalityValueList);
+        uvitalityValueListMapper.updateByPrimaryKeySelective(bean);
     }
 
     @Override
@@ -493,15 +444,20 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             updateValue=vcMemberResource.getActiveValue()-uvitalityValueList.getActiveValue();
         }
         if(updateValue>=0){
-            VcMemberResource vcMemberResource1  =  new VcMemberResource();
-            vcMemberResource1.setMemberId(vcMemberResource.getMemberId());
-            vcMemberResource1.setActiveValue(updateValue);
-            vcMemberResourceMapper.updateByPrimaryKey(vcMemberResource1);
+            VcMemberResource vcMemberResource1  = TaskMeThod.changUpdateResourceTOActiveValue(vcMemberResource.getMemberId(),updateValue);
+            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource1);
             return 1;
         }
         return 0;
     }
 
+    /**
+     * @Description: 打开跑活力值的更新用户活力值状态
+     * @param
+     * @return void
+     * @author long
+     * @date 2019/11/21 19:51
+     */
     @Override
     public void openUpdateTask() {
         while (true){
@@ -511,7 +467,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
                 ComponentUtil.taskService.updateUserVitalityValue(list);
             }else{
                 try{
-                    Thread.sleep(300000);
+                    Thread.sleep(3000);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

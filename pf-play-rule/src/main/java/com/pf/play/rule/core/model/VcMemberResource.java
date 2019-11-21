@@ -100,6 +100,30 @@ public class VcMemberResource {
      */
     private Integer darenLevel;
     /**
+     * 团队总人数
+     *
+     * @mbggenerated
+     */
+    private Integer teamPeople;
+    /**
+     * 团队总活力值
+     *
+     * @mbggenerated
+     */
+    private Float teamActive;
+    /**
+     * 英雄活力值
+     *
+     * @mbggenerated
+     */
+    private Float heroActive;
+    /**
+     *联盟活力值
+     *
+     * @mbggenerated
+     */
+    private Float allianceActive;
+    /**
      * 是否重新计算活力值： 1、否  2 、是
      *
      * @mbggenerated
@@ -111,7 +135,7 @@ public class VcMemberResource {
      *
      * @mbggenerated
      */
-    private Boolean isValid;
+    private Integer isValid;
 
     public Long getId() {
         return id;
@@ -209,19 +233,11 @@ public class VcMemberResource {
         this.updateTime = updateTime;
     }
 
-    public Boolean getValid() {
+    public Integer getIsValid() {
         return isValid;
     }
 
-    public void setValid(Boolean valid) {
-        isValid = valid;
-    }
-
-    public Boolean getIsValid() {
-        return isValid;
-    }
-
-    public void setIsValid(Boolean isValid) {
+    public void setIsValid(Integer isValid) {
         this.isValid = isValid;
     }
 

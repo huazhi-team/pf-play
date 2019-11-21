@@ -80,8 +80,8 @@
       <if test="symbolType != null" >
         #{symbolType},
       </if>
-      <if test="empiricValue != null" >
-        #{empiricValue},
+      <if test="activeValue != null" >
+        #{activeValue},
       </if>
       <if test="curday != null" >
         #{curday},

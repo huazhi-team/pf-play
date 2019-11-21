@@ -3,6 +3,8 @@ package com.pf.play.rule.core.controller;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.task.TaskReq;
+import com.pf.play.rule.core.common.exception.ServiceException;
+import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.DisTaskType;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
@@ -91,11 +93,21 @@ public class TaskController {
             String    wxOpenId  ="slllsdjdjsa";
             Integer   taskId    = 2;
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(token, wxOpenId);
+//            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
+            boolean  checkFlag  =   ComponentUtil.taskService.checkUserCondition(memberId,taskId);
+            if(!checkFlag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR1.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR1.geteDesc());
+            }
 
-            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
-            return JsonResult.successResult(list);
+            boolean  insertFlag  = ComponentUtil.taskService.addUserTask(memberId,taskId);
+            if(!insertFlag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR1.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR1.geteDesc());
+            }
+            return JsonResult.successResult(null);
         }catch (Exception e){
             return JsonResult.failedResult("wrong for data!",1+"");
         }
     }
+
+
 }

@@ -265,10 +265,10 @@
     where 1=1
     and   is_valid=1
     <if test="memberId != null and memberId != '' " >
-      and member_id != #{memberId}
+      and member_id = #{memberId}
     </if>
     <if test="currentState != null and currentState != '' " >
-      and current_state != #{currentState}
+      and current_state = #{currentState}
     </if>
     order by task_level desc
   </select>

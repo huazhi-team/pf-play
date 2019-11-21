@@ -113,6 +113,8 @@ public class UMasonryListLog {
      *
      * @mbggenerated
      */
+    private Integer isValid;
+
     public Long getId() {
         return id;
     }
@@ -231,5 +233,13 @@ public class UMasonryListLog {
 
     public void setTypeValue(String typeValue) {
         this.typeValue = typeValue;
+    }
+
+    public Integer getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Integer isValid) {
+        this.isValid = isValid;
     }
 }

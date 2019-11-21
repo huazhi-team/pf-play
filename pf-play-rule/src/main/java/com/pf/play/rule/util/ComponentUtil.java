@@ -21,6 +21,7 @@ public class ComponentUtil {
     public static CommonService commonService;
     public static TransactionalService transactionalService;
     public static InitService initService;
+    public static ConsumerFixedService consumerFixedService;
 
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;

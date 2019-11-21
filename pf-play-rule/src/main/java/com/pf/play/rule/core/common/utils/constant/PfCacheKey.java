@@ -13,4 +13,9 @@ public interface PfCacheKey {
      */
     String MEMBERID_UP_PAY_CODE = "-1";
 
+    /**
+     * 用户固定账号
+     */
+    String CONSUMER_FIXED = "-2";
+
 }

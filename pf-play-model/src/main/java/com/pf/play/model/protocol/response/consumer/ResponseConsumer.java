@@ -13,6 +13,10 @@ import java.io.Serializable;
 public class ResponseConsumer extends BaseResponse implements Serializable {
     private static final long   serialVersionUID = 1233223331149L;
 
+    public String fullName;
+    public String idCard;
+    public Integer fixedType;
+    public String fixedNum;
 
     public ResponseConsumer(){
 

@@ -64,6 +64,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private InitService initService;
 
+    @Autowired
+    private ConsumerFixedService consumerFixedService;
+
 
 
     Thread runThread = null;
@@ -92,6 +95,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.commonService = commonService;
         ComponentUtil.transactionalService = transactionalService;
         ComponentUtil.initService = initService;
+        ComponentUtil.consumerFixedService = consumerFixedService;
 
 
         runThread = new RunThread();

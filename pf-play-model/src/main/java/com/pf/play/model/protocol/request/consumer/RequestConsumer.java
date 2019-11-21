@@ -15,6 +15,10 @@ public class RequestConsumer extends BaseRequest implements Serializable {
 
     public String payPw;
     public Integer upPayCode;
+    public String fullName;
+    public String idCard;
+    public Integer fixedType;
+    public String fixedNum;
 
     public RequestConsumer(){
     }
@@ -33,5 +37,37 @@ public class RequestConsumer extends BaseRequest implements Serializable {
 
     public void setUpPayCode(Integer upPayCode) {
         this.upPayCode = upPayCode;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public Integer getFixedType() {
+        return fixedType;
+    }
+
+    public void setFixedType(Integer fixedType) {
+        this.fixedType = fixedType;
+    }
+
+    public String getFixedNum() {
+        return fixedNum;
+    }
+
+    public void setFixedNum(String fixedNum) {
+        this.fixedNum = fixedNum;
     }
 }

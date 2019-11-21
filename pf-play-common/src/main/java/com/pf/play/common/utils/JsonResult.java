@@ -18,6 +18,8 @@ public class JsonResult<T> implements Serializable {
 	private boolean success;
 	private String msg;
 	private T data;
+	private String sgid;
+	private String cgid;
 
 
 	/**
@@ -34,6 +36,23 @@ public class JsonResult<T> implements Serializable {
 		return jsonResult;
 	}
 
+	/**
+	 * x
+	 * @param data
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> JsonResult<T> successResult(T data, String cgid, String sgid) {
+		JsonResult<T> jsonResult = new JsonResult<T>();
+		jsonResult.setCode("0");
+		jsonResult.setSuccess(true);
+		jsonResult.setData(data);
+		jsonResult.setCgid(cgid);
+		jsonResult.setSgid(sgid);
+		return jsonResult;
+	}
+
+
 
 	/**
 	 * x
@@ -48,6 +67,25 @@ public class JsonResult<T> implements Serializable {
 		jsonResult.setSuccess(false);
 		jsonResult.setMsg(msg);
 		jsonResult.setData(null);
+		return jsonResult;
+	}
+
+
+	/**
+	 * x
+	 * @param msg
+	 * @param code
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> JsonResult<T> failedResult(String msg, String code, String cgid, String sgid) {
+		JsonResult<T> jsonResult = new JsonResult<T>();
+		jsonResult.setCode(code);
+		jsonResult.setSuccess(false);
+		jsonResult.setMsg(msg);
+		jsonResult.setData(null);
+		jsonResult.setCgid(cgid);
+		jsonResult.setSgid(sgid);
 		return jsonResult;
 	}
 
@@ -100,5 +138,19 @@ public class JsonResult<T> implements Serializable {
 		this.data = data;
 	}
 
+	public String getSgid() {
+		return sgid;
+	}
 
+	public void setSgid(String sgid) {
+		this.sgid = sgid;
+	}
+
+	public String getCgid() {
+		return cgid;
+	}
+
+	public void setCgid(String cgid) {
+		this.cgid = cgid;
+	}
 }

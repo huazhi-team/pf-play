@@ -1,6 +1,7 @@
 package com.pf.play.common.utils;
 
 import org.apache.commons.lang.StringUtils;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -1151,6 +1152,19 @@ public class StringUtil {
 		org.apache.commons.codec.binary.Base64 bas=new org.apache.commons.codec.binary.Base64();
 		byte[] resByte=bas.encode(str.getBytes("UTF-8"));
 		String res=new String(resByte);
+		return res;
+	}
+
+
+	/**
+	 * base64解密
+	 * @param str
+	 * @return
+	 */
+	public final static String decoderBase64(String str) throws IOException {
+		BASE64Decoder decoder = new BASE64Decoder();
+		byte[] bytes = decoder.decodeBuffer(str);
+		String res=new String(bytes);
 		return res;
 	}
 

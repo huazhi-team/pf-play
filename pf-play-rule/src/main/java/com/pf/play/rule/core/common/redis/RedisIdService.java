@@ -21,6 +21,21 @@ public class RedisIdService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+
+    /**
+     * @Description: 生成sgid（会话ID）
+     * @author yoko
+     * @date 2019/11/12 22:31
+     */
+    public String getSgid() throws Exception {
+        String formatDate = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+        String key = "sgid_key" + formatDate;
+        Long incr = getIncr(key);
+        //七位序列号
+        DecimalFormat df = new DecimalFormat("0000000");
+        return formatDate + df.format(incr);
+    }
+
     public String getId() throws Exception {
         String formatDate = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
         String key = "RedisIdService_key" + formatDate;

@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.mapper;
 
 import com.pf.play.rule.core.common.dao.BaseDao;
+import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.VcMember;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,4 +20,13 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(VcMember record);
 
     int updateByPrimaryKey(VcMember record);
+
+    /**
+     * @Description: 更新用户的支付密码
+     * @param model
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 16:47
+     */
+    public void updatePayPassword(UserInfoModel model);
 }

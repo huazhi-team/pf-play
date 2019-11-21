@@ -15,4 +15,6 @@ import java.util.List;
 @Mapper
 public interface UserInfoMapper<T> extends BaseDao<T> {
     UserInfoModel selectByUserInfo (UserInfoModel userInfoModel);
+
+
 }

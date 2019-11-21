@@ -26,6 +26,32 @@ public class ServerConstant {
          */
         public static final int SIZE_VALUE_TWO = 2;
 
+        /**
+         * 字符串值等于1
+         */
+        public static final String STR_VALUE_ONE = "1";
+
+        /**
+         * token计算标识
+         */
+        public static final String TAG_HZ = "HZ";
+
+        /**
+         * 是否需要邮件提醒：1不需要邮件提醒，2需要邮件提醒
+         * 这里2表示需要邮件提醒
+         */
+        public static final int MAIL_REMIND_YES = 2;
+
+        /**
+         * 钱包地址：前缀标签
+         */
+        public static final String CURRENCY_TAG = "gd";
+
+        /**
+         * 锁redis的key的前缀标签
+         */
+        public static final String REDIS_LOCK_TAG = "lock";
+
 
     }
 

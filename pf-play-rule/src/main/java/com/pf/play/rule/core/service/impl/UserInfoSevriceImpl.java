@@ -3,6 +3,7 @@ package com.pf.play.rule.core.service.impl;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.UserInfoMapper;
+import com.pf.play.rule.core.mapper.VcMemberMapper;
 import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserInfoSevrice<T> {
     @Autowired
     private UserInfoMapper userInfoMapper ;
+
+    @Autowired
+    private VcMemberMapper vcMemberMapper;
 
     @Override
     public BaseDao<T> getDao() {
@@ -62,6 +66,15 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         return false;
     }
 
+    @Override
+    public void updatePayPassword(UserInfoModel model){
+        try {
+            vcMemberMapper.updatePayPassword(model);
+        }catch (Exception e)
+        {
+            throw e;
+        }
+    }
 
 
 }

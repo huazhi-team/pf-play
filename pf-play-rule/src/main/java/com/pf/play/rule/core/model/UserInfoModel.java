@@ -255,6 +255,11 @@ public class UserInfoModel {
      */
     private Integer isLevel5;
 
+    /**
+     * 支付密码
+     */
+    private String payPassword;
+
 
     public String getWxOpenid() {
         return wxOpenid;
@@ -542,5 +547,13 @@ public class UserInfoModel {
 
     public void setIsLevel5(Integer isLevel5) {
         this.isLevel5 = isLevel5;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }

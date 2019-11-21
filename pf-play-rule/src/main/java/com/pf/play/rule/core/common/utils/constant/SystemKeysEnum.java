@@ -9,6 +9,7 @@ package com.pf.play.rule.core.common.utils.constant;
 public enum SystemKeysEnum {
 
     KEY_PLAY("PLAY", "玩法业务"),
+    KEY_PF("PF", "支付业务"),
 
 
     ;

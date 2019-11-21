@@ -271,4 +271,18 @@
     where 1=1
     and (a.invite_code = #{inviteCode} or a.trading_address  = #{tradingAddress} or b.token=#{token} )
   </select>
+
+
+  <!-- 更新用户的支付密码 -->
+  <update id="updatePayPassword" parameterType="Object" >
+    update vc_member a
+    <trim prefix="set" suffixOverrides=",">
+      <if test="payPassword != null and payPassword != '' " >
+        a.pay_password = #{payPassword},
+      </if>
+    </trim>
+    where 1=1
+    and a.member_id = #{memberId}
+  </update>
+
 </mapper>

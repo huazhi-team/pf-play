@@ -7,23 +7,22 @@ import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
-import com.pf.play.rule.core.mapper.ConsumerFixedMapper;
-import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
-import com.pf.play.rule.core.service.ConsumerFixedService;
+import com.pf.play.rule.core.mapper.StrategyMapper;
+import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.service.StrategyService;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
- * @Description 用户固定账号的Service层的实现层
+ * @Description 策略的Service层的实现层
  * @Author yoko
- * @Date 2019/11/21 17:25
+ * @Date 2019/11/21 21:07
  * @Version 1.0
  */
 @Service
-public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements ConsumerFixedService<T> {
+public class StrategyServiceImpl<T> extends BaseServiceImpl<T> implements StrategyService<T> {
     /**
      * 5分钟.
      */
@@ -32,24 +31,24 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
     public long TWO_HOUR = 2;
 
     @Autowired
-    private ConsumerFixedMapper consumerFixedMapper;
+    private StrategyMapper strategyMapper;
 
     public BaseDao<T> getDao() {
-        return consumerFixedMapper;
+        return strategyMapper;
     }
 
     @Override
-    public ConsumerFixedModel getConsumerFixed(ConsumerFixedModel model, int isCache) throws Exception {
-        ConsumerFixedModel dataModel = null;
+    public StrategyModel getStrategyModel(StrategyModel model, int isCache) throws Exception {
+        StrategyModel dataModel = null;
         if (isCache == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.CONSUMER_FIXED, model.getMemberId());
+            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.STRATEGY, model.getStgType());
             String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
             if (!StringUtils.isBlank(strCache)) {
                 // 从缓存里面获取数据
-                dataModel = JSON.parseObject(strCache, ConsumerFixedModel.class);
+                dataModel = JSON.parseObject(strCache, StrategyModel.class);
             } else {
                 //查询数据库
-                dataModel = (ConsumerFixedModel) consumerFixedMapper.findByObject(model);
+                dataModel = (StrategyModel) strategyMapper.findByObject(model);
                 if (dataModel != null && dataModel.getId() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO) {
                     // 把数据存入缓存
                     ComponentUtil.redisService.set(strKeyCache, JSON.toJSONString(dataModel, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty), FIVE_MIN);
@@ -58,7 +57,7 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
         }else {
             // 直接查数据库
             // 查询数据库
-            dataModel = (ConsumerFixedModel) consumerFixedMapper.findByObject(model);
+            dataModel = (StrategyModel) strategyMapper.findByObject(model);
         }
         return dataModel;
     }

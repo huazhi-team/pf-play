@@ -5,7 +5,9 @@ import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -1336,6 +1338,28 @@ public class StringUtil {
 			randomcode = randomcode + c;
 		}
 		return randomcode;
+	}
+
+	/**
+	 * @Description: 计算涨幅
+	 * <p>返回的数据是百分比的</p>
+	 * @param t - 今日价格
+	* @param y - 昨日价格
+	 * @return java.lang.String
+	 * @author yoko
+	 * @date 2019/11/22 21:20
+	 */
+	public static String getGrowthRate(String t, String y){
+		String z = "100";
+		BigDecimal resDoble;
+		BigDecimal tt = new BigDecimal(t);
+		BigDecimal yy = new BigDecimal(y);
+		BigDecimal zz = new BigDecimal(z);
+		BigDecimal jf_res = tt.subtract(yy);
+		resDoble = jf_res.divide(yy, 4, BigDecimal.ROUND_HALF_UP).multiply(zz);
+		DecimalFormat sb = new DecimalFormat("###.##");
+		String data = sb.format(resDoble);
+		return data;
 	}
 
 }

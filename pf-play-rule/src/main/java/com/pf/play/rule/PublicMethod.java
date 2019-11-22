@@ -2,8 +2,11 @@ package com.pf.play.rule;
 
 import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.BeanUtils;
+import com.pf.play.common.utils.DateUtil;
+import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
+import com.pf.play.model.protocol.response.price.ResponseDayPrice;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
@@ -11,8 +14,15 @@ import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
+import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
+import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 公共方法类
@@ -268,6 +278,117 @@ public class PublicMethod {
         resBean.setMemberId(memberId);
         resBean.setFixedNum(fixedNum);
         return resBean;
+    }
+
+
+    /**
+     * @Description: 查询虚拟币每天兑换的价格时，校验基本数据是否非法
+     * @param requestConsumer - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkGetVirtualCoinPriceData(RequestConsumer requestConsumer) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestConsumer == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.P00002.geteCode(), PfErrorCode.ENUM_ERROR.P00002.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestConsumer.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询虚拟币每天兑换的价格的查询条件
+     * @return VirtualCoinPriceModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+    */
+    public static VirtualCoinPriceModel assembleVirtualCoinPriceQuery(){
+        // 获取昨天的时间
+        VirtualCoinPriceModel resBen = new VirtualCoinPriceModel();
+        resBen.setCurdayStart(DateUtil.getIntYesterday());
+        resBen.setCurdayEnd(DateUtil.getDayNumber(new Date()));
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 组装虚拟币的价格数据
+     * @param list - 昨日、今日虚拟币的价格
+     * @return VirtualCoinPriceDto
+     * @author yoko
+     * @date 2019/11/22 21:37
+    */
+    public static VirtualCoinPriceDto assembleVirtualCoinPriceDto(List<VirtualCoinPriceModel> list) throws Exception{
+        VirtualCoinPriceDto dto = new VirtualCoinPriceDto();
+        int today = DateUtil.getDayNumber(new Date());
+        int yesterday = DateUtil.getIntYesterday();
+        for (VirtualCoinPriceModel dataModel : list){
+            if (dataModel.getCurday() == today){
+                // 今天
+                dto.setT_exchangePrice(dataModel.getExchangePrice());
+                dto.setT_tallestPrice(dataModel.getTallestPrice());
+                dto.setMaxPrice(dataModel.getMaxPrice());
+                dto.setMinPrice(dataModel.getMinPrice());
+            }else if (dataModel.getCurday() == yesterday){
+                // 昨天
+                dto.setY_exchangePrice(dataModel.getExchangePrice());
+                dto.setY_tallestPrice(dataModel.getTallestPrice());
+            }
+        }
+        String growthRate = StringUtil.getGrowthRate(dto.getT_exchangePrice(), dto.getY_exchangePrice());
+        dto.setGrowthRate(growthRate);
+        return dto;
+    }
+
+
+    /**
+     * @Description: 虚拟币价格数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param virtualCoinPriceDto - 虚拟币价格数据
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/13 21:45
+     */
+    public static String assembleDayPriceResult(long stime, String token, String sign, VirtualCoinPriceDto virtualCoinPriceDto){
+        ResponseDayPrice dataModel = null;
+        if (virtualCoinPriceDto != null){
+            dataModel = BeanUtils.copy(virtualCoinPriceDto, ResponseDayPrice.class);
+        }else{
+            dataModel = new ResponseDayPrice();
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+    public static void main(String [] args){
+
+        String t = "1.835";
+        String y = "1.921";
+        String z = "100";
+//        String res = (t-y)/y*100;
+        BigDecimal resDoble;
+        BigDecimal tt = new BigDecimal(t);
+        BigDecimal yy = new BigDecimal(y);
+        BigDecimal zz = new BigDecimal(z);
+        BigDecimal jf_res = tt.subtract(yy);
+        resDoble = jf_res.divide(yy, 4, BigDecimal.ROUND_HALF_UP).multiply(zz);
+        DecimalFormat sb = new DecimalFormat("###.##");
+        String data = sb.format(resDoble);
+
+        System.out.println("data:" + data);
     }
 
 }

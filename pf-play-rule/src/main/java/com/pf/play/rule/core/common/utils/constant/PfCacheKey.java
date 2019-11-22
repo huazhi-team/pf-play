@@ -18,4 +18,14 @@ public interface PfCacheKey {
      */
     String CONSUMER_FIXED = "-2";
 
+    /**
+     * 策略
+     */
+    String STRATEGY = "-3";
+
+    /**
+     * 虚拟币每天兑换的价格
+     */
+    String VIRTUALCOIN_PRICE = "-4";
+
 }

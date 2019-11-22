@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.controller.consumer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.common.utils.SignUtil;
@@ -28,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description TODO
+ * @Description 用户固定账号、支付密码的Controller层
  * @Author yoko
  * @Date 2019/11/21 10:00
  * @Version 1.0
@@ -37,6 +38,11 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/play/csm")
 public class ConsumerController {
     private static Logger log = LoggerFactory.getLogger(ConsumerController.class);
+
+    /**
+     * 5分钟.
+     */
+    public long FIVE_MIN = 300;
 
     /**
      * 15分钟.
@@ -356,7 +362,15 @@ public class ConsumerController {
             ConsumerFixedModel upDataModel = PublicMethod.assembleUpConsumerFixed(memberId, requestConsumer.getFixedNum());
             ComponentUtil.consumerFixedService.update(upDataModel);
 
-
+            // 更新缓存里面的数据
+            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.CONSUMER_FIXED, memberId);
+            String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+            if (!StringUtils.isBlank(strCache)) {
+                // 从缓存里面获取数据
+                ConsumerFixedModel dataModel = JSON.parseObject(strCache, ConsumerFixedModel.class);
+                dataModel.setFixedNum(requestConsumer.getFixedNum());
+                ComponentUtil.redisService.set(strKeyCache, JSON.toJSONString(dataModel, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty), FIVE_MIN);
+            }
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
 //            String tokon = SignUtil.getSgin(memberId, stime, secretKeySign); // 用户did+用户账号+秘钥=token

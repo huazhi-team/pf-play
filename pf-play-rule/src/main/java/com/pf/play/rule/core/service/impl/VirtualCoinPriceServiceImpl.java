@@ -45,7 +45,7 @@ public class VirtualCoinPriceServiceImpl<T> extends BaseServiceImpl<T> implement
     public List<VirtualCoinPriceModel> getVirtualCoinPriceList(VirtualCoinPriceModel model, int isCache) throws Exception {
         List<VirtualCoinPriceModel> dataList = null;
         if (isCache == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.VIRTUALCOIN_PRICE, model.getCurdayStart(), model.getCurdayEnd());
+            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.VIRTUALCOIN_PRICE_LIST, model.getCurdayStart(), model.getCurdayEnd());
             String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
             if (!StringUtils.isBlank(strCache)) {
                 // 从缓存里面获取数据
@@ -64,5 +64,30 @@ public class VirtualCoinPriceServiceImpl<T> extends BaseServiceImpl<T> implement
             dataList = virtualCoinPriceMapper.findByCondition(model);
         }
         return dataList;
+    }
+
+    @Override
+    public VirtualCoinPriceModel getVirtualCoinPrice(VirtualCoinPriceModel model, int isCache) throws Exception {
+        VirtualCoinPriceModel dataModel = null;
+        if (isCache == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.VIRTUALCOIN_PRICE, model.getCurday());
+            String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+            if (!StringUtils.isBlank(strCache)) {
+                // 从缓存里面获取数据
+                dataModel = JSON.parseObject(strCache, VirtualCoinPriceModel.class);
+            } else {
+                //查询数据库
+                dataModel = (VirtualCoinPriceModel) virtualCoinPriceMapper.findByObject(model);
+                if (dataModel != null && dataModel.getId() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO) {
+                    // 把数据存入缓存
+                    ComponentUtil.redisService.set(strKeyCache, JSON.toJSONString(dataModel, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty), DateUtil.getTomorrowMinute(), TimeUnit.MINUTES);
+                }
+            }
+        }else {
+            // 直接查数据库
+            // 查询数据库
+            dataModel = (VirtualCoinPriceModel) virtualCoinPriceMapper.findByObject(model);
+        }
+        return dataModel;
     }
 }

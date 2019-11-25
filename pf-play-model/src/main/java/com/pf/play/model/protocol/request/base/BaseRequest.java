@@ -1,5 +1,7 @@
 package com.pf.play.model.protocol.request.base;
 
+import com.pf.play.model.protocol.page.BasePage;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * @Date 2019/11/6 17:43
  * @Version 1.0
  */
-public class BaseRequest implements Serializable {
+public class BaseRequest extends BasePage implements Serializable {
     private static final long   serialVersionUID = 1233223331148L;
 
     public Integer agtVer;

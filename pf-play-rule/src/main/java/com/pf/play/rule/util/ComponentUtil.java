@@ -24,6 +24,7 @@ public class ComponentUtil {
     public static ConsumerFixedService consumerFixedService;
     public static StrategyService strategyService;
     public static VirtualCoinPriceService virtualCoinPriceService;
+    public static OrderService orderService;
 
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;

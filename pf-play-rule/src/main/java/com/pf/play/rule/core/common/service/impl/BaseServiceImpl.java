@@ -4,6 +4,7 @@ package com.pf.play.rule.core.common.service.impl;
 
 
 
+import com.pf.play.model.protocol.page.BasePage;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.BaseService;
 
@@ -120,4 +121,14 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 	public List<T> findByCondition(Object obj) {
 		return getDao().findByCondition(obj);
 	};
+
+	public int queryByCount(BasePage page){
+		return getDao().queryByCount(page);
+	}
+
+	public List<T> queryByList(BasePage page){
+		Integer rowCount = queryByCount(page);
+		page.setRowCount(rowCount);
+		return getDao().queryByList(page);
+	}
 }

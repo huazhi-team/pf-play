@@ -73,6 +73,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private VirtualCoinPriceService virtualCoinPriceService;
 
+    @Autowired
+    private OrderService orderService;
+
 
 
     Thread runThread = null;
@@ -104,6 +107,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.consumerFixedService = consumerFixedService;
         ComponentUtil.strategyService = strategyService;
         ComponentUtil.virtualCoinPriceService = virtualCoinPriceService;
+        ComponentUtil.orderService = orderService;
 
 
         runThread = new RunThread();

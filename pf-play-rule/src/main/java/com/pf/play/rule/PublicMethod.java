@@ -5,15 +5,17 @@ import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
 import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
+import com.pf.play.model.protocol.request.order.RequestOrder;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
+import com.pf.play.model.protocol.response.order.Order;
+import com.pf.play.model.protocol.response.order.ResponseOrder;
 import com.pf.play.model.protocol.response.price.ResponseDayPrice;
 import com.pf.play.rule.core.common.exception.ServiceException;
-import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
-import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
+import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
 import com.pf.play.rule.util.ComponentUtil;
@@ -21,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -371,6 +374,129 @@ public class PublicMethod {
         dataModel.setToken(token);
         dataModel.setSign(sign);
         return JSON.toJSONString(dataModel);
+    }
+
+
+
+    /**
+     * @Description: 查询订单时，校验基本数据是否非法
+     * @param requestOrder - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkOrderData(RequestOrder requestOrder) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestOrder == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00001.geteCode(), PfErrorCode.ENUM_ERROR.D00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestOrder.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestOrder.getToken());
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询订单列表的查询条件
+     * @param requestOrder - 查询的基本信息
+     * @param memberId - 用户ID
+     * //@param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+     * @param ownType - 自己订单号是否需要包含在内：不为空则自己的订单不做显示
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderQuery(RequestOrder requestOrder, long memberId, int ownType){
+        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBen.setMemberId(memberId);
+        resBen.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        resBen.setOwnType(ownType);
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 订单信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderList - 订单信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleOrderResult(long stime, String token, String sign, List <OrderModel> orderList){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderList != null && orderList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            List<Order> dataList = BeanUtils.copyList(orderList, Order.class);
+            dataModel.oList = dataList;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+    /**
+     * @Description: 组装查询今天的虚拟币的价格信息的查询条件
+     * @return VirtualCoinPriceModel
+     * @author yoko
+     * @date 2019/11/25 22:53
+    */
+    public static VirtualCoinPriceModel assembleVirtualCoinPriceQueryToday(){
+        VirtualCoinPriceModel resBean = new VirtualCoinPriceModel();
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 发布订单时，校验基本数据是否非法
+     * @param requestOrder - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkAddOrderData(RequestOrder requestOrder, VirtualCoinPriceModel virtualCoinPriceModel) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestOrder == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00002.geteCode(), PfErrorCode.ENUM_ERROR.D00002.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestOrder.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestOrder.getToken());
+
+        // 购买的数量
+        if (StringUtils.isBlank(requestOrder.getTradeNum())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00003.geteCode(), PfErrorCode.ENUM_ERROR.D00003.geteDesc());
+        }
+
+        // 单价
+        if (StringUtils.isBlank(requestOrder.getTradePrice())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00004.geteCode(), PfErrorCode.ENUM_ERROR.D00004.geteDesc());
+        }
+
+        // 判断单价是否属于设定范围内：推荐的最高单价-推荐的最低单价
+        double minPrice = Double.parseDouble(virtualCoinPriceModel.getMinPrice());
+        double maxPrice = Double.parseDouble(virtualCoinPriceModel.getMaxPrice());
+        double clientPrice = Double.parseDouble(requestOrder.getTradePrice()); // 客户端用户填写的价格
+        if (clientPrice < minPrice || clientPrice > maxPrice){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00005.geteCode(), PfErrorCode.ENUM_ERROR.D00005.geteDesc());
+        }
+        return memberId;
     }
 
     public static void main(String [] args){

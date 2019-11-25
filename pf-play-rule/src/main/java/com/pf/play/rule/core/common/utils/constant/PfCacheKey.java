@@ -24,8 +24,13 @@ public interface PfCacheKey {
     String STRATEGY = "-3";
 
     /**
-     * 虚拟币每天兑换的价格
+     * 虚拟币每天兑换的价格：今天、昨天
      */
-    String VIRTUALCOIN_PRICE = "-4";
+    String VIRTUALCOIN_PRICE_LIST = "-4";
+
+    /**
+     * 虚拟币每天兑换的价格：今天
+     */
+    String VIRTUALCOIN_PRICE = "-5";
 
 }

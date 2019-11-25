@@ -12,7 +12,6 @@ import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
-import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
 import com.pf.play.rule.util.ComponentUtil;

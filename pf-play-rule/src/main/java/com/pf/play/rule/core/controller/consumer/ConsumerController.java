@@ -2,7 +2,6 @@ package com.pf.play.rule.core.controller.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.common.utils.SignUtil;
 import com.pf.play.common.utils.StringUtil;
@@ -154,14 +153,14 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/getFixed
+     * local:http://localhost:8082/play/csm/getData
      * 请求的属性类:RequestConsumer
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段（用户固定账号不为空）:fixedType+fixedNum+stime+token+秘钥=sign
      * 服务端加密字段（用户固定账号为空）:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/getFixed", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getData", method = {RequestMethod.POST})
     public JsonResult<Object> getFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
@@ -242,13 +241,13 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/addFixed
+     * local:http://localhost:8082/play/csm/addData
      * 请求的属性类:RequestConsumer
      * 必填字段:{"fullName":"小五哥","idCard":"435202111111111111","fixedType":2,"fixedNum":13717505292,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fullName+idCard+fixedType+fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/addFixed", method = {RequestMethod.POST})
+    @RequestMapping(value = "/addData", method = {RequestMethod.POST})
     public JsonResult<Object> addFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
@@ -335,13 +334,13 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/upFixed
+     * local:http://localhost:8082/play/csm/upData
      * 请求的属性类:RequestConsumer
      * 必填字段:{"fixedNum":13717505293,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/upFixed", method = {RequestMethod.POST})
+    @RequestMapping(value = "/upData", method = {RequestMethod.POST})
     public JsonResult<Object> upFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";

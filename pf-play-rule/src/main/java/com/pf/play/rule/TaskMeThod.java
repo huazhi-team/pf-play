@@ -214,7 +214,6 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 19:34
      */
-
     public static  void   exeUserVitalityValueType( List<UvitalityValueList>   uvitalityValueList,
                                                             List<UvitalityValueList>   successObject,
                                                                 List<UvitalityValueList>   failObject){
@@ -294,8 +293,18 @@ public class TaskMethod {
     }
 
 
-
+    /**
+     * @Description: 查询最大的size
+     * @param vcMemberResource
+    * @param rs
+    * @param vcMember
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     * @author long
+     * @date 2019/11/26 14:34
+     */
     public  static Map<String,Object> changCurrentAndMaxMap(VcMemberResource vcMemberResource, VcRewardReceive  rs,VcMember vcMember ){
+
+
         Map<String,Object> map = new HashMap<>();
         if(vcMember.getIsCertification()==1){
            for(int i=0; i<6;i++){
@@ -370,7 +379,15 @@ public class TaskMethod {
         return  disWisemanInfoList;
     }
 
-
+    /**
+     * @Description: 检查是否有效可以执行的taskId
+     * @param vcMemberResource
+    * @param rewardReceive
+    * @param taskId
+     * @return boolean
+     * @author long
+     * @date 2019/11/26 14:35
+     */
     public static  boolean   cheakCondition(VcMemberResource   vcMemberResource,VcRewardReceive  rewardReceive,Integer  taskId){
        boolean  flag = true ;
        if(vcMemberResource.getDarenLevel()>=taskId){
@@ -406,7 +423,14 @@ public class TaskMethod {
 
 
 
-
+    /**
+     * @Description: 组装用户的奖励领取
+     * @param memberId
+    * @param level
+     * @return com.pf.play.rule.core.model.VcRewardReceive
+     * @author long
+     * @date 2019/11/26 14:36
+     */
     public   static VcRewardReceive  changeUpdateRewardReceive(Integer memberId,Integer level){
         VcRewardReceive vcRewardReceive = new VcRewardReceive();
         vcRewardReceive.setMemberId(memberId);

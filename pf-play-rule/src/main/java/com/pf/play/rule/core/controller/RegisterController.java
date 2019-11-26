@@ -1,7 +1,6 @@
 package com.pf.play.rule.core.controller;
 
 import com.pf.play.common.utils.JsonResult;
-import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.response.uesr.RegisterResp;

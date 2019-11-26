@@ -215,8 +215,8 @@ public class TaskMethod {
      * @date 2019/11/21 19:34
      */
     public static  void   exeUserVitalityValueType( List<UvitalityValueList>   uvitalityValueList,
-                                                            List<UvitalityValueList>   successObject,
-                                                                List<UvitalityValueList>   failObject){
+                                                    List<UvitalityValueList>   successObject,
+                                                    List<UvitalityValueList>   failObject){
         if(successObject.size()==uvitalityValueList.size()){
             for(UvitalityValueList uvitalityValue:successObject){
                 ComponentUtil.taskService.updateUserVitalityValueType(uvitalityValue,4);
@@ -307,9 +307,9 @@ public class TaskMethod {
 
         Map<String,Object> map = new HashMap<>();
         if(vcMember.getIsCertification()==1){
-           for(int i=0; i<6;i++){
-               map.put("size"+i,3);
-           }
+            for(int i=0; i<6;i++){
+                map.put("size"+i,3);
+            }
         }else{
             for(int  i=0;i<6;i++){
                 if(i<=vcMemberResource.getDarenLevel()){
@@ -389,34 +389,34 @@ public class TaskMethod {
      * @date 2019/11/26 14:35
      */
     public static  boolean   cheakCondition(VcMemberResource   vcMemberResource,VcRewardReceive  rewardReceive,Integer  taskId){
-       boolean  flag = true ;
-       if(vcMemberResource.getDarenLevel()>=taskId){
-           if(taskId==0){
-               if(rewardReceive.getIsLevel0()==2){
-                   return false;
-               }
-           }else if(taskId==1){
-               if(rewardReceive.getIsLevel1()==2){
-                   return false;
-               }
-           }else if(taskId==2){
-               if(rewardReceive.getIsLevel2()==2){
-                   return false;
-               }
-           }else if(taskId==3){
-               if(rewardReceive.getIsLevel3()==2){
-                   return false;
-               }
-           }else if(taskId==4){
-               if(rewardReceive.getIsLevel4()==2){
-                   return false;
-               }
-           }else if(taskId==5){
-               if(rewardReceive.getIsLevel5()==2){
-                   return false;
-               }
-           }
-       }
+        boolean  flag = true ;
+        if(vcMemberResource.getDarenLevel()>=taskId){
+            if(taskId==0){
+                if(rewardReceive.getIsLevel0()==2){
+                    return false;
+                }
+            }else if(taskId==1){
+                if(rewardReceive.getIsLevel1()==2){
+                    return false;
+                }
+            }else if(taskId==2){
+                if(rewardReceive.getIsLevel2()==2){
+                    return false;
+                }
+            }else if(taskId==3){
+                if(rewardReceive.getIsLevel3()==2){
+                    return false;
+                }
+            }else if(taskId==4){
+                if(rewardReceive.getIsLevel4()==2){
+                    return false;
+                }
+            }else if(taskId==5){
+                if(rewardReceive.getIsLevel5()==2){
+                    return false;
+                }
+            }
+        }
         return  flag;
     }
 
@@ -561,13 +561,13 @@ public class TaskMethod {
     public   static  boolean    checkPhoneVerification(PhoneVerificationReq req){
         boolean  flag = true;
         if(StringUtils.isBlank(req.getPhone())&& PhoneUtil.isMobile(req.getPhone()) &&!PhoneUtil.isInvalidMobile(req.getPhone())){
-               flag = false;
+            flag = false;
         }else if(StringUtils.isBlank(req.getPicTimeStamp())){
-               flag = false;
+            flag = false;
         }else  if(StringUtils.isBlank(req.getPicVerification())){
-               flag = false;
+            flag = false;
         }
-         return   flag;
+        return   flag;
     }
 
     /**

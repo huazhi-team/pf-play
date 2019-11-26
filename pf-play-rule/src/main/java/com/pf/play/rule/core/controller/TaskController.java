@@ -4,7 +4,6 @@ import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
-import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;

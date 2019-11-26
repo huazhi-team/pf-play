@@ -415,6 +415,9 @@ public class PublicMethod {
     public static OrderModel assembleOrderQuery(RequestOrder requestOrder, long memberId, int ownType){
         OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
         resBen.setMemberId(memberId);
+        if (!StringUtils.isBlank(requestOrder.getPhoneNum())){
+            resBen.setInviteCode(requestOrder.getPhoneNum());
+        }
         resBen.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
         resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
         resBen.setOwnType(ownType);
@@ -488,7 +491,10 @@ public class PublicMethod {
         if (StringUtils.isBlank(requestOrder.getTradePrice())){
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00004.geteCode(), PfErrorCode.ENUM_ERROR.D00004.geteDesc());
         }
-
+        // 判断虚拟币今日价格是否有数据
+        if(virtualCoinPriceModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.P00004.geteCode(), PfErrorCode.ENUM_ERROR.P00004.geteDesc());
+        }
         // 判断单价是否属于设定范围内：推荐的最高单价-推荐的最低单价
         double minPrice = Double.parseDouble(virtualCoinPriceModel.getMinPrice());
         double maxPrice = Double.parseDouble(virtualCoinPriceModel.getMaxPrice());
@@ -497,6 +503,64 @@ public class PublicMethod {
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00005.geteCode(), PfErrorCode.ENUM_ERROR.D00005.geteDesc());
         }
         return memberId;
+    }
+
+
+    /**
+     * @Description: 组装新增订单的数据
+     * @param requestOrder - 订单的基本信息
+     * @param memberId - 用户ID
+     * @param orderNo - 订单号
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/26 11:19
+     */
+    public static OrderModel assembleAddOrderData(RequestOrder requestOrder, long memberId, String orderNo){
+        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBen.setMemberId(memberId);
+        resBen.setOrderNo(orderNo);
+        resBen.setCurday(DateUtil.getDayNumber(new Date()));
+        resBen.setCurhour(DateUtil.getHour(new Date()));
+        resBen.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 新增订单信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleAddOrderResult(long stime, String token, String sign){
+        ResponseOrder dataModel = new ResponseOrder();
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+
+    /**
+     * @Description: 组装查询用户购买的订单列表的查询条件
+     * @param requestOrder - 查询的基本信息
+     * @param memberId - 用户ID
+     * @param orderTradeStatus - 订单交易状态：0初始化(我的购入订单)，1锁定(我的代付款订单)，2完成
+     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleBuyOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int sortType){
+        OrderModel resBen = new OrderModel();
+        resBen.setMemberId(memberId);
+        resBen.setOrderTradeStatus(orderTradeStatus);
+        resBen.setSortType(sortType);
+        return resBen;
     }
 
     public static void main(String [] args){

@@ -9,7 +9,7 @@
     <sql id="Base_Column_List">
         a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
-        a.create_time,a.update_time,a.yn
+        a.create_time,a.update_time,a.yn,b.invite_code,b.nickname
     </sql>
 
     <!-- 查询条件 -->
@@ -54,9 +54,12 @@
                     </if>
                 </otherwise>
             </choose>
-            <!--<if test="ownType != null and ownType != '' " >-->
-            <!--and a.member_id != #{memberId}-->
-            <!--</if>-->
+            <if test="inviteCode != null and inviteCode != '' " >
+                and b.invite_code = #{inviteCode}
+            </if>
+            <if test="nickname != null and nickname != '' " >
+                and b.nickname = #{nickname}
+            </if>
 
             and a.yn = 0
         </trim>
@@ -82,16 +85,16 @@
             order by a.create_time asc
         </if>
         <if test="sortType != null and sortType != '' and sortType == 3 " >
-            order by a.trade_num desc
+            order by a.trade_num * 1 desc
         </if>
         <if test="sortType != null and sortType != '' and sortType == 4 " >
-            order by a.trade_num asc
+            order by a.trade_num * 1 asc
         </if>
         <if test="sortType != null and sortType != '' and sortType == 5 " >
-            order by a.trade_price desc
+            order by a.trade_price * 1 desc
         </if>
         <if test="sortType != null and sortType != '' and sortType == 6 " >
-            order by a.trade_price asc
+            order by a.trade_price * 1 asc
         </if>
     </sql>
 
@@ -100,7 +103,7 @@
     <select id="findAll" resultType="com.pf.play.rule.core.model.order.OrderModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -108,7 +111,7 @@
     <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
     </select>
@@ -117,7 +120,7 @@
     <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause"/>
         limit 1
     </select>
@@ -126,7 +129,7 @@
     <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.order.OrderModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause_id"/>
     </select>
 
@@ -135,7 +138,7 @@
     <!-- 查询总数-->
     <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
         select count(1)
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -143,7 +146,7 @@
     <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a
+        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
         limit #{start},#{end}

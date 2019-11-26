@@ -9,6 +9,7 @@ import com.pf.play.model.protocol.request.RequestEncryptionJson;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.response.ResponseEncryptionJson;
 import com.pf.play.rule.PublicMethod;
+import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.*;
 import com.pf.play.rule.core.model.UserInfoModel;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -115,31 +117,9 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            String code = "";
-            String message = "";
-            if (e instanceof ServiceException){
-                if (!StringUtils.isBlank(((ServiceException) e).getCode())){
-                    code = ((ServiceException) e).getCode();
-                    message = e.getMessage();
-                }else {
-                    code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-                }
-            }else {
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
-                message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
-            }
-            log.error(String.format("this ConsumerController.upPayCode() is error , the errorCode=%s and cgid=%s and sgid=%s and all data=%s!", code, "null", "null", request.getQueryString()));
-            // 记录错误日志
-            int mailRemind = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO;
-            if (code.equals(ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE)){
-                //是属于系统错误，需要发送邮件提醒
-                mailRemind = ServerConstant.PUBLIC_CONSTANT.MAIL_REMIND_YES;
-            }else{
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-            }
-            e.printStackTrace();
+            Map<String,String> map = ExceptionMethod.getException(e);
             // 添加错误异常数据
-            return JsonResult.failedResult(message, code, cgid, sgid);
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
 
@@ -202,31 +182,9 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            String code = "";
-            String message = "";
-            if (e instanceof ServiceException){
-                if (!StringUtils.isBlank(((ServiceException) e).getCode())){
-                    code = ((ServiceException) e).getCode();
-                    message = e.getMessage();
-                }else {
-                    code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-                }
-            }else {
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
-                message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
-            }
-            log.error(String.format("this ConsumerController.getFixed() is error , the errorCode=%s and cgid=%s and sgid=%s and all data=%s!", code, "null", "null", request.getQueryString()));
-            // 记录错误日志
-            int mailRemind = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO;
-            if (code.equals(ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE)){
-                //是属于系统错误，需要发送邮件提醒
-                mailRemind = ServerConstant.PUBLIC_CONSTANT.MAIL_REMIND_YES;
-            }else{
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-            }
-            e.printStackTrace();
+            Map<String,String> map = ExceptionMethod.getException(e);
             // 添加错误异常数据
-            return JsonResult.failedResult(message, code, cgid, sgid);
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
 
@@ -291,31 +249,9 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            String code = "";
-            String message = "";
-            if (e instanceof ServiceException){
-                if (!StringUtils.isBlank(((ServiceException) e).getCode())){
-                    code = ((ServiceException) e).getCode();
-                    message = e.getMessage();
-                }else {
-                    code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-                }
-            }else {
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
-                message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
-            }
-            log.error(String.format("this ConsumerController.addFixed() is error , the errorCode=%s and cgid=%s and sgid=%s and all data=%s!", code, "null", "null", request.getQueryString()));
-            // 记录错误日志
-            int mailRemind = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO;
-            if (code.equals(ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE)){
-                //是属于系统错误，需要发送邮件提醒
-                mailRemind = ServerConstant.PUBLIC_CONSTANT.MAIL_REMIND_YES;
-            }else{
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-            }
-            e.printStackTrace();
+            Map<String,String> map = ExceptionMethod.getException(e);
             // 添加错误异常数据
-            return JsonResult.failedResult(message, code, cgid, sgid);
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
 

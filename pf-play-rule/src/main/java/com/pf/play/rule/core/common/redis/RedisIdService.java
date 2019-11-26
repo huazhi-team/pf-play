@@ -36,6 +36,20 @@ public class RedisIdService {
         return formatDate + df.format(incr);
     }
 
+    /**
+     * @Description: 生成订单号
+     * @author yoko
+     * @date 2019/11/12 22:31
+     */
+    public String getOrderNo() throws Exception {
+        String formatDate = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+        String key = "order_key" + formatDate;
+        Long incr = getIncr(key);
+        //七位序列号
+        DecimalFormat df = new DecimalFormat("0000000");
+        return formatDate + df.format(incr);
+    }
+
     public String getId() throws Exception {
         String formatDate = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
         String key = "RedisIdService_key" + formatDate;

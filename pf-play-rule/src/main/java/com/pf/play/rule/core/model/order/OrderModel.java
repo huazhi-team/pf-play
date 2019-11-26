@@ -117,6 +117,16 @@ public class OrderModel extends BasePage implements Serializable {
      */
     private String totalPrice;
 
+    /**
+     * 推广码：也可以当做手机号
+     */
+    private String inviteCode;
+
+    /**
+     * 用户昵称
+     */
+    private String nickname;
+
     public Long getId() {
         return id;
     }
@@ -293,5 +303,22 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

@@ -33,4 +33,10 @@ public interface PfCacheKey {
      */
     String VIRTUALCOIN_PRICE = "-5";
 
+    /**
+     * 订单：订单交易、取消需要对其进行锁定
+     * 所以在变量名称前加了lock
+     */
+    String LOCK_ORDER = "-6";
+
 }

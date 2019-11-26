@@ -282,6 +282,24 @@
     </update>
 
 
+    <!-- 取消订单 -->
+    <update id="cancelOrder" parameterType="Object">
+        update tb_pf_order a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderStatus != null and orderStatus != '' " >
+                a.order_status = #{orderStatus},
+            </if>
+            a.update_time = NOW().
+        </trim>
+        where 1=1
+        and a.order_no = #{orderNo} and a.member_id = #{memberId}
+        and a.order_trade_status = 0 and a.order_status = 1
+        and a.yn = 0
+    </update>
+
+
+
+
 
 
 

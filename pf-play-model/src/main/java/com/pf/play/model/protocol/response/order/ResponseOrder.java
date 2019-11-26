@@ -16,6 +16,8 @@ public class ResponseOrder  extends BaseResponse implements Serializable {
 
     public List<Order> oList;
 
+    public List<ConsumerOrder> coList;
+
     public ResponseOrder(){
 
     }

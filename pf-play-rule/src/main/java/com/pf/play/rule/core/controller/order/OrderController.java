@@ -170,7 +170,7 @@ public class OrderController {
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
-            String strData = PublicMethod.assembleAddOrderResult(stime, token, sign);
+            String strData = PublicMethod.assembleOrderResult(stime, token, sign);
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
@@ -222,14 +222,14 @@ public class OrderController {
             // 校验sign
 
             // 订单列表
-            OrderModel orderQuery = PublicMethod.assembleBuyOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            OrderModel orderQuery = PublicMethod.assembleBuySellOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
             orderQuery.getPage();
             log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
-            String strData = PublicMethod.assembleOrderResult(stime, token, sign, orderList);
+            String strData = PublicMethod.assembleBuyOrderResult(stime, token, sign, orderList);
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
@@ -245,6 +245,189 @@ public class OrderController {
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
+
+
+    /**
+     * @Description: 获取已取消的订单信息
+     * <p>查询用户已经取消的订单信息</p>
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/getCancelData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     */
+    @RequestMapping(value = "/getCancelData", method = {RequestMethod.POST})
+    public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkOrderData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 订单列表-已取消的订单
+            OrderModel orderQuery = PublicMethod.assembleCancelOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
+            orderQuery.getPage();
+            log.info("data :" + orderList.size());
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleBuyOrderResult(stime, token, sign, orderList);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 购买的订单：取消
+     * <p>
+     *     买家取消自己的求购订单；
+     *     这里要注意的是：
+     *      1.要进行取消的订单是否没有被redis进行锁住（刚好那时候有用户要对此订单进行交易）
+     *      2.查看订单是否属于锁定状态
+     * </p>
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/upCancelData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"orderNo":"1111","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     */
+    @RequestMapping(value = "/upCancelData", method = {RequestMethod.POST})
+    public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkCancelOrderData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 获取订单数据
+            OrderModel orderQuery = PublicMethod.assembleCancelOrderQuery(requestOrder, memberId);
+            OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+            // 校验订单数据
+            PublicMethod.checkCancelOrder(orderModel);
+            // 正式取消订单
+            orderQuery.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO); // 更细成取消的状态
+            ComponentUtil.orderService.cancelOrder(orderQuery);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleOrderResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+//    /**
+//     * @Description: 获取待付款订单信息
+//     * @param request
+//     * @param response
+//     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+//     * @author yoko
+//     * @date 2019/11/25 22:58
+//     * local:http://localhost:8082/play/od/getUnpaidData
+//     * 请求的属性类:RequestOrder
+//     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+//     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+//     * 服务端加密字段:stime+token+秘钥=sign
+//     */
+//    @RequestMapping(value = "/getUnpaidData", method = {RequestMethod.POST})
+//    public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//        String sgid = ComponentUtil.redisIdService.getSgid();
+//        String cgid = "";
+//        String token;
+//        try{
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
+//            log.info("jsonData:" + requestData.jsonData);
+//            // 解密
+//            String data = StringUtil.decoderBase64(requestData.jsonData);
+//            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+//            // check校验数据、校验用户是否登录、获得用户ID
+//            long memberId = PublicMethod.checkOrderData(requestOrder);
+//            token = requestOrder.getToken();
+//            // 校验ctime
+//            // 校验sign
+//
+//            // 订单列表
+//            OrderModel orderQuery = PublicMethod.assembleBuySellOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+//            List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
+//            orderQuery.getPage();
+//            log.info("data :" + orderList.size());
+//            // 组装返回客户端的数据
+//            long stime = System.currentTimeMillis();
+//            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+//            String strData = PublicMethod.assembleOrderResult(stime, token, sign, orderList);
+//            // #插入流水
+//            // 数据加密
+//            String encryptionData = StringUtil.mergeCodeBase64(strData);
+//            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+//            resultDataModel.jsonData = encryptionData;
+//            // 用户注册完毕则直接让用户处于登录状态
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            // 返回数据给客户端
+//            return JsonResult.successResult(resultDataModel, cgid, sgid);
+//        }catch (Exception e){
+//            Map<String,String> map = ExceptionMethod.getException(e);
+//            // 添加错误异常数据
+//            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+//        }
+//    }
 
 
 

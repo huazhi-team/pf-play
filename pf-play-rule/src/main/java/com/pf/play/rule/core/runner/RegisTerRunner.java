@@ -23,18 +23,18 @@ public class RegisTerRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        /****************  初始化信息 ************/
-        log.debug("初始化信息！");
-        ComponentUtil.registerService.initDate();
-
-        log.debug("类型初始化行为！");
-        ComponentUtil.commonService.quertCommenType();
-
-        log.debug("任务类型初始化！");
-        ComponentUtil.initService.initTask();
-
-        log.debug("更新用户活力值明细表！");
-        ComponentUtil.taskService.openUpdateTask();
+//        /****************  初始化信息 ************/
+//        log.debug("初始化信息！");
+//        ComponentUtil.registerService.initDate();
+//
+//        log.debug("类型初始化行为！");
+//        ComponentUtil.commonService.quertCommenType();
+//
+//        log.debug("任务类型初始化！");
+//        ComponentUtil.initService.initTask();
+//
+//        log.debug("更新用户活力值明细表！");
+//        ComponentUtil.taskService.openUpdateTask();
 
     }
 

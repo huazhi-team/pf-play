@@ -7,6 +7,7 @@ import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.request.order.RequestOrder;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
+import com.pf.play.model.protocol.response.order.ConsumerOrder;
 import com.pf.play.model.protocol.response.order.Order;
 import com.pf.play.model.protocol.response.order.ResponseOrder;
 import com.pf.play.model.protocol.response.price.ResponseDayPrice;
@@ -527,7 +528,7 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 新增订单信息的数据组装返回客户端的方法
+     * @Description: 新增、取消订单信息的数据组装返回客户端的方法
      * @param stime - 服务器的时间
      * @param token - 登录token
      * @param sign - 签名
@@ -535,7 +536,7 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/11/25 22:45
      */
-    public static String assembleAddOrderResult(long stime, String token, String sign){
+    public static String assembleOrderResult(long stime, String token, String sign){
         ResponseOrder dataModel = new ResponseOrder();
         dataModel.setStime(stime);
         dataModel.setToken(token);
@@ -546,22 +547,135 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 组装查询用户购买的订单列表的查询条件
+     * @Description: 组装查询用户购买的订单（买入订单）列表的查询条件
      * @param requestOrder - 查询的基本信息
      * @param memberId - 用户ID
      * @param orderTradeStatus - 订单交易状态：0初始化(我的购入订单)，1锁定(我的代付款订单)，2完成
+     * @param orderStatus - 订单状态：1正常，2取消，3完成交易；因为这里的订单交易状态是买入的订单状态（初始化状态），只会查询订单正常状态
      * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
      * @return OrderModel
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleBuyOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int sortType){
+    public static OrderModel assembleBuySellOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int orderStatus, int sortType){
         OrderModel resBen = new OrderModel();
         resBen.setMemberId(memberId);
         resBen.setOrderTradeStatus(orderTradeStatus);
+        resBen.setOrderStatus(orderStatus);
         resBen.setSortType(sortType);
         return resBen;
     }
+
+    /**
+     * @Description: 买入、取消的订单的订单信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderList - 订单信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleBuyOrderResult(long stime, String token, String sign, List <OrderModel> orderList){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderList != null && orderList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            List<ConsumerOrder> dataList = BeanUtils.copyList(orderList, ConsumerOrder.class);
+            dataModel.coList = dataList;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 查询取消时，校验基本数据是否非法
+     * @param requestOrder - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkCancelOrderData(RequestOrder requestOrder) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestOrder == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00001.geteCode(), PfErrorCode.ENUM_ERROR.D00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestOrder.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestOrder.getToken());
+
+        // 校验订单值
+        if (StringUtils.isBlank(requestOrder.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00006.geteCode(), PfErrorCode.ENUM_ERROR.D00006.geteDesc());
+        }
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询要被取消的订单号的查询条件
+     * @param requestOrder - 订单信息
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+    */
+    public static OrderModel assembleCancelOrderQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(requestOrder.getOrderNo());
+        resBean.setMemberId(memberId);
+        return resBean;
+    }
+
+    /**
+     * @Description: 校验要被取消的订单信息
+     * @param orderModel - 订单信息
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/26 21:34
+    */
+    public static void checkCancelOrder(OrderModel orderModel) throws Exception{
+        if (orderModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00007.geteCode(), PfErrorCode.ENUM_ERROR.D00007.geteDesc());
+        }
+        if (orderModel.getOrderStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 订单状态：1正常，2取消，3完成交易；
+            // 订单状态不等于1的订单无法取消
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00008.geteCode(), PfErrorCode.ENUM_ERROR.D00008.geteDesc());
+        }
+        if (orderModel.getOrderStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            // 订单交易状态：0初始化，1锁定，2完成；
+            // 订单交易状态不等于0的订单无法取消
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00009.geteCode(), PfErrorCode.ENUM_ERROR.D00009.geteDesc());
+        }
+    }
+
+
+    /**
+     * @Description: 组装查询用户已取消的订单（被取消掉的订单）列表的查询条件
+     * @param requestOrder - 查询的基本信息
+     * @param memberId - 用户ID
+     * @param orderStatus - 订单状态：1正常，2取消，3完成交易
+     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleCancelOrderQuery(RequestOrder requestOrder, long memberId, int orderStatus, int sortType){
+        OrderModel resBen = new OrderModel();
+        resBen.setMemberId(memberId);
+        resBen.setOrderStatus(orderStatus);
+        resBen.setSortType(sortType);
+        return resBen;
+    }
+
+
 
     public static void main(String [] args){
 

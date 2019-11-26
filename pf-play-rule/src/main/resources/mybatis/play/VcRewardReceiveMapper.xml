@@ -93,6 +93,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
     update vc_reward_receive
     <set>
@@ -124,7 +125,7 @@
         is_valid = #{isValid},
       </if>
     </set>
-    where member_id = #{memberId,jdbcType=INTEGER}
+    where member_id = #{memberId}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcRewardReceive">
     update vc_reward_receive
@@ -139,4 +140,11 @@
       is_valid = #{isValid,jdbcType=BIT}
     where member_id = #{memberId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByMemberId" parameterType="java.lang.Integer" resultType="com.pf.play.rule.core.model.VcRewardReceive">
+    select
+    <include refid="Base_Column_List" />
+    from vc_reward_receive
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
 </mapper>

@@ -50,7 +50,7 @@ public class VcRewardReceive {
      *
      * @mbggenerated
      */
-    private Boolean isLevel5;
+    private Integer isLevel5;
 
     /**
      * 创建时间
@@ -121,12 +121,12 @@ public class VcRewardReceive {
         this.isLevel4 = isLevel4;
     }
 
-    public Boolean getLevel5() {
+    public Integer getIsLevel5() {
         return isLevel5;
     }
 
-    public void setLevel5(Boolean level5) {
-        isLevel5 = level5;
+    public void setIsLevel5(Integer isLevel5) {
+        this.isLevel5 = isLevel5;
     }
 
     public Date getCreateTime() {

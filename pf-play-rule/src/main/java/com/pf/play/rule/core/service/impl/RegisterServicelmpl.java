@@ -4,6 +4,7 @@ import com.pf.play.common.utils.*;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.response.uesr.RegisterResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
+import com.pf.play.rule.RegisterMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
@@ -67,7 +68,6 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
     public BaseDao<T> getDao() {
         return vcAccountRelationMapper;
     }
-
     /**
      * @Description: 注册方法
      * @param registerReq
@@ -90,7 +90,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
             throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR2.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR2.geteDesc());
         }
         /**************申请新的邀请码*****************/
-        String   strName  = ComponentUtil.registerService.createInviteCode();
+        String   strName  = ComponentUtil.registerService.createInviteCode(registerReq.getPhone());
         String[]   InviteAdd  = strName.split(",");
         if(InviteAdd.length!=3){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteDesc());
@@ -188,60 +188,64 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         Integer  createTime  =  Integer.parseInt(DateUtil.timeStamp());
         Integer  loginTime  =  createTime;
         Date     createdate =  DateUtil.currentTimestamp();
-        VcMember  memberModel = new VcMember();  //会员信息
+
+//        VcMember  memberModel = new VcMember();  //会员信息
         Integer  memberId  = ComponentUtil.generateService.getMemberId();
-        memberModel.setMemberId(memberId);
-        memberModel.setDeviceId(registerReq.getDeviceId());
-        memberModel.setOwnerMemberId(registerReq.getOwner());
-        memberModel.setMemberAdd(registerReq.getMemberAdd());
-        memberModel.setNickname(registerReq.getWxName());
-        memberModel.setMemberCode("C"+registerReq.getPhone());
-        if(registerReq.getOwner()==0){
-            memberModel.setMemberType(2);
-        }else{
-            memberModel.setMemberType(1);
-        }
-        memberModel.setInviteCode(SecureUUID[0]);
-        memberModel.setTradingAddress(SecureUUID[1]);
-        memberModel.setCreateTime(createTime);
-        memberModel.setLoginTime(loginTime);
-        memberModel.setSuperiorId(superiorId);
-        memberModel.setExtensionMemberId(extensionMemberId+","+superiorId);
+        VcMember  vcMember =RegisterMethod.insertVcMember( memberId,  registerReq, SecureUUID, superiorId, extensionMemberId);
+//        memberModel.setMemberId(memberId);
+//        memberModel.setDeviceId(registerReq.getDeviceId());
+//        memberModel.setOwnerMemberId(registerReq.getOwner());
+//        memberModel.setMemberAdd(registerReq.getMemberAdd());
+//        memberModel.setNickname(registerReq.getWxName());
+//        memberModel.setMemberCode("C"+registerReq.getPhone());
+//        if(registerReq.getOwner()==0){
+//            memberModel.setMemberType(2);
+//        }else{
+//            memberModel.setMemberType(1);
+//        }
+//        memberModel.setInviteCode(SecureUUID[0]);
+//        memberModel.setTradingAddress(SecureUUID[1]);
+//        memberModel.setCreateTime(createTime);
+//        memberModel.setLoginTime(loginTime);
+//        memberModel.setSuperiorId(superiorId);
+//        memberModel.setExtensionMemberId(extensionMemberId+","+superiorId);
 
 
-        VcAccountRelation  accountRelationModel = new VcAccountRelation();//账户信息
-        accountRelationModel.setMemberId(memberId);
-        accountRelationModel.setAccountNum(registerReq.getPhone());
-        accountRelationModel.setCreateTime(createTime);
-        accountRelationModel.setUpdateTime(loginTime);
-        accountRelationModel.setAccountType(registerReq.getRegisterType());
+//        VcAccountRelation  accountRelationModel = new VcAccountRelation();//账户信息
+//        accountRelationModel.setMemberId(memberId);
+//        accountRelationModel.setAccountNum(registerReq.getPhone());
+//        accountRelationModel.setCreateTime(createTime);
+//        accountRelationModel.setUpdateTime(loginTime);
+//        accountRelationModel.setAccountType(registerReq.getRegisterType());
+        VcAccountRelation  accountRelationModel =RegisterMethod.insertVcAccountRelation(memberId,registerReq.getPhone(),registerReq.getRegisterType());
 
-        VcThirdParty   vcThirdPartyModel  = new VcThirdParty(); //三方资源信息
-        vcThirdPartyModel.setMemberId(memberId);
-        vcThirdPartyModel.setWxRefresh(registerReq.getWxRefresh());
-        vcThirdPartyModel.setWxOpenid(registerReq.getWxOpenid());
-        vcThirdPartyModel.setWxUnionid(registerReq.getWxUnionid());
-        vcThirdPartyModel.setToken(token);
+        VcThirdParty   vcThirdPartyModel  = RegisterMethod.insertVcThirdParty(memberId,registerReq.getWxRefresh(),registerReq.getWxOpenid(),registerReq.getWxUnionid(),token); //三方资源信息
 
-        VcRewardReceive  rewardReceiveModel  = new VcRewardReceive();//会员奖励
-        rewardReceiveModel.setMemberId(memberId);
-        rewardReceiveModel.setCreateTime(createdate);
-        rewardReceiveModel.setUpdateTime(createdate);
+        VcRewardReceive  rewardReceiveModel  = RegisterMethod.insertVcRewardReceive(memberId);//会员奖励
 
-        VcMemberResource   vcMemberResourceModel  =  new  VcMemberResource();  //会员资源
-        vcMemberResourceModel.setMemberId(memberId);
+
+        VcMemberResource   vcMemberResourceModel  =  RegisterMethod.insertVcMemberResource(memberId);
+//        VcMemberGive   vcMemberGive  =  RegisterSingleton.getInstance().getVcMemberGive();
+
+        UTaskHave  uTaskHave =RegisterMethod.insertUTaskHave(memberId);//会员资源
+//        vcMemberResourceModel.setMemberId(memberId);
 //        vcMemberResourceModel.setActiveValue();
-        vcMemberResourceModel.setCreateTime(createdate);
-        vcMemberResourceModel.setUpdateTime(new Date());
-        VcMemberGive   vcMemberGive  =  RegisterSingleton.getInstance().getVcMemberGive();
-        if(vcMemberGive==null||vcMemberGive.getActiveValue()<=0){//没有获取到值
-            vcMemberResourceModel.setActiveValue(activeValue);
-        }else{
-            vcMemberResourceModel.setActiveValue(vcMemberGive.getActiveValue());
-        }
+//        vcMemberResourceModel.setCreateTime(createdate);
+//        vcMemberResourceModel.setUpdateTime(new Date());
+//
+//
+//        if(vcMemberGive==null||vcMemberGive.getActiveValue()<=0){//没有获取到值
+//            vcMemberResourceModel.setActiveValue(activeValue);
+//        }else{
+//            vcMemberResourceModel.setActiveValue(vcMemberGive.getActiveValue());
+//        }
+
+        UMasonrySummary  uMasonrySummary = RegisterMethod.insertUMasonrySummary(memberId);
         try{
-            ComponentUtil.transactionalService.registerAdd(memberModel,accountRelationModel,vcThirdPartyModel,rewardReceiveModel,vcMemberResourceModel);
+            ComponentUtil.transactionalService.registerAdd(vcMember,accountRelationModel,vcThirdPartyModel,rewardReceiveModel,vcMemberResourceModel,uMasonrySummary,uTaskHave);
         }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
             throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteDesc());
         }
         return  true;
@@ -287,7 +291,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
      * @date 2019/11/13 10:40
      */
     @Override
-    public String createInviteCode()throws  Exception {
+    public String createInviteCode(String phone)throws  Exception {
         //生成邀请码是否有重复的
         String inviteCode ="";
         String tradingAddress ="";
@@ -295,7 +299,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         VcMember vcMember = new VcMember();
         VcMember rsVcMember = new VcMember();
         token=ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
-        inviteCode=ComponentUtil.generateService.getNonexistentInformation(Constant.INVITE_CODE);
+        inviteCode= phone ;
         tradingAddress=ComponentUtil.generateService.getNonexistentInformation(Constant.TRADING_ADDRESS);
         do{
             vcMember.setInviteCode(inviteCode);

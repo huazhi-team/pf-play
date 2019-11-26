@@ -12,10 +12,14 @@ import com.pf.play.rule.core.model.*;
 
 public interface TransactionalService<T> extends BaseService<T> {
     void registerAdd(VcMember memberModel, VcAccountRelation accountRelationModel, VcThirdParty vcThirdPartyModel,
-                     VcRewardReceive rewardReceiveModel , VcMemberResource vcMemberResourceModel) throws  Exception;
+                     VcRewardReceive rewardReceiveModel , VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,UTaskHave  uTaskHave) throws  Exception;
 
     void  updateTask(UDayTaskReward record,UTaskHave uTaskHave);
 
-    void  buyTaskUpdateInfo(UTaskHave uTaskHave,VcMemberResource resource,UMasonryListLog   uMasonryLog,UvitalityValueList my,UvitalityValueList uq);
+    void  buyTaskUpdateInfo(UTaskHave uTaskHave,VcMemberResource resource,UMasonryListLog   uMasonryLog,
+                              UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary);
+
+
+    void  receiveTaskUpdateInfo(UTaskHave uTaskHave,VcRewardReceive resource);
 
 }

@@ -17,7 +17,7 @@ public interface RegisterService <T> extends BaseService<T> {
       void initDate() throws  Exception;
       boolean  checkRegister(RegisterReq registerReq)throws  Exception;
       VcMember checkInviteCode(RegisterReq registerReq)throws  Exception;
-      String   createInviteCode()throws  Exception;
+      String   createInviteCode(String  phone)throws  Exception;
       boolean  addUserInfo(RegisterReq registerReq,String[] inviteCode,
                                     Integer superiorId,String extensionMemberId,String token)throws  Exception;
       void     addRedis(RegisterReq registerReq,String [] InviteAdd)throws  Exception;

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.DisWisemanAttributeMapper" >
+  <sql id="Base_Column_List" >
+    id, wiseman_id, attribute_type, key1, key2, key3, key4, key5, key6, key7, key8, key9, 
+    key10, create_date, update_date, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisWisemanAttribute"  >
+    select 
+    <include refid="Base_Column_List" />
+    from dis_wiseman_attribute
+    where 1=1
+    <if test="wisemanId != null and wisemanId != '' " >
+      and wiseman_id = #{wisemanId}
+    </if>
+    and   is_valid=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dis_wiseman_attribute
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisWisemanAttribute" >
+    insert into dis_wiseman_attribute
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="wisemanId != null" >
+        wiseman_id,
+      </if>
+      <if test="attributeType != null" >
+        attribute_type,
+      </if>
+      <if test="key1 != null" >
+        key1,
+      </if>
+      <if test="key2 != null" >
+        key2,
+      </if>
+      <if test="key3 != null" >
+        key3,
+      </if>
+      <if test="key4 != null" >
+        key4,
+      </if>
+      <if test="key5 != null" >
+        key5,
+      </if>
+      <if test="key6 != null" >
+        key6,
+      </if>
+      <if test="key7 != null" >
+        key7,
+      </if>
+      <if test="key8 != null" >
+        key8,
+      </if>
+      <if test="key9 != null" >
+        key9,
+      </if>
+      <if test="key10 != null" >
+        key10,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="wisemanId != null" >
+        #{wisemanId},
+      </if>
+      <if test="attributeType != null" >
+        #{attributeType},
+      </if>
+      <if test="key1 != null" >
+        #{key1},
+      </if>
+      <if test="key2 != null" >
+        #{key2},
+      </if>
+      <if test="key3 != null" >
+        #{key3},
+      </if>
+      <if test="key4 != null" >
+        #{key4},
+      </if>
+      <if test="key5 != null" >
+        #{key5},
+      </if>
+      <if test="key6 != null" >
+        #{key6},
+      </if>
+      <if test="key7 != null" >
+        #{key7},
+      </if>
+      <if test="key8 != null" >
+        #{key8},
+      </if>
+      <if test="key9 != null" >
+        #{key9},
+      </if>
+      <if test="key10 != null" >
+        #{key10},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisWisemanAttribute" >
+    update dis_wiseman_attribute
+    <set >
+      <if test="wisemanId != null" >
+        wiseman_id = #{wisemanId},
+      </if>
+      <if test="attributeType != null" >
+        attribute_type = #{attributeType},
+      </if>
+      <if test="key1 != null" >
+        key1 = #{key1},
+      </if>
+      <if test="key2 != null" >
+        key2 = #{key2},
+      </if>
+      <if test="key3 != null" >
+        key3 = #{key3},
+      </if>
+      <if test="key4 != null" >
+        key4 = #{key4},
+      </if>
+      <if test="key5 != null" >
+        key5 = #{key5},
+      </if>
+      <if test="key6 != null" >
+        key6 = #{key6},
+      </if>
+      <if test="key7 != null" >
+        key7 = #{key7},
+      </if>
+      <if test="key8 != null" >
+        key8 = #{key8},
+      </if>
+      <if test="key9 != null" >
+        key9 = #{key9},
+      </if>
+      <if test="key10 != null" >
+        key10 = #{key10},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

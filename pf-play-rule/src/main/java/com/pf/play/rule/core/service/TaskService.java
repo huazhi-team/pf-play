@@ -44,31 +44,17 @@ public interface TaskService  <T> extends BaseService<T> {
 
     void  updateUserVitalityValueType(UvitalityValueList uvitalityValueList, Integer type);
 
-     int  updateUserInfoToVitalityValue(VcMemberResource vcMemberResource,UvitalityValueList uvitalityValueList);
+    int  updateUserInfoToVitalityValue(VcMemberResource vcMemberResource,UvitalityValueList uvitalityValueList);
 
-     void  openUpdateTask();
+    void  openUpdateTask();
 
+    List<DisWisemanInfo>  getNoLoginDisWisemanInfo() throws Exception;
 
+    List<DisWisemanInfo>  queryUserDisWisemanInfo(Integer member) throws Exception ;
 
-
-
-
-
-
+    boolean  checkExeTaskIdReward(Integer memberId,Integer taskId);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    boolean  addRewardTaskLog(Integer memberId, Integer taskId)throws Exception;
 
 }

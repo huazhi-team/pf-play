@@ -264,4 +264,36 @@ public class VcMemberResource {
     public void setIsVitalityValue(Integer isVitalityValue) {
         this.isVitalityValue = isVitalityValue;
     }
+
+    public Integer getTeamPeople() {
+        return teamPeople;
+    }
+
+    public void setTeamPeople(Integer teamPeople) {
+        this.teamPeople = teamPeople;
+    }
+
+    public Float getTeamActive() {
+        return teamActive;
+    }
+
+    public void setTeamActive(Float teamActive) {
+        this.teamActive = teamActive;
+    }
+
+    public Float getHeroActive() {
+        return heroActive;
+    }
+
+    public void setHeroActive(Float heroActive) {
+        this.heroActive = heroActive;
+    }
+
+    public Float getAllianceActive() {
+        return allianceActive;
+    }
+
+    public void setAllianceActive(Float allianceActive) {
+        this.allianceActive = allianceActive;
+    }
 }

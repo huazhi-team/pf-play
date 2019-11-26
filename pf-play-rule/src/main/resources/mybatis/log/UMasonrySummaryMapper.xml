@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UMasonrySummaryMapper" >
+  <sql id="Base_Column_List" >
+    id, member_id, in_masonry, out_masonry, create_time, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UMasonrySummary" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_masonry_summary
+    where memberId = #{memberId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_masonry_summary
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UMasonrySummary" >
+    insert into u_masonry_summary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="inMasonry != null" >
+        in_masonry,
+      </if>
+      <if test="outMasonry != null" >
+        out_masonry,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="inMasonry != null" >
+        #{inMasonry},
+      </if>
+      <if test="outMasonry != null" >
+        #{outMasonry},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UMasonrySummary" >
+    update u_masonry_summary
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="inMasonry != null" >
+        in_masonry = in_masonry + #{inMasonry},
+      </if>
+      <if test="outMasonry != null" >
+        out_masonry = out_masonry- #{outMasonry},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
+</mapper>

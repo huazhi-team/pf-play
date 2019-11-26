@@ -87,7 +87,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     }
 
     /**
-     * @Description: TODO
+     * @Description: 我的资产信息
      * @param loginReq
      * @return com.pf.play.rule.core.model.UMasonryListLog
      * @author long
@@ -126,7 +126,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
             UserInfoModel  userInfoModel = new  UserInfoModel();
             userInfoModel.setToken(token);
             userInfoModel.setWxOpenid(wxOpenId);
-            model  = userInfoMapper.selectByUserInfo(userInfoModel);
+            model  = userInfoMapper.select(userInfoModel);
             if(null == model||model.getMemberId()==0){
                 return  0;
             }

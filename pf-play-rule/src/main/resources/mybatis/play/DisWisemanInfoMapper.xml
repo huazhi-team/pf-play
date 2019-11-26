@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.DisWisemanInfoMapper" >
+  <sql id="Base_Column_List" >
+    id, wiseman_id, wiseman_name, remarks, relative_level, create_time, update_time, 
+    is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisWisemanInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from dis_wiseman_info
+    where 1=1
+    and  is_valid=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dis_wiseman_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisWisemanInfo" >
+    insert into dis_wiseman_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="wisemanId != null" >
+        wiseman_id,
+      </if>
+      <if test="wisemanName != null" >
+        wiseman_name,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="relativeLevel != null" >
+        relative_level,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="wisemanId != null" >
+        #{wisemanId},
+      </if>
+      <if test="wisemanName != null" >
+        #{wisemanName},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="relativeLevel != null" >
+        #{relativeLevel},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisWisemanInfo" >
+    update dis_wiseman_info
+    <set >
+      <if test="wisemanId != null" >
+        wiseman_id = #{wisemanId},
+      </if>
+      <if test="wisemanName != null" >
+        wiseman_name = #{wisemanName},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks},
+      </if>
+      <if test="relativeLevel != null" >
+        relative_level = #{relativeLevel},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

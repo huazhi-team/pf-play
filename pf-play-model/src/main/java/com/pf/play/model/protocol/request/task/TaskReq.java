@@ -7,37 +7,18 @@ package com.pf.play.model.protocol.request.task;
  * @Version 1.0
  */
 public class TaskReq {
-    /****
-     * 用户id
-     */
-    private  Integer   memberId;
-
-    /**
-     * 任务类型 1 、我的任务  2、领取任务 3、历史任务
-     */
-    private  Integer   taskType;
-
     /***
      * 访问token
      */
     private  String   token;
-
-
-    public Integer getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Integer memberId) {
-        this.memberId = memberId;
-    }
-
-    public Integer getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(Integer taskType) {
-        this.taskType = taskType;
-    }
+    /**
+     * 访问微信id
+     */
+    private  String   wxOpenId;
+    /***
+     * taskId
+     */
+    private  Integer  taskId;
 
     public String getToken() {
         return token;
@@ -47,4 +28,19 @@ public class TaskReq {
         this.token = token;
     }
 
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
+    }
 }

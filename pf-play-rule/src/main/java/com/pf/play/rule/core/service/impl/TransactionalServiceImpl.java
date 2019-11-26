@@ -45,6 +45,9 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     @Autowired
     private UvitalityValueListMapper  uVitalityValueListMapper ;
 
+    @Autowired
+    private UMasonrySummaryMapper  uMasonrySummaryMapper ;
+
 
     @Override
     public BaseDao<T> getDao() {
@@ -63,7 +66,7 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
      */
     @Override
     public void registerAdd(VcMember memberModel, VcAccountRelation accountRelationModel, VcThirdParty vcThirdPartyModel,
-                            VcRewardReceive rewardReceiveModel, VcMemberResource vcMemberResourceModel)throws  Exception {
+                            VcRewardReceive rewardReceiveModel, VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,UTaskHave  uTaskHave)throws  Exception {
 
         vcMemberMapper.insertSelective(memberModel);
         vcAccountRelationMapper.insertSelective(accountRelationModel);
@@ -71,6 +74,8 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         vcRewardReceiveMapper.insertSelective(rewardReceiveModel);
         vcMemberResourceMapper.insertSelective(vcMemberResourceModel);
         ComponentUtil.registerService.userRegisterReward(memberModel.getMemberId());
+        uMasonrySummaryMapper.insertSelective(uMasonrySummary);
+        uTaskHaveMapper.insertSelective(uTaskHave);
     }
 
     /**
@@ -90,14 +95,19 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
 
     @Override
     public void buyTaskUpdateInfo(UTaskHave uTaskHave, VcMemberResource resource,
-                                        UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq) {
+                                        UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary) {
         uTaskHaveMapper.insertSelective(uTaskHave);
         vcMemberResourceMapper.updateByPrimaryKeySelective(resource);
         uMasonryListLogMapper.insertSelective(uMasonryLog);
         uVitalityValueListMapper.insertSelective(my);
         uVitalityValueListMapper.insertSelective(uq);
+        uMasonrySummaryMapper.updateByPrimaryKeySelective(uMasonrySummary);
     }
 
 
-
+    @Override
+    public void receiveTaskUpdateInfo(UTaskHave uTaskHave, VcRewardReceive resource) {
+        uTaskHaveMapper.insertSelective(uTaskHave);
+        vcRewardReceiveMapper.updateByPrimaryKeySelective(resource);
+    }
 }

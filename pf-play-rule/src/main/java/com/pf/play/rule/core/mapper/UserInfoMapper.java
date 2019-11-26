@@ -16,5 +16,5 @@ import java.util.List;
 public interface UserInfoMapper<T> extends BaseDao<T> {
     UserInfoModel selectByUserInfo (UserInfoModel userInfoModel);
 
-
+    UserInfoModel select (UserInfoModel userInfoModel);
 }

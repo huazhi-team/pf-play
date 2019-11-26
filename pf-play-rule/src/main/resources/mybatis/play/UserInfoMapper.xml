@@ -73,6 +73,26 @@
   </sql>
 
 
+    <sql id="Example_Where_Clause_All">
+        where 1=1
+        <if test="token != null and token != '' " >
+            and b.token = #{token}
+        </if>
+        <if test="tradingAddress != null and tradingAddress != '' " >
+            and a.trading_address = #{tradingAddress}
+        </if>
+        <if test="memberId != null and memberId != '' " >
+            and a.member_id = #{memberId}
+        </if>
+        <if test="deviceId != null and deviceId != '' " >
+            and a.device_id = #{deviceId}
+        </if>
+        <if test="wxOpenid != null and wxOpenid != '' " >
+            and b.wx_openid = #{wxOpenid}
+        </if>
+    </sql>
+
+
   <select id="selectByUserInfo" parameterType="Object" resultType="com.pf.play.rule.core.model.UserInfoModel"  >
     select
     <include refid="Base_Column_List" />
@@ -85,5 +105,19 @@
       on a.member_id = d.member_id
     <include refid="Example_Where_Clause" />
   </select>
+
+
+    <select id="select" parameterType="Object" resultType="com.pf.play.rule.core.model.UserInfoModel"  >
+        select
+        <include refid="Base_Column_List" />
+        from vc_member  a
+        inner  JOIN vc_third_party b
+        on  a.member_id = b.member_id
+        inner JOIN  vc_reward_receive c
+        on  a.member_id =c.member_id
+        inner JOIN vc_member_resource d
+        on a.member_id = d.member_id
+        <include refid="Example_Where_Clause_All" />
+    </select>
 
 </mapper>

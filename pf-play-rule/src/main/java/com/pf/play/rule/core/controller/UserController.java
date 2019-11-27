@@ -3,6 +3,7 @@ package com.pf.play.rule.core.controller;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
+import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.rule.core.model.UMasonryListLog;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
@@ -29,14 +30,26 @@ public class UserController {
 
     private static Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/masonryInfo")
-    public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, CommonReq  commonReq){
+    /**
+     * @Description: 我的资产信息
+     * @param request
+    * @param response
+    * @param commonReq
+     * @return com.pf.play.common.utils.JsonResult<java.lang.Object>
+     * @author long
+     * @date 2019/11/26 17:37
+     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
+     *  客户端加密字段:ctime+cctime+token+秘钥=sign
+     *  服务端加密字段:stime+token+秘钥=sign
+     */
+    @GetMapping("/myMasonry")
+    public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{
             log.info("----------:masonryInfo!");
             LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenId("slllsdjdjsa");
-            loginReq1.setToken("0423837aee5d4d96a2cf868d5fc2d47d");
+            loginReq1.setWxOpenId(userCommonReq.getWxOpenid());
+            loginReq1.setToken(userCommonReq.getToken());
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
             if(null==list||list.size()==0){
                 list =new  ArrayList();
@@ -47,6 +60,28 @@ public class UserController {
             return JsonResult.failedResult("wrong for data!",1+"");
         }
     }
+
+
+    @GetMapping("/myTeam")
+    public JsonResult<Object> myTeam(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+        JsonResult<Object>     result  = null;
+        try{
+            log.info("----------:myTeam!");
+            LoginReq loginReq1 = new LoginReq();
+            loginReq1.setWxOpenId(userCommonReq.getWxOpenid());
+            loginReq1.setToken(userCommonReq.getToken());
+            List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
+            if(null==list||list.size()==0){
+                list =new  ArrayList();
+            }
+            return JsonResult.successResult(list);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResult.failedResult("wrong for data!",1+"");
+        }
+    }
+
+
 
 
     @GetMapping("/userReceiveTaskReward")

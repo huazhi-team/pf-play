@@ -22,6 +22,7 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -152,5 +153,10 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
             masonryTypelist = RegisterSingleton.getInstance().getMasonryType();
         }
         return masonryTypelist;
+    }
+
+    public List   getMyInfoList(Integer memberId){
+        List  list = new ArrayList();
+        return   list;
     }
 }

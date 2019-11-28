@@ -2946,6 +2946,34 @@ public class DateUtil {
 	}
 
 
+	/**
+	 *
+	 * @Title: isBeLongSfm
+	 * @Description: TODO(判断时间：时分秒是否在当前系统时分的范围内)
+	 * <p>时分秒</p>
+	 * @param  begin
+	 * @param  end
+	 * @return boolean
+	 * @throws
+	 */
+	public static boolean isBeLongSfm(String begin,String end){
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");//设置日期格式
+		Date now =null;
+		Date beginTime = null;
+		Date endTime = null;
+		try {
+			now = df.parse(df.format(new Date()));
+			beginTime = df.parse(begin);
+			endTime = df.parse(end);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Boolean flag = belongCalendar(now, beginTime, endTime);
+		return flag;
+	}
+
+
 
 	public static void main(String[] args) throws Exception{
 //		try{
@@ -2961,6 +2989,10 @@ public class DateUtil {
 
 		long  dd =1573739849000L;
 		System.out.println(timeDifference(	Long.parseLong(dds)));
+		String start = "17:24:31";
+		String end = "17:28:30";
+		boolean flag = isBeLongSfm(start, end);
+		System.out.println("flag:" + flag);
 
 	}
 }

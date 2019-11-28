@@ -14,6 +14,8 @@ import java.util.List;
 public class ResponseOrder  extends BaseResponse implements Serializable {
     private static final long   serialVersionUID = 1233023331141L;
 
+    public Integer overtime;
+
     public List<Order> oList;
 
     public List<ConsumerOrder> coList;
@@ -21,4 +23,6 @@ public class ResponseOrder  extends BaseResponse implements Serializable {
     public ResponseOrder(){
 
     }
+
+
 }

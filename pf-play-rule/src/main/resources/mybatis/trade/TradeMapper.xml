@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pf.play.rule.core.mapper.OrderMapper">
+<mapper namespace="com.pf.play.rule.core.mapper.TradeMapper">
 
 
 
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,a.is_overtime,
+        a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
         a.create_time,a.update_time,a.yn,b.invite_code,b.nickname
-    </sql>
-
-    <!-- 定义数据库基本列,只适用代替单表的* 待支付订单-->
-    <sql id="Base_Column_List_Unpaid">
-        a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,a.is_overtime,
-        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
-        a.create_time,a.update_time,a.yn,b.sell_fixed_num,b.buy_fixed_num,b.trade_status,b.picture_ads,b.ratio,b.pay_time,
-	    b.receive_time,b.appeal_status,b.create_time as trade_create_time
     </sql>
 
     <!-- 查询条件 -->
@@ -68,60 +60,8 @@
             <if test="nickname != null and nickname != '' " >
                 and b.nickname = #{nickname}
             </if>
-            <!-- 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时 -->
-            and a.is_overtime = 1
-            and a.yn = 0
-        </trim>
-    </sql>
 
-
-    <!-- 查询条件_待支付 -->
-    <sql id="Example_Where_Clause_Unpaid">
-        where 1=1
-        <trim  suffixOverrides="," >
-            <if test="id != null and id != '' " >
-                and a.id = #{id}
-            </if>
-            <if test="orderNo != null and orderNo != '' " >
-                and a.order_no = #{orderNo}
-            </if>
-            <if test="orderTradeStatus != null and orderTradeStatus != '' " >
-                and a.order_trade_status = #{orderTradeStatus}
-            </if>
-            <if test="orderStatus != null and orderStatus != '' " >
-                and a.order_status = #{orderStatus}
-            </if>
-            <if test="appealStatus != null and appealStatus != '' " >
-                and a.appeal_status = #{appealStatus}
-            </if>
-            <if test="curday != null and curday != '' " >
-                and a.curday = #{curday}
-            </if>
-            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
-                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
-            </if>
-            <if test="runNum != null and runNum != '' " >
-                and a.run_num = #{runNum}
-            </if>
-            <if test="runStatus != null and runStatus != '' " >
-                and a.run_status = #{runStatus}
-            </if>
-            <!-- 各个用户查询时，他的用户ID是可以拿到的，这里的条件是：是否包含自己发布的订单 -->
-            <choose>
-                <when test="ownType != null and ownType != '' " >
-                    and a.member_id != #{memberId}
-                </when>
-                <otherwise>
-                    <if test="memberId != null and memberId != '' " >
-                        and a.member_id = #{memberId}
-                    </if>
-                </otherwise>
-            </choose>
-            <!-- 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时 -->
-            and a.is_overtime = 1
             and a.yn = 0
-            and b.trade_status = 2
-            and b.yn = 0
         </trim>
     </sql>
 
@@ -160,7 +100,7 @@
 
 
     <!-- 显示所有数据 -->
-    <select id="findAll" resultType="com.pf.play.rule.core.model.order.OrderModel">
+    <select id="findAll" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
         from tb_pf_order a left join vc_member b on a.member_id = b.member_id
@@ -168,7 +108,7 @@
     </select>
 
     <!-- 查询列表 -->
-    <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+    <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
         from tb_pf_order a left join vc_member b on a.member_id = b.member_id
@@ -177,7 +117,7 @@
     </select>
 
     <!-- 根据条件查询信息-->
-    <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+    <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
         from tb_pf_order a left join vc_member b on a.member_id = b.member_id
@@ -186,7 +126,7 @@
     </select>
 
     <!-- 根据id查询信息-->
-    <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.order.OrderModel">
+    <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
         from tb_pf_order a left join vc_member b on a.member_id = b.member_id
@@ -203,7 +143,7 @@
     </select>
 
     <!-- 查询分页列表 -->
-    <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+    <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
         from tb_pf_order a left join vc_member b on a.member_id = b.member_id
@@ -214,7 +154,7 @@
 
 
     <!-- 添加基本信息 -->
-    <insert id="add" parameterType="com.pf.play.rule.core.model.order.OrderModel" >
+    <insert id="add" parameterType="com.pf.play.rule.core.model.trade.TradeModel" >
         <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
         <!--SELECT LAST_INSERT_ID() as id-->
         <!--</selectKey>-->
@@ -301,7 +241,7 @@
     </insert>
 
     <!-- 更新基本信息 -->
-    <update id="update" parameterType="com.pf.play.rule.core.model.order.OrderModel">
+    <update id="update" parameterType="com.pf.play.rule.core.model.trade.TradeModel">
         UPDATE tb_pf_order a
         <trim prefix="set" suffixOverrides=",">
             <if test="orderNo != null and orderNo != '' " >
@@ -356,25 +296,6 @@
         and a.order_trade_status = 0 and a.order_status = 1
         and a.yn = 0
     </update>
-
-
-
-    <!-- 查询总数-待付款订单-->
-    <select id="countUnpaidOrder" resultType="java.lang.Integer"  parameterType="Object">
-        select count(1)
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
-        <include refid="Example_Where_Clause_Unpaid"/>
-    </select>
-
-    <!-- 查询分页列表-待付款订单 -->
-    <select id="getUnpaidOrderList" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
-        select
-        <include refid="Base_Column_List_Unpaid" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
-        <include refid="Example_Where_Clause_Unpaid"/>
-        <include refid="Example_Order_By"/>
-        limit #{start},#{end}
-    </select>
 
 
 

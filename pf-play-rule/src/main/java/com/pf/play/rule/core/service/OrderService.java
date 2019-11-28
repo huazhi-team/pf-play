@@ -3,6 +3,8 @@ package com.pf.play.rule.core.service;
 import com.pf.play.rule.core.common.service.BaseService;
 import com.pf.play.rule.core.model.order.OrderModel;
 
+import java.util.List;
+
 
 /**
  * @Description 订单流水的Service层
@@ -20,4 +22,13 @@ public interface OrderService<T> extends BaseService<T> {
      * @date 2019/11/26 21:49
     */
     public int cancelOrder(OrderModel model) throws Exception;
+
+    /**
+     * @Description: 获取用户的待支付订单数据
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+    */
+    public List<OrderModel> getUnpaidOrderList(OrderModel model) throws Exception;
 }

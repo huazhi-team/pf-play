@@ -6,11 +6,13 @@ import com.pf.play.common.utils.DateUtil;
 import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.request.order.RequestOrder;
+import com.pf.play.model.protocol.request.trade.RequestTrade;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
 import com.pf.play.model.protocol.response.order.ConsumerOrder;
 import com.pf.play.model.protocol.response.order.Order;
 import com.pf.play.model.protocol.response.order.ResponseOrder;
 import com.pf.play.model.protocol.response.price.ResponseDayPrice;
+import com.pf.play.model.protocol.response.trade.ResponseTradeTime;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
@@ -19,6 +21,7 @@ import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
+import com.pf.play.rule.core.model.strategy.StrategyModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -659,7 +662,6 @@ public class PublicMethod {
 
     /**
      * @Description: 组装查询用户已取消的订单（被取消掉的订单）列表的查询条件
-     * @param requestOrder - 查询的基本信息
      * @param memberId - 用户ID
      * @param orderStatus - 订单状态：1正常，2取消，3完成交易
      * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
@@ -667,12 +669,166 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleCancelOrderQuery(RequestOrder requestOrder, long memberId, int orderStatus, int sortType){
+    public static OrderModel assembleCancelOrderQuery(long memberId, int orderStatus, int sortType){
         OrderModel resBen = new OrderModel();
         resBen.setMemberId(memberId);
         resBen.setOrderStatus(orderStatus);
         resBen.setSortType(sortType);
         return resBen;
+    }
+
+
+
+    /**
+     * @Description: 查询交易开市时间时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkTradeTimeData(RequestTrade requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00001.geteCode(), PfErrorCode.ENUM_ERROR.T00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询策略数据条件的方法
+     * @param stgType - 策略类型：1表示成交量虚假数据开关，2表示交易所时间控制
+     * @return com.pf.play.rule.core.model.strategy.StrategyModel
+     * @author yoko
+     * @date 2019/11/27 17:12
+     */
+    public static StrategyModel assembleStrategyQuery(int stgType){
+        StrategyModel resBean = new StrategyModel();
+        resBean.setStgType(stgType);
+        return resBean;
+    }
+
+    /**
+     * @Description: 校验判断是否现在属于开市时间
+     * @param strategyModel - 开市的交易时间
+     * @return int - 返回1表示属于开市时间，2表示目前不是开市时间
+     * @author yoko
+     * @date 2019/11/27 17:16
+     */
+    public static int checkTradeTime(StrategyModel strategyModel) throws Exception{
+        int num;
+        if (strategyModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00002.geteCode(), PfErrorCode.ENUM_ERROR.T00002.geteDesc());
+        }
+        if (StringUtils.isBlank(strategyModel.getStgValue())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00003.geteCode(), PfErrorCode.ENUM_ERROR.T00003.geteDesc());
+        }
+        String[] tradeTime = strategyModel.getStgValue().split("-");
+        boolean flag = DateUtil.isBeLongSfm(tradeTime[0], tradeTime[1]);
+        if (flag){
+            num = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE;
+        }else{
+            num = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO;
+        }
+        return num;
+    }
+
+
+    /**
+     * @Description: 开市时间的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param isTrade - 是否是开市时间范围内：1表示属于开市时间，2表示目前不是开市时间
+     * @param tradeTime - 开市交易时间
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleTradeTimeResult(long stime, String token, String sign, int isTrade, String tradeTime){
+        ResponseTradeTime dataModel = new ResponseTradeTime();
+        dataModel.setIsTrade(isTrade);
+        dataModel.setTradeTime(tradeTime);
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 查询用户待付款订单时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkUnpaidData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00011.geteCode(), PfErrorCode.ENUM_ERROR.D00011.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 组装查询待付款的订单的查询条件
+     * @param requestOrder - 订单信息
+     * @param memberId - 用户ID
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2完成 --这里查询状态为1的
+     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleUnpaidOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int sortType){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        resBean.setSortType(sortType);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 买入、取消的订单的订单信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderList - 订单信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleUnpaidOrderResult(long stime, String token, String sign, List <OrderModel> orderList, int overtime){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderList != null && orderList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            List<ConsumerOrder> dataList = BeanUtils.copyList(orderList, ConsumerOrder.class);
+            dataModel.coList = dataList;
+        }
+        dataModel.overtime = overtime;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
     }
 
 

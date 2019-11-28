@@ -13,6 +13,8 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * @Description 订单流水的Service层的实现层
@@ -50,5 +52,13 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
         // 解锁
         ComponentUtil.redisIdService.delLock(lockKey);
         return num;
+    }
+
+    @Override
+    public List<OrderModel> getUnpaidOrderList(OrderModel model) throws Exception {
+        Integer rowCount = orderMapper.countUnpaidOrder(model);
+        model.setRowCount(rowCount);
+        List<OrderModel> list = orderMapper.getUnpaidOrderList(model);
+        return list;
     }
 }

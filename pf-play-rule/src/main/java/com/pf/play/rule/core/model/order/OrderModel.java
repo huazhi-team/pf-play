@@ -57,6 +57,11 @@ public class OrderModel extends BasePage implements Serializable {
     private Integer appealStatus;
 
     /**
+     * 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时
+     */
+    private Integer isOvertime;
+
+    /**
      * 创建日期：存的日期格式20160530
      */
     private Integer curday;
@@ -126,6 +131,11 @@ public class OrderModel extends BasePage implements Serializable {
      * 用户昵称
      */
     private String nickname;
+
+    /**
+     * 交易时间：可以理解为卖家卖给买家的时间
+     */
+    private String tradeCreateTime;
 
     public Long getId() {
         return id;
@@ -320,5 +330,21 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Integer getIsOvertime() {
+        return isOvertime;
+    }
+
+    public void setIsOvertime(Integer isOvertime) {
+        this.isOvertime = isOvertime;
+    }
+
+    public String getTradeCreateTime() {
+        return tradeCreateTime;
+    }
+
+    public void setTradeCreateTime(String tradeCreateTime) {
+        this.tradeCreateTime = tradeCreateTime;
     }
 }

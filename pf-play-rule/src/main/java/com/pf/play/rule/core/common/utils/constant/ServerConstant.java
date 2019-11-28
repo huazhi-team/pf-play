@@ -60,36 +60,50 @@ public class ServerConstant {
 
 
     /**
-     * 所有API源的标识类型
+     * 策略的枚举
+     * 策略类型：1表示成交量虚假数据开关，2表示交易所时间控制，3买家付款超时时间
+     * 策略整形值:当策略类型等于1时（此字段值1表示虚假数据处于关闭，等于2表示开启虚假数据），等于2时（此字段值1表示双休日不交易，2表示交易）
+     * 策略值：字段stg_type等于1，字段stg_num_value等于2时，则根据本字段的数据乘以倍数，等于2，表示交易时间的时间段
      */
-    public enum ApiSourceTypeEnum{
-        SRE_ZY("SRE_ZY","源:自有的广告API"),
-        SRE_TS("SRE_TS","源:探索的广告API"),
-        SRE_BD("SRE_BD","源:百度的广告API"),
-        SRE_YM("SRE_YM","源:友盟的广告API"),
+    public enum StrategyEnum{
+        STG_DATA_CLOSE(1, 1, ""),
+        STG_DATA_OPEN(1, 2, ""),
+        STG_TRADE_TIME_WEEKEND_CLOSE(2, 1, ""),
+        STG_TRADE_TIME_WEEKEND_OPEN(2, 2, ""),
+        STG_BUY_OVERTIME(3, 0, ""),
         ;
-        private String sourceType;
-        private String sourceTypeMsg;
+        private int stgType;
+        private int stgNumValue;
+        private String stgValue;
 
-        private ApiSourceTypeEnum(String sourceType, String sourceTypeMsg) {
-            this.sourceType = sourceType;
-            this.sourceTypeMsg = sourceTypeMsg;
+        private StrategyEnum(int stgType, int stgNumValue, String stgValue) {
+            this.stgType = stgType;
+            this.stgNumValue = stgNumValue;
+            this.stgValue = stgValue;
         }
 
-        public String getSourceType() {
-            return sourceType;
+        public int getStgType() {
+            return stgType;
         }
 
-        public void setSourceType(String sourceType) {
-            this.sourceType = sourceType;
+        public void setStgType(int stgType) {
+            this.stgType = stgType;
         }
 
-        public String getSourceTypeMsg() {
-            return sourceTypeMsg;
+        public int getStgNumValue() {
+            return stgNumValue;
         }
 
-        public void setSourceTypeMsg(String sourceTypeMsg) {
-            this.sourceTypeMsg = sourceTypeMsg;
+        public void setStgNumValue(int stgNumValue) {
+            this.stgNumValue = stgNumValue;
+        }
+
+        public String getStgValue() {
+            return stgValue;
+        }
+
+        public void setStgValue(String stgValue) {
+            this.stgValue = stgValue;
         }
     }
 

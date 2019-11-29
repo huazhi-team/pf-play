@@ -98,6 +98,18 @@ public class VcMember {
      * @mbggenerated
      */
     private Integer createTime;
+    /**
+     * 用户注册时间
+     *
+     * @mbggenerated
+     */
+    private String  createTimeStr;
+    /**
+     * 用户登录时间
+     *
+     * @mbggenerated
+     */
+    private String  loginTimeStr;
 
     /**
      * 用户当前状态：1、正常用户 2、黑名单
@@ -138,10 +150,36 @@ public class VcMember {
     private String token;
 
 
+    /**
+     * 等级类型
+     */
+    private Integer dateType;
+
     /***
      * 推广人id
      */
     private Integer superiorId;
+    /***
+     * 团队总人数
+     */
+    private Integer teamPeople;
+    /***
+     * 性别 1 男 2女
+     */
+    private Integer sex;
+    /***
+     * 生日
+     */
+    private String birthday;
+    /***
+     * 省份
+     */
+    private String province;
+    /***
+     * 城市
+     */
+    private String city;
+
 
     public Integer getSuperiorId() {
         return superiorId;
@@ -309,5 +347,69 @@ public class VcMember {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(Integer dateType) {
+        this.dateType = dateType;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public String getLoginTimeStr() {
+        return loginTimeStr;
+    }
+
+    public void setLoginTimeStr(String loginTimeStr) {
+        this.loginTimeStr = loginTimeStr;
+    }
+
+    public Integer getTeamPeople() {
+        return teamPeople;
+    }
+
+    public void setTeamPeople(Integer teamPeople) {
+        this.teamPeople = teamPeople;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

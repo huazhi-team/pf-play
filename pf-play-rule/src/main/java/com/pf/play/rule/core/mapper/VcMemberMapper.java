@@ -5,6 +5,8 @@ import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.VcMember;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface VcMemberMapper<T> extends BaseDao<T> {
     int deleteByPrimaryKey(Integer memberId);
@@ -16,6 +18,10 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
     VcMember selectByPrimaryKey(VcMember record);
 
     VcMember selectByCodeOrAddress(VcMember record);
+
+    VcMember selectByPid(VcMember record);
+
+    List<VcMember> selectByMemberId(VcMember record);
 
     int updateByPrimaryKeySelective(VcMember record);
 

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.DisVitalityValueMapper">
+
+  <sql id="Base_Column_List">
+    id, vitality_id, vitality_name, push_number, team_vitalit_num, alliance_vitalit_num, 
+    reward_num, create_time, update_time, is_valid,remarks
+  </sql>
+  <select id="selectByPrimaryKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from dis_vitality_value
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dis_vitality_value
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisVitalityValue">
+    insert into dis_vitality_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="vitalityId != null">
+        vitality_id,
+      </if>
+      <if test="vitalityName != null">
+        vitality_name,
+      </if>
+      <if test="pushNumber != null">
+        push_number,
+      </if>
+      <if test="teamVitalitNum != null">
+        team_vitalit_num,
+      </if>
+      <if test="allianceVitalitNum != null">
+        alliance_vitalit_num,
+      </if>
+      <if test="rewardNum != null">
+        reward_num,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="vitalityId != null">
+        #{vitalityId},
+      </if>
+      <if test="vitalityName != null">
+        #{vitalityName},
+      </if>
+      <if test="pushNumber != null">
+        #{pushNumber},
+      </if>
+      <if test="teamVitalitNum != null">
+        #{teamVitalitNum},
+      </if>
+      <if test="allianceVitalitNum != null">
+        #{allianceVitalitNum},
+      </if>
+      <if test="rewardNum != null">
+        #{rewardNum},
+      </if>
+      <if test="remarks != null">
+        #{remarks},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime},
+      </if>
+      <if test="isValid != null">
+        #{isValid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisVitalityValue">
+    update dis_vitality_value
+    <set>
+      <if test="vitalityId != null">
+        vitality_id = #{vitalityId,jdbcType=INTEGER},
+      </if>
+      <if test="vitalityName != null">
+        vitality_name = #{vitalityName,jdbcType=VARCHAR},
+      </if>
+      <if test="pushNumber != null">
+        push_number = #{pushNumber,jdbcType=INTEGER},
+      </if>
+      <if test="teamVitalitNum != null">
+        team_vitalit_num = #{teamVitalitNum,jdbcType=INTEGER},
+      </if>
+      <if test="allianceVitalitNum != null">
+        alliance_vitalit_num = #{allianceVitalitNum,jdbcType=INTEGER},
+      </if>
+      <if test="rewardNum != null">
+        reward_num = #{rewardNum,jdbcType=REAL},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

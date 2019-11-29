@@ -3,6 +3,7 @@ package com.pf.play.rule.core.service.impl;
 import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.uesr.BaseReq;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
+import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
@@ -11,10 +12,12 @@ import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.UMasonryListLogMapper;
 import com.pf.play.rule.core.mapper.UserInfoMapper;
+import com.pf.play.rule.core.mapper.VcMemberMapper;
 import com.pf.play.rule.core.model.Enum.MasonryTypeEnum;
 import com.pf.play.rule.core.model.SysTypeDictionary;
 import com.pf.play.rule.core.model.UMasonryListLog;
 import com.pf.play.rule.core.model.UserInfoModel;
+import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.service.UserMasonryService;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
@@ -39,6 +42,8 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private VcMemberMapper vcMemberMapper;
 
     @Override
     public BaseDao<T> getDao() {
@@ -155,8 +160,6 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
         return masonryTypelist;
     }
 
-    public List   getMyInfoList(Integer memberId){
-        List  list = new ArrayList();
-        return   list;
-    }
+
+
 }

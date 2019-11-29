@@ -606,5 +606,20 @@ public class TaskMethod {
         return   flag ;
     }
 
+    /**
+     * @Description: 根据用户上级id 组装条件
+     * @param superiorId
+     * @return com.pf.play.rule.core.model.VcMember
+     * @author long
+     * @date 2019/11/27 10:35
+     */
+    public static   VcMember   changvcMemberTOsuperiorId(Integer superiorId){
+        VcMember  vcMember = new  VcMember();
+        vcMember.setSuperiorId(superiorId);
+        return   vcMember;
+    }
+
+
+
 
 }

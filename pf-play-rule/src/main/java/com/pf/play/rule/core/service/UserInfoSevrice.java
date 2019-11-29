@@ -1,8 +1,15 @@
 package com.pf.play.rule.core.service;
 
+import com.pf.play.model.protocol.response.my.Empirical;
+import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.rule.core.common.service.BaseService;
+import com.pf.play.rule.core.model.DisVitalityValue;
 import com.pf.play.rule.core.model.UserInfoModel;
+import com.pf.play.rule.core.model.VcMember;
+import com.pf.play.rule.core.model.VcMemberResource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description TODO
@@ -23,4 +30,16 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
      * @date 2019/11/21 16:47
     */
     public void updatePayPassword(UserInfoModel model);
+
+    VcMember getMySuperiorInfo(Integer memberId);
+    List<VcMember> getMyUpInfo(Integer memberId);
+    VcMemberResource getMyTeamResourceInfo(Integer memberId);
+
+    List<Empirical> getMyEmpirical(Integer memberId);
+
+    List<Vitality> getMyDisVitalityValue(Integer memberId);
+
+    VcMember   getMemeber(Integer memberId);
+
+    boolean   updateMemeber(VcMember vcMember);
 }

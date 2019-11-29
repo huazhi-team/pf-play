@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.DisEmpiricalValueLevelMapper">
+  <sql id="Base_Column_List">
+    id, empirical_id, empirical_name, transaction_number, transaction_fee, create_time, 
+    update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.DisEmpiricalValueLevel">
+    select 
+    <include refid="Base_Column_List" />
+    from dis_empirical_value_level
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dis_empirical_value_level
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.DisEmpiricalValueLevel">
+    insert into dis_empirical_value_level (id, empirical_id, empirical_name,
+      transaction_number, transaction_fee, create_time,
+      update_time, is_valid)
+    values (#{id,jdbcType=BIGINT}, #{empiricalId,jdbcType=INTEGER}, #{empiricalName,jdbcType=VARCHAR},
+      #{transactionNumber,jdbcType=INTEGER}, #{transactionFee,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.DisEmpiricalValueLevel">
+    insert into dis_empirical_value_level
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="empiricalId != null">
+        empirical_id,
+      </if>
+      <if test="empiricalName != null">
+        empirical_name,
+      </if>
+      <if test="transactionNumber != null">
+        transaction_number,
+      </if>
+      <if test="transactionFee != null">
+        transaction_fee,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="empiricalId != null">
+        #{empiricalId,jdbcType=INTEGER},
+      </if>
+      <if test="empiricalName != null">
+        #{empiricalName,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNumber != null">
+        #{transactionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="transactionFee != null">
+        #{transactionFee,jdbcType=REAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.DisEmpiricalValueLevel">
+    update dis_empirical_value_level
+    <set>
+      <if test="empiricalId != null">
+        empirical_id = #{empiricalId,jdbcType=INTEGER},
+      </if>
+      <if test="empiricalName != null">
+        empirical_name = #{empiricalName,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNumber != null">
+        transaction_number = #{transactionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="transactionFee != null">
+        transaction_fee = #{transactionFee,jdbcType=REAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

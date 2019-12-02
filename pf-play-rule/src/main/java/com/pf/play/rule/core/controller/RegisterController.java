@@ -3,8 +3,10 @@ package com.pf.play.rule.core.controller;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
+import com.pf.play.model.protocol.response.uesr.LoginResp;
 import com.pf.play.model.protocol.response.uesr.RegisterResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
+import com.pf.play.rule.LoginMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
@@ -59,7 +61,8 @@ public class RegisterController {
 //            registerReq1.setInviteCode("Sjadgsade");
 //            registerReq1.setTimeStamp("1574651926");
             UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq1);
-            return JsonResult.successResult(userInfoResp);
+            LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
+            return JsonResult.successResult(loginResp);
 
 
         }catch (Exception e){

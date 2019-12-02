@@ -40,7 +40,7 @@ public interface TaskService  <T> extends BaseService<T> {
     //奖励发放
     boolean   addUserGrantReward(Integer memberId,Integer taskId)throws Exception;
 
-    void  updateUserVitalityValue(List<UvitalityValueList>  uvitalityValueList);
+    void  updateUserVitalityValue(UvitalityValueList uvitalityValueList);
 
     void  updateUserVitalityValueType(UvitalityValueList uvitalityValueList, Integer type);
 
@@ -53,7 +53,6 @@ public interface TaskService  <T> extends BaseService<T> {
     List<DisWisemanInfo>  queryUserDisWisemanInfo(Integer member) throws Exception ;
 
     boolean  checkExeTaskIdReward(Integer memberId,Integer taskId);
-
 
     boolean  addRewardTaskLog(Integer memberId, Integer taskId)throws Exception;
 

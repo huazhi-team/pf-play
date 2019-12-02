@@ -399,30 +399,30 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
      * @date 2019/11/21 13:49
      */
     @Override
-    public void updateUserVitalityValue(List<UvitalityValueList>  uvitalityValueList ) {
+    public void updateUserVitalityValue(UvitalityValueList  uvitalityValue ) {
         List<UvitalityValueList>  successObject=new ArrayList<>();
         List<UvitalityValueList>  failObject=new ArrayList<>();
 
-        for(UvitalityValueList uvitalityValue:uvitalityValueList){
-            updateUserVitalityValueType(uvitalityValue,2);//更新处理状态
-            //更新用户经验值
+        //获取该用户的上级信息
+        VcMember  vcMember  =  vcMemberMapper.selectByMemberId(TaskMethod.changvcMember(uvitalityValue.getMemberId()));
 
-            VcMemberResource vcMemberResource1 = vcMemberResourceMapper.selectByPrimaryKey(TaskMethod.changeQueryMemberResource(uvitalityValue.getMemberId()));
-            if(vcMemberResource1==null){
+        if(vcMember!=null){
+
+        }
+
+        VcMemberResource vcMemberResource1 = vcMemberResourceMapper.selectByPrimaryKey(TaskMethod.changeQueryMemberResource(uvitalityValue.getMemberId()));
+        if(vcMemberResource1==null){
+            failObject.add(uvitalityValue);
+        }else{
+            int stat = ComponentUtil.taskService.updateUserInfoToVitalityValue(vcMemberResource1,uvitalityValue);
+            if(stat==0){
                 failObject.add(uvitalityValue);
-                continue;
             }else{
-                int stat = ComponentUtil.taskService.updateUserInfoToVitalityValue(vcMemberResource1,uvitalityValue);
-                if(stat==0){
-                    failObject.add(uvitalityValue);
-                    continue;
-                }else{
-                    successObject.add(uvitalityValue);
-                }
+                successObject.add(uvitalityValue);
             }
         }
 
-        TaskMethod.exeUserVitalityValueType(uvitalityValueList,successObject,failObject);
+       // TaskMethod.exeUserVitalityValueType(uvitalityValueList,successObject,failObject);
 
     }
 
@@ -468,10 +468,12 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             log.debug("=======================");
             List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
             if(list.size()!=0){
-                ComponentUtil.taskService.updateUserVitalityValue(list);
+                UvitalityValueList uvitalityValueList  =TaskMethod.changUvitalityValueList(list);
+                uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
+//                ComponentUtil.taskService.updateUserVitalityValue(list);
             }else{
                 try{
-                    Thread.sleep(3000);
+                    Thread.sleep(600000);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

@@ -124,8 +124,8 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
         UserInfoModel  model =null;
         try{
             String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-            String rsTokens =(String ) ComponentUtil.redisService.get(tokens);
-            if(!rsTokens.equals("1")){
+            String rsTokens =(String) ComponentUtil.redisService.get(tokens);
+            if(rsTokens==null||!rsTokens.equals("1")){
                 return  0 ;
             }
 

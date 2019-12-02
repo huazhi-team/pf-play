@@ -16,5 +16,7 @@ public interface VcThirdPartyMapper<T> extends BaseDao<T> {
 
     int updateByPrimaryKeySelective(VcThirdParty record);
 
+    int updateByWxOpenId(VcThirdParty record);
+
     int updateByPrimaryKey(VcThirdParty record);
 }

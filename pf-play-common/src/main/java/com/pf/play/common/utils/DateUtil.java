@@ -2945,6 +2945,12 @@ public class DateUtil {
 		return s ;
 	}
 
+	public static Date addDay(Date date, int days) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, days);
+		return calendar.getTime();
+	}
 
 	/**
 	 *
@@ -2986,13 +2992,13 @@ public class DateUtil {
 //		}catch (Exception e){
 //		}
 		String dds ="1573739849"+"000";
-
-		long  dd =1573739849000L;
-		System.out.println(timeDifference(	Long.parseLong(dds)));
-		String start = "17:24:31";
-		String end = "17:28:30";
-		boolean flag = isBeLongSfm(start, end);
-		System.out.println("flag:" + flag);
+		System.out.println(getSecordsFromString(sdfLongTimePlus.format(addDay(new Date(),10))));
+//		long  dd =1573739849000L;
+//		System.out.println(timeDifference(	Long.parseLong(dds)));
+//		String start = "17:24:31";
+//		String end = "17:28:30";
+//		boolean flag = isBeLongSfm(start, end);
+//		System.out.println("flag:" + flag);
 
 	}
 }

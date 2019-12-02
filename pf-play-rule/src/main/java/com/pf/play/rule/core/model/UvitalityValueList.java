@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class UvitalityValueList {
     /**
@@ -86,6 +87,8 @@ public class UvitalityValueList {
      * @mbggenerated
      */
     private Integer isCount;
+
+    private List<Long> idList;
 
     public Long getId() {
         return id;
@@ -181,5 +184,13 @@ public class UvitalityValueList {
 
     public void setIsCount(Integer isCount) {
         this.isCount = isCount;
+    }
+
+    public List<Long> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Long> idList) {
+        this.idList = idList;
     }
 }

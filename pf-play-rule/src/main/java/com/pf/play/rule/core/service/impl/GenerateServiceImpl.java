@@ -50,9 +50,7 @@ public class GenerateServiceImpl<T> extends BaseServiceImpl<T> implements Genera
         do{
             if (type== Constant.TOKEN){
                 rs = UUIDUtils.createUUID();
-//                rs = "9ec8d4f4f2ba4547bdf67454ced3a331";
                 String token1 = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, rs);
-//                System.out.println(token1);
                 reStr = ComponentUtil.redisService.get(token1);
             }else if(type==Constant.INVITE_CODE){
                 rs  =   UUIDUtils.createInviteCode();

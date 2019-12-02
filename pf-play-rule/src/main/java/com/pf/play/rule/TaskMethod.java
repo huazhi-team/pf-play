@@ -7,6 +7,9 @@ import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
+import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
+import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
+import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
@@ -620,6 +623,152 @@ public class TaskMethod {
     }
 
 
+
+    /**
+     * @Description: 修改用户
+     * @param list
+     * @return com.pf.play.rule.core.model.UvitalityValueList
+     * @author long
+     * @date 2019/11/30 13:32
+     */
+    public static  UvitalityValueList   changUvitalityValueList( List<UvitalityValueList>  list){
+        List<Long>  listId = new ArrayList<>();
+        UvitalityValueList uvitalityValueList =new UvitalityValueList();
+        for(UvitalityValueList valueList:list){
+            listId.add(valueList.getId());
+        }
+        uvitalityValueList.setIdList(listId);
+        uvitalityValueList.setIsCount(2);
+        return   uvitalityValueList;
+    }
+
+    /**
+     * @Description: 转换成领取任务出去字段
+     * @param list
+     * @return java.util.List<com.pf.play.model.protocol.response.task.ReceiveTaskResp>
+     * @author long
+     * @date 2019/12/1 17:11
+     */
+    public static  List<ReceiveTaskResp>   changReceiveTaskResp( List<DisTaskType>  list){
+
+
+        List<ReceiveTaskResp>  list1 = new ArrayList<>();
+        for(DisTaskType disTaskType:list){
+            ReceiveTaskResp  receiveTaskResp = new ReceiveTaskResp();
+            BeanUtils.copy(disTaskType,receiveTaskResp);
+            list1.add(receiveTaskResp);
+        }
+
+        return   list1;
+    }
+
+
+    /**
+     * @Description: 当前拥有的转换成  UserHavaTaskResp 出去
+     * @param list
+     * @return com.pf.play.model.protocol.response.task.UserHavaTaskResp
+     * @author long
+     * @date 2019/12/1 20:46
+     */
+    public  static List<UserHavaTaskResp> changUserHavaTaskResp(List<UTaskHave> list){
+        List<UserHavaTaskResp>  userHavaTaskRespList = new ArrayList<>();
+        List<DisTaskType> disTaskTypeList = TaskSingleton.getInstance().getDisTaskTypeList();
+
+        List<DisTaskAttribute> attributeList =TaskSingleton.getInstance().getAttributeTypeList1();
+        List<DisTaskAttribute> rewardAttributeList =TaskSingleton.getInstance().getAttributeTypeList2();
+        for(UTaskHave uTaskHave :list){
+            UserHavaTaskResp  userHavaTaskResp  = new  UserHavaTaskResp();
+            userHavaTaskResp.setTaskId(uTaskHave.getTaskId());
+            userHavaTaskResp.setTaskLevel(uTaskHave.getTaskLevel());
+            userHavaTaskResp.setEndTimeStr(uTaskHave.getEndTimeStr());
+            userHavaTaskResp.setAlreadyNum(uTaskHave.getAlreadyNum());
+            for(DisTaskType disTaskType:disTaskTypeList){
+                if(uTaskHave.getTaskId()==disTaskType.getTaskId()){
+                    userHavaTaskResp.setTotalNum(disTaskType.getTotalNum());
+                    userHavaTaskResp.setEveryNum(disTaskType.getEveryNum());
+                    userHavaTaskResp.setTaskName(disTaskType.getTaskName());
+                    if(uTaskHave.getAlreadyNum()==0){
+                        userHavaTaskResp.setSurplusNum(30.F);
+                    }else{
+                        userHavaTaskResp.setSurplusNum(disTaskType.getTaskCircleDay()-(uTaskHave.getAlreadyNum()/disTaskType.getEveryNum()));
+                    }
+                    break;
+                }
+            }
+
+            for(DisTaskAttribute disTaskAttribute:attributeList){
+                if(disTaskAttribute.getTaskId()==uTaskHave.getTaskId()){
+                    userHavaTaskResp.setWhere1(disTaskAttribute.getKey1());
+                    userHavaTaskResp.setWhere2(disTaskAttribute.getKey2());
+                    break;
+                }
+            }
+
+            for(DisTaskAttribute disTaskAttribute:rewardAttributeList){
+                if(disTaskAttribute.getTaskId()==uTaskHave.getTaskId()){
+                    userHavaTaskResp.setActiveValue(Float.parseFloat(disTaskAttribute.getKey1()));
+                    break;
+                }
+            }
+
+            userHavaTaskRespList.add(userHavaTaskResp);
+        }
+
+        return  userHavaTaskRespList;
+    }
+
+
+
+
+    /**
+     * @Description: 当前拥有的转换成  UserHavaTaskResp 出去
+     * @param list
+     * @return com.pf.play.model.protocol.response.task.UserHavaTaskResp
+     * @author long
+     * @date 2019/12/1 20:46
+     */
+    public  static List<UserHistoryTaskResp> changUserHistoryTask(List<UTaskHave> list){
+        List<UserHistoryTaskResp>  userHavaTaskRespList = new ArrayList<>();
+        List<DisTaskType> disTaskTypeList = TaskSingleton.getInstance().getDisTaskTypeList();
+
+        List<DisTaskAttribute> attributeList =TaskSingleton.getInstance().getAttributeTypeList1();
+        List<DisTaskAttribute> rewardAttributeList =TaskSingleton.getInstance().getAttributeTypeList2();
+        for(UTaskHave uTaskHave :list){
+            UserHistoryTaskResp  userHistoryTaskResp  = new  UserHistoryTaskResp();
+            userHistoryTaskResp.setTaskId(uTaskHave.getTaskId());
+            userHistoryTaskResp.setTaskLevel(uTaskHave.getTaskLevel());
+            userHistoryTaskResp.setEndTimeStr(uTaskHave.getEndTimeStr());
+            userHistoryTaskResp.setAlreadyNum(uTaskHave.getAlreadyNum());
+            for(DisTaskType disTaskType:disTaskTypeList){
+                if(uTaskHave.getTaskId()==disTaskType.getTaskId()){
+                    userHistoryTaskResp.setTotalNum(disTaskType.getTotalNum());
+                    userHistoryTaskResp.setTaskName(disTaskType.getTaskName());
+                    if(uTaskHave.getAlreadyNum()==0){
+                        userHistoryTaskResp.setSurplusNum(30.F);
+                    }else{
+                        userHistoryTaskResp.setSurplusNum(disTaskType.getTaskCircleDay()-(uTaskHave.getAlreadyNum()/disTaskType.getEveryNum()));
+                    }
+                    break;
+                }
+            }
+
+            for(DisTaskAttribute disTaskAttribute:attributeList){
+                if(disTaskAttribute.getTaskId()==uTaskHave.getTaskId()){
+                    userHistoryTaskResp.setWhere1(disTaskAttribute.getKey1());
+                    userHistoryTaskResp.setWhere2(disTaskAttribute.getKey2());
+                    break;
+                }
+            }
+            for(DisTaskAttribute disTaskAttribute:rewardAttributeList){
+                if(disTaskAttribute.getTaskId()==uTaskHave.getTaskId()){
+                    userHistoryTaskResp.setActiveValue(Float.parseFloat(disTaskAttribute.getKey1()));
+                    break;
+                }
+            }
+            userHavaTaskRespList.add(userHistoryTaskResp);
+        }
+        return  userHavaTaskRespList;
+    }
 
 
 }

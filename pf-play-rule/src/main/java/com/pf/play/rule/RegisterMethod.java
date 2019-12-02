@@ -2,6 +2,7 @@ package com.pf.play.rule;
 
 import com.pf.play.common.utils.DateUtil;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
@@ -147,8 +148,11 @@ public class RegisterMethod {
      * @date 2019/11/25 10:18
      */
     public static  VcThirdParty  insertVcThirdParty(Integer memberId,String wxRefresh,String wxOpenid,String wxUnionid,String token){
+        String   token_expire   =  DateUtil.sdfLongTimePlus.format(DateUtil.addDay(new Date(), Constant.TOKEN_EXPIRE));
+        Long  token_expire_time = DateUtil.getSecordsFromString(token_expire)/1000;
         VcThirdParty   vcThirdPartyModel  = new VcThirdParty(); //三方资源信息
         vcThirdPartyModel.setMemberId(memberId);
+        vcThirdPartyModel.setTokenExpire(token_expire_time.intValue());
         vcThirdPartyModel.setWxRefresh(wxRefresh);
         vcThirdPartyModel.setWxOpenid(wxOpenid);
         vcThirdPartyModel.setWxUnionid(wxUnionid);

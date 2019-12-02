@@ -3,6 +3,7 @@ package com.pf.play.rule.core.service;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.core.common.service.BaseService;
+import com.pf.play.rule.core.model.VcThirdParty;
 
 /**
  * @Description TODO
@@ -13,5 +14,7 @@ import com.pf.play.rule.core.common.service.BaseService;
 public interface LoginService<T> extends BaseService<T> {
     UserInfoResp login(LoginReq loginReq) throws Exception ;
     boolean   checkDateNormal(LoginReq loginReq);
+
+    void   signOut(VcThirdParty vcThirdParty);
 
 }

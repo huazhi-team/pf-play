@@ -7,9 +7,13 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
+import com.pf.play.rule.core.common.utils.constant.CacheKey;
+import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
+import com.pf.play.rule.core.service.CommonService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.util.ComponentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,11 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
 
     @Autowired
     private VcMemberMapper vcMemberMapper;
+
+    @Autowired
+    private VcThirdPartyMapper vcThirdPartyMapper;
+
+
 
     @Autowired
     private VcMemberResourceMapper vcMemberResourceMapper;
@@ -63,6 +72,8 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             userInfoModel.setWxOpenid(wxOpenid);
             model = userInfoMapper.selectByUserInfo(userInfoModel);
         }
+
+
 //        else if (type==2){//暂时没需求
 //            UserInfoModel userInfoModel= new UserInfoModel();
 //            userInfoModel.setPassword();
@@ -103,10 +114,10 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     public VcMember getMySuperiorInfo(Integer memberId){
         VcMember  vcMember= TaskMethod.changvcMember(memberId);
         VcMember  vcMember1=TaskMethod.changvcMemberTOsuperiorId(memberId);
-        VcMemberResource  vcMemberResource  =  ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(vcMember1.getMemberId());
+        VcMemberResource  vcMemberResource  =  ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(vcMember.getMemberId());
         vcMember1.setTeamPeople(vcMemberResource.getTeamPeople());
-        vcMember1.setDarenLevel(vcMember1.getDarenLevel());
-        vcMember1.setEmpiricalLevel(vcMember1.getEmpiricalLevel());
+        vcMember1.setDarenLevel(vcMember.getDarenLevel());
+        vcMember1.setEmpiricalLevel(vcMember.getEmpiricalLevel());
         return   vcMember1;
     }
 
@@ -120,7 +131,7 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     public List<VcMember> getMyUpInfo(Integer memberId){
         List<VcMember>   list = new ArrayList<VcMember>();
         VcMember  vcMember=TaskMethod.changvcMemberTOsuperiorId(memberId);
-        List<VcMember>  list1 =  vcMemberMapper.selectByMemberId(vcMember);
+        List<VcMember>  list1 =  vcMemberMapper.selectByPid(vcMember);
         for(VcMember vcMember1 :list1){
             VcMemberResource  vcMemberResource  =  ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(vcMember1.getMemberId());
             vcMember1.setTeamPeople(vcMemberResource.getTeamPeople());
@@ -175,5 +186,29 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         return false;
     }
 
+
+    /**
+     * @Description: token 是否被使用
+     * @param token
+     * @return boolean
+     * @author long
+     * @date 2019/11/30 18:27
+     */
+    public boolean  isToken(String  token){
+        boolean    flag =  false;
+        VcThirdParty    vcThirdParty = new VcThirdParty();
+        vcThirdParty.setToken(token);
+        String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+        String tokenExist  = (String)ComponentUtil.redisService.get(tokenstr);
+        if(tokenExist.equals("1")){
+            return     flag;
+        }
+        
+        VcThirdParty  vcThirdParty1  =  vcThirdPartyMapper.selectByPrimaryKey(vcThirdParty);
+        if(vcThirdParty1==null){
+            flag = true;
+        }
+        return     flag ;
+    }
 
 }

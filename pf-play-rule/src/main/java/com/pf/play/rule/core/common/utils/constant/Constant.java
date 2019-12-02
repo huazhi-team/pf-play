@@ -33,4 +33,18 @@ public class Constant {
     public static  int   REWARD_TYPE3 = 3;//团队活力值
     public static  int   REWARD_TYPE4 = 4;//联盟活力值
 
+
+
+    /***********注册验证码有效时间(单位分钟)*********/
+    public  static  int  EFFECTIVE_IDENT_CODE_TIME =1;
+
+    /***********token 过期时间(单位 天 )*********/
+    public  static  int  TOKEN_EXPIRE    =  15 ;
+
+
+
+    public  static  int  TASK_TYPE_HISTORY    =  1 ;
+    public  static  int  TASK_TYPE_EXISTING   =  2 ;
+
+
 }

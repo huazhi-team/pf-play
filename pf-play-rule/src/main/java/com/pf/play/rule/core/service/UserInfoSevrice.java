@@ -42,4 +42,8 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
     VcMember   getMemeber(Integer memberId);
 
     boolean   updateMemeber(VcMember vcMember);
+
+    boolean   isToken(String  token);
+
+
 }

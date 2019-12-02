@@ -279,7 +279,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         RegisterResp    registerResp =new RegisterResp();
         registerResp.setTimeStamp(time);
         String  amsVerification = RandomUtil.getRandom(6);
-        ComponentUtil.redisService.set((phone+time),amsVerification,SMS_REDIS_TIME, TimeUnit.MINUTES);
+        ComponentUtil.redisService.set((phone+time),amsVerification,Constant.EFFECTIVE_IDENT_CODE_TIME, TimeUnit.MINUTES);
         return registerResp;
     }
 

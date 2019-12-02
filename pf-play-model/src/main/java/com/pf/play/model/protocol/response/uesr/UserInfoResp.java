@@ -249,6 +249,12 @@ public class UserInfoResp {
      */
     private Integer isLevel5;
 
+
+    private   Integer  sex;
+    private   String   birthday;
+    private   String   province;
+    private   String   city;
+
     public Integer getMemberId() {
         return memberId;
     }
@@ -527,5 +533,37 @@ public class UserInfoResp {
 
     public void setIsLevel5(Integer isLevel5) {
         this.isLevel5 = isLevel5;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

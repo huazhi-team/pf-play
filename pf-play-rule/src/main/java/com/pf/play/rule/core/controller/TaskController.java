@@ -4,12 +4,16 @@ import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
+import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
+import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
+import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.DisTaskType;
 import com.pf.play.rule.core.model.DisWisemanInfo;
+import com.pf.play.rule.core.model.UTaskHave;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,20 +40,10 @@ public class TaskController {
 
     private static Logger log = LoggerFactory.getLogger(SpCodeController.class);
 
-    @PostMapping("/typeTaskInfo")
-    public JsonResult<Object> actionPay(HttpServletRequest request, HttpServletResponse response, CommonReq commonReq){
-        try{
-            log.info("----------:type_taskInfo!");
-            JsonResult.successResult(null);
-        }catch (Exception e){
-            return JsonResult.failedResult("wrong for data!",1+"");
-        }
-        return null;
-    }
 
 
     /**
-     * @Description: 任务管理列表详情
+     * @Description: 领取任务列表详情
      * @param request
     * @param response
     * @param commonReq
@@ -68,7 +62,8 @@ public class TaskController {
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
             }
             List<DisTaskType> list = ComponentUtil.taskService.queryReceiveTask(memberId);
-            return JsonResult.successResult(list);
+            List<ReceiveTaskResp>  receiveTaskRespList = TaskMethod.changReceiveTaskResp(list);
+            return JsonResult.successResult(receiveTaskRespList);
         }catch (Exception e){
             return JsonResult.failedResult("wrong for data!",1+"");
         }
@@ -89,12 +84,20 @@ public class TaskController {
             log.info("----------:myTask!");
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+            }else {
+                return JsonResult.successResult(null);
             }
-            List<DisTaskType> list = ComponentUtil.taskService.getMyTask(memberId);
-            return JsonResult.successResult(list);
+
+            List<UTaskHave> list = ComponentUtil.taskService.getMyTask(memberId);
+
+            List<UserHavaTaskResp>  rslist=TaskMethod.changUserHavaTaskResp(list);
+
+//            List<ReceiveTaskResp>  receiveTaskRespList = TaskMethod.changReceiveTaskResp(list);
+            return JsonResult.successResult(rslist);
         }catch (Exception e){
+            e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");
         }
     }
@@ -116,8 +119,13 @@ public class TaskController {
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(!flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+            }else{
+                return JsonResult.successResult(null);
             }
-            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
+
+            List<Long> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
+//            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
+//            List<UserHistoryTaskResp>    userHistoryTaskList =TaskMethod.changUserHistoryTask(list);
             return JsonResult.successResult(list);
         }catch (Exception e){
             return JsonResult.failedResult("wrong for data!",1+"");
@@ -212,19 +220,15 @@ public class TaskController {
             String    token  ="d9680065409547b69746912de48ee8d4";
             String    wxOpenId  = "slllsdjdjsa";
             Integer   taskId    = 1;
-
             boolean   cheakFlag  = TaskMethod.checkUserTaskIsEffective(taskReq);
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
-
             boolean       flag   =   ComponentUtil.taskService.checkExeTaskIdReward(memberId, taskReq.getTaskId());
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteDesc());
             }
-
             flag  = ComponentUtil.taskService.addRewardTaskLog(memberId,taskReq.getTaskId());
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR9.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR9.geteDesc());

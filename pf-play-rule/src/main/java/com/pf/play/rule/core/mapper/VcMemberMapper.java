@@ -19,9 +19,10 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
 
     VcMember selectByCodeOrAddress(VcMember record);
 
-    VcMember selectByPid(VcMember record);
+    List<VcMember> selectByPid(VcMember record);
 
-    List<VcMember> selectByMemberId(VcMember record);
+    VcMember selectByMemberId(VcMember record);
+
 
     int updateByPrimaryKeySelective(VcMember record);
 

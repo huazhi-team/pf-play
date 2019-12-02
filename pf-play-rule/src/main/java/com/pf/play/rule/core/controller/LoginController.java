@@ -2,8 +2,13 @@ package com.pf.play.rule.core.controller;
 
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
+import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
+import com.pf.play.model.protocol.request.uesr.UserCommonReq;
+import com.pf.play.model.protocol.response.uesr.LoginResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
+import com.pf.play.rule.LoginMethod;
+import com.pf.play.rule.core.model.VcThirdParty;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,21 +31,37 @@ public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @GetMapping("/userInfo")
-    public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, CommonReq  commonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
         try{
             log.info("----------:进来啦!");
-            JsonResult.successResult(null);
-            LoginReq loginReq1 = new LoginReq ();
-            loginReq1.setLoginType(2);
-            loginReq1.setWxOpenId("slllsdjdjsa");
-            loginReq1.setPhone("asdakj");
 
-            UserInfoResp userInfoResp= ComponentUtil.loginService.login(loginReq1);
+            UserInfoResp userInfoResp= ComponentUtil.loginService.login(loginReq);
             if(userInfoResp==null){
                 return JsonResult.failedResult("wrong for data!",1+"");
             }
-            return JsonResult.successResult(userInfoResp);
+
+            LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
+            return JsonResult.successResult(loginResp);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResult.failedResult("wrong for data!",1+"");
+        }
+    }
+
+
+    @GetMapping("/signOut")
+    public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
+        JsonResult<Object>     result  = null;
+        try{
+            log.info("----------:signOut!");
+            boolean  flag   =   LoginMethod.checkRemoveSignOutToken(loginReq);
+
+            if(flag){
+                VcThirdParty vcThirdParty =LoginMethod.changLoginReqToVcThirdParty(loginReq);
+                ComponentUtil.loginService.signOut(vcThirdParty);
+            }
+
+            return JsonResult.successResult(null);
         }catch (Exception e){
             e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");

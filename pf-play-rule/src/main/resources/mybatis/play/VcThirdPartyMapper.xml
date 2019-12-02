@@ -129,6 +129,40 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <update id="updateByWxOpenId" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
+    update vc_third_party
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpire != null" >
+        token_expire = #{tokenExpire,jdbcType=INTEGER},
+      </if>
+      <if test="jpushToken != null" >
+        jpush_token = #{jpushToken,jdbcType=VARCHAR},
+      </if>
+      <if test="wxAccess != null" >
+        wx_access = #{wxAccess,jdbcType=VARCHAR},
+      </if>
+      <if test="wxRefresh != null" >
+        wx_refresh = #{wxRefresh,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUnionid != null" >
+        wx_unionid = #{wxUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where wx_openid = #{wxOpenid}
+  </update>
+
+
   <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcThirdParty" >
     update vc_third_party
     set member_id = #{memberId,jdbcType=INTEGER},

@@ -105,6 +105,13 @@ public class VcMember {
      */
     private String  createTimeStr;
     /**
+     * 登录时间
+     *
+     * @mbggenerated
+     */
+    private String  updateTimeStr;
+
+    /**
      * 用户登录时间
      *
      * @mbggenerated
@@ -180,6 +187,13 @@ public class VcMember {
      */
     private String city;
 
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
 
     public Integer getSuperiorId() {
         return superiorId;

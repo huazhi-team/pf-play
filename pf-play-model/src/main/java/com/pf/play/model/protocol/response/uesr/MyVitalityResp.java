@@ -12,6 +12,9 @@ import java.util.List;
  * @Version 1.0
  */
 public class MyVitalityResp {
+    /**
+     * 活跃值
+     */
     private  Float  vitalityValue;
     private List<Vitality> list;
 

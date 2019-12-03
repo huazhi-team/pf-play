@@ -13,6 +13,7 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,11 +27,11 @@ import javax.servlet.http.HttpServletResponse;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/play/login")
 public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    @GetMapping("/userInfo")
+    @PostMapping("/userInfo")
     public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
         try{
             log.info("----------:进来啦!");
@@ -49,7 +50,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/signOut")
+    @PostMapping("/signOut")
     public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
         JsonResult<Object>     result  = null;
         try{

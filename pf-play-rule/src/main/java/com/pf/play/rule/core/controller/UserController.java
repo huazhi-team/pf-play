@@ -22,6 +22,7 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/play/user")
 public class UserController {
 
     private static Logger log = LoggerFactory.getLogger(UserController.class);
@@ -55,7 +56,7 @@ public class UserController {
      *  客户端加密字段:ctime+cctime+token+秘钥=sign
      *  服务端加密字段:stime+token+秘钥=sign
      */
-    @GetMapping("/myMasonry")
+    @PostMapping("/myMasonry")
     public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         try{
             log.info("----------:masonryInfo!");
@@ -84,7 +85,7 @@ public class UserController {
      * @date 2019/11/27 19:07
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
-    @GetMapping("/myFriends")
+    @PostMapping("/myFriends")
     public JsonResult<Object> myFriends(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{
@@ -127,10 +128,8 @@ public class UserController {
      * @date 2019/11/27 22:44
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
-    @GetMapping("/myEmpiricValue")
+    @PostMapping("/myEmpiricValue")
     public JsonResult<Object> myEmpiricValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-
-
         JsonResult<Object>     result  = null;
         try{
             log.info("----------:myEmpiricValue!");
@@ -169,7 +168,7 @@ public class UserController {
      * @date 2019/11/27 22:45
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
-    @GetMapping("/myVitalityValue")
+    @PostMapping("/myVitalityValue")
     public JsonResult<Object> myVitalityValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{
@@ -177,7 +176,7 @@ public class UserController {
             List<MyFriendsResp>   list  = null;
             Integer   memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
             }
             VcMemberResource  vcMemberResource =null;
@@ -209,7 +208,7 @@ public class UserController {
      * @date 2019/11/28 16:39
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
-    @GetMapping("/queryUserInfo")
+    @PostMapping("/queryUserInfo")
     public JsonResult<Object> queryUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{

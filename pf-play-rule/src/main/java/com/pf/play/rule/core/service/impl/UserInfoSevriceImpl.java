@@ -119,9 +119,14 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             vcMember1 =null;
             return vcMember1;
         }
+        vcMember1.setInviteCode(vcMemberResource.getPhone());
+        vcMember1.setNickname(vcMemberResource.getNickName());
+        vcMember1.setIsCertification(vcMemberResource.getIsCertification());
         vcMember1.setTeamPeople(vcMemberResource.getTeamPeople());
-        vcMember1.setDarenLevel(vcMember.getDarenLevel());
-        vcMember1.setEmpiricalLevel(vcMember.getEmpiricalLevel());
+        vcMember1.setDarenLevel(vcMemberResource.getDarenLevel());
+        vcMember1.setEmpiricalLevel(vcMemberResource.getEmpiricalLevel());
+        vcMember1.setCreateTimeStr(vcMemberResource.getCreateTimeStr());
+        vcMember1.setUpdateTimeStr(vcMemberResource.getUqdateTimeStr());
         return   vcMember1;
     }
 
@@ -139,8 +144,10 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         for(VcMember vcMember1 :list1){
             VcMemberResource  vcMemberResource  =  ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(vcMember1.getMemberId());
             vcMember1.setTeamPeople(vcMemberResource.getTeamPeople());
-            vcMember1.setDarenLevel(vcMember1.getDarenLevel());
-            vcMember1.setEmpiricalLevel(vcMember1.getEmpiricalLevel());
+            vcMember1.setDarenLevel(vcMemberResource.getDarenLevel());
+            vcMember1.setEmpiricalLevel(vcMemberResource.getEmpiricalLevel());
+            vcMember1.setCreateTimeStr(vcMemberResource.getCreateTimeStr());
+            vcMember1.setUpdateTimeStr(vcMemberResource.getUqdateTimeStr());
             list.add(vcMember1);
         }
         return   list;
@@ -156,7 +163,15 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     @Override
     public VcMemberResource getMyTeamResourceInfo(Integer memberId) {
         VcMemberResource  vcMemberResource  = TaskMethod.changeQueryMemberResource(memberId);
+        VcMember vcMemberParameter =  TaskMethod.changvcMember(memberId);
         VcMemberResource  vcMemberResource1 =vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
+        VcMember  vcMember   =vcMemberMapper.selectByPrimaryKey(vcMemberParameter);
+        if(vcMemberResource1==null||vcMember==null){
+            return  null;
+        }
+        vcMemberResource1.setNickName(vcMember.getNickname());
+        vcMemberResource1.setIsCertification(vcMember.getIsCertification());
+        vcMemberResource1.setPhone(vcMember.getInviteCode());
         return vcMemberResource1;
     }
 

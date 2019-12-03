@@ -115,8 +115,9 @@ public class JsonResult<T> implements Serializable {
 	}
 
 
-
-
+	public T getContent() {
+		return content;
+	}
 
 	public String getMessage() {
 		return message;

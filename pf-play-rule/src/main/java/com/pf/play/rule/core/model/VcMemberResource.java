@@ -136,6 +136,37 @@ public class VcMemberResource {
      * @mbggenerated
      */
     private Integer isValid;
+    /**
+     * 登录时间
+     *
+     * @mbggenerated
+     */
+    private String uqdateTimeStr;
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
+    private String createTimeStr;
+    /**
+     * 昵称
+     *
+     * @mbggenerated
+     */
+    private String nickName;
+    /**
+     * 昵称
+     *
+     * @mbggenerated
+     */
+    private String phone;
+
+    /**
+     * 是否实名制
+     *
+     * @mbggenerated
+     */
+    private Integer isCertification;
 
     public Long getId() {
         return id;
@@ -295,5 +326,45 @@ public class VcMemberResource {
 
     public void setAllianceActive(Float allianceActive) {
         this.allianceActive = allianceActive;
+    }
+
+    public String getUqdateTimeStr() {
+        return uqdateTimeStr;
+    }
+
+    public void setUqdateTimeStr(String uqdateTimeStr) {
+        this.uqdateTimeStr = uqdateTimeStr;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public Integer getIsCertification() {
+        return isCertification;
+    }
+
+    public void setIsCertification(Integer isCertification) {
+        this.isCertification = isCertification;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

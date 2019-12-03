@@ -33,7 +33,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/play/task")
 public class TaskController {
 
     private static Logger log = LoggerFactory.getLogger(SpCodeController.class);
@@ -49,7 +49,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:40
      */
-    @GetMapping("/queryMemberReceiveTaskList")
+    @PostMapping("/queryMemberReceiveTaskList")
     public JsonResult<Object> queryReceiveTaskList(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         try{
             log.info("----------:receiveTask!");
@@ -76,7 +76,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:35
      */
-    @GetMapping("/userHavaTask")
+    @PostMapping("/userHavaTask")
     public JsonResult<Object> myTask(HttpServletRequest request, HttpServletResponse response,UserCommonReq userCommonReq){
         try{
             log.info("----------:myTask!");
@@ -109,7 +109,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:34
      */
-    @GetMapping("/userTaskHistory")
+    @PostMapping("/userTaskHistory")
     public JsonResult<Object> userTaskHistory(HttpServletRequest request, HttpServletResponse response,UserCommonReq  userCommonReq){
         try{
             log.info("----------:userTaskHistory!");
@@ -142,7 +142,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:33
      */
-    @GetMapping("/exeReceiveTask")
+    @PostMapping("/exeReceiveTask")
     public JsonResult<Object> exeReceiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq){
         try{
             log.info("----------:exeReceiveTask!");
@@ -181,7 +181,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:27
      */
-    @GetMapping("/giveTaskList")
+    @PostMapping("/giveTaskList")
     public JsonResult<Object> queryGiveTaskList(HttpServletRequest request, HttpServletResponse response,UserCommonReq  userCommonReq){
         try{
             List<DisWisemanInfo>  list  = new ArrayList<>();
@@ -215,7 +215,7 @@ public class TaskController {
      * @author long
      * @date 2019/11/23 11:18
      */
-    @GetMapping("/exeGiveTask")
+    @PostMapping("/exeGiveTask")
     public JsonResult<Object> exeGiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq){
         try{
             List<DisWisemanInfo>  list  = new ArrayList<>();

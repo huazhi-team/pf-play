@@ -16,6 +16,7 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,12 +31,12 @@ import java.util.Map;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/play/register")
 public class RegisterController {
 
     private static Logger log = LoggerFactory.getLogger(RegisterController.class);
 
-    @GetMapping("/userInfo")
+    @PostMapping("/userInfo")
     public JsonResult<Object> register(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq ){
         try{
             log.info("----------:进来啦!");
@@ -74,7 +75,7 @@ public class RegisterController {
 
 
 
-    @GetMapping("/getPhoneVerification")
+    @PostMapping("/getPhoneVerification")
     public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, PhoneVerificationReq req){
         JsonResult<Object>     result  = null;
         try{

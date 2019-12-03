@@ -6,7 +6,7 @@
     id, vitality_id, vitality_name, push_number, team_vitalit_num, alliance_vitalit_num, 
     reward_num, create_time, update_time, is_valid,remarks
   </sql>
-  <select id="selectByPrimaryKey" >
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisVitalityValue">
     select 
     <include refid="Base_Column_List" />
     from dis_vitality_value

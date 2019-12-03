@@ -33,7 +33,7 @@ public class MyMethod {
          MyFriendsResp   myFriendsResp  =  new MyFriendsResp();
          BeanUtils.copy(vcMemberResource,myFriendsResp);
          InviteMy inviteMy = new InviteMy();
-         inviteMy.setCreateTime(vcMember.getCreateTimeStr());
+         inviteMy.setUpdateTime(vcMember.getUpdateTimeStr());
          inviteMy.setDarenLevel(vcMember.getDarenLevel());
          inviteMy.setNickname(vcMember.getNickname());
          inviteMy.setPhone(vcMember.getInviteCode());
@@ -48,6 +48,7 @@ public class MyMethod {
          for(VcMember vcMember1:list){
              InviteMy inviteMy1 = new InviteMy();
              inviteMy1.setCreateTime(vcMember1.getCreateTimeStr());
+             inviteMy1.setUpdateTime(vcMember1.getUpdateTimeStr());
              inviteMy1.setDarenLevel(vcMember1.getDarenLevel());
              inviteMy1.setNickname(vcMember1.getNickname());
              inviteMy1.setPhone(vcMember1.getInviteCode());
@@ -95,6 +96,7 @@ public class MyMethod {
         List<Vitality>  empiricals  =   new ArrayList<>();
         for(DisVitalityValue disVitalityValue:list){
             Vitality vitality = new Vitality();
+            BeanUtils.copy(disVitalityValue,vitality);
             if(disVitalityValue.getPushNumber()==0){
                 vitality.setPushNumber("实名制");
             }else{
@@ -110,6 +112,7 @@ public class MyMethod {
             }else{
                 vitality.setTeamVitalitNum(disVitalityValue.getAllianceVitalitNum()+"");
             }
+            vitality.setAllianceVitalitNum(disVitalityValue.getAllianceVitalitNum()+"");
             vitality.setRewardNum(disVitalityValue.getRewardNum()+"");
             vitality.setRemarks(disVitalityValue.getRemarks());
             empiricals.add(vitality);

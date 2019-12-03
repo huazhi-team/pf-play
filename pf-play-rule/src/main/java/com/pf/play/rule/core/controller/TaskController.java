@@ -4,9 +4,7 @@ import com.pf.play.common.utils.JsonResult;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
-import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
-import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
-import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
+import com.pf.play.model.protocol.response.task.*;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
@@ -123,10 +121,13 @@ public class TaskController {
                 return JsonResult.successResult(null);
             }
 
-            List<Long> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
+            if(memberId==0){
+                return JsonResult.successResult(null);
+            }
+            List<UTaskHave> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
-//            List<UserHistoryTaskResp>    userHistoryTaskList =TaskMethod.changUserHistoryTask(list);
-            return JsonResult.successResult(list);
+            List<UserHistoryTaskResp>    userHistoryTaskList =TaskMethod.changUserHistoryTask(list);
+            return JsonResult.successResult(userHistoryTaskList);
         }catch (Exception e){
             return JsonResult.failedResult("wrong for data!",1+"");
         }
@@ -152,7 +153,7 @@ public class TaskController {
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
+            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenid());
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
             boolean  checkFlag  =   ComponentUtil.taskService.checkUserCondition(memberId,taskReq.getTaskId());
             if(!checkFlag){
@@ -196,7 +197,9 @@ public class TaskController {
             }else{
                   list = ComponentUtil.taskService.queryUserDisWisemanInfo(memberId);
             }
-            return JsonResult.successResult(list);
+
+            List<GiveTaskResp>  giveTaskRespsList=TaskMethod.changGiveTask(list);
+            return JsonResult.successResult(giveTaskRespsList);
         }catch (Exception e){
             e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");
@@ -224,7 +227,7 @@ public class TaskController {
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
+            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenid());
             boolean       flag   =   ComponentUtil.taskService.checkExeTaskIdReward(memberId, taskReq.getTaskId());
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteDesc());
@@ -233,9 +236,13 @@ public class TaskController {
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR9.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR9.geteDesc());
             }
-            return JsonResult.successResult(flag);
+
+            GiveTaskResultResp giveTaskResultResp = new GiveTaskResultResp();
+            giveTaskResultResp.setResult(flag);
+            return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 

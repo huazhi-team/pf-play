@@ -114,6 +114,12 @@ public class UMasonryListLog {
      * @mbggenerated
      */
     private Integer isValid;
+    /**
+     * 生成时间
+     *
+     * @mbggenerated
+     */
+    private String createTimeStr;
 
     public Long getId() {
         return id;
@@ -241,5 +247,13 @@ public class UMasonryListLog {
 
     public void setIsValid(Integer isValid) {
         this.isValid = isValid;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 }

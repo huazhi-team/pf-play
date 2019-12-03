@@ -33,7 +33,6 @@ public interface TaskService  <T> extends BaseService<T> {
     List<DisTaskType>   queryReceiveTask(Integer  memberid);
 
 
-
     boolean   checkUserCondition(Integer memberId,Integer taskId)throws Exception; //条件是否满足
     //添加记录
     boolean   addUserTask(Integer memberId,Integer taskId)throws Exception;

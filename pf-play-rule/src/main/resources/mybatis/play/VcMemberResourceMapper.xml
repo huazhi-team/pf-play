@@ -5,7 +5,7 @@
   <sql id="Base_Column_List" >
     id, member_id, produce_masonry_count, extension_masonry_count, day_masonry, day_ext_masonry, 
     frozen_masonry, empirical_value, active_value, push_people, create_time, update_time,
-    empirical_level,daren_level,is_vitality_value
+    empirical_level,daren_level,is_vitality_value,team_people,team_active,hero_active,alliance_active,
     is_valid
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMemberResource"  >

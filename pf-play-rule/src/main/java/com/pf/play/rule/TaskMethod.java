@@ -7,6 +7,7 @@ import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
+import com.pf.play.model.protocol.response.task.GiveTaskResp;
 import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
 import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
 import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
@@ -306,8 +307,6 @@ public class TaskMethod {
      * @date 2019/11/26 14:34
      */
     public  static Map<String,Object> changCurrentAndMaxMap(VcMemberResource vcMemberResource, VcRewardReceive  rs,VcMember vcMember ){
-
-
         Map<String,Object> map = new HashMap<>();
         if(vcMember.getIsCertification()==1){
             for(int i=0; i<6;i++){
@@ -419,6 +418,8 @@ public class TaskMethod {
                     return false;
                 }
             }
+        }else{
+            return false;
         }
         return  flag;
     }
@@ -601,7 +602,7 @@ public class TaskMethod {
         boolean    flag = true ;
         if(StringUtils.isBlank(taskReq.getToken())){
             flag = false;
-        }else if(StringUtils.isBlank(taskReq.getWxOpenId())){
+        }else if(StringUtils.isBlank(taskReq.getWxOpenid())){
             flag = false;
         }else if(taskReq.getTaskId()==0){
             flag = false;
@@ -721,7 +722,7 @@ public class TaskMethod {
 
 
     /**
-     * @Description: 当前拥有的转换成  UserHavaTaskResp 出去
+     * @Description: 当前拥有的转换成  UserHistoryTaskResp 出去
      * @param list
      * @return com.pf.play.model.protocol.response.task.UserHavaTaskResp
      * @author long
@@ -769,6 +770,29 @@ public class TaskMethod {
         }
         return  userHavaTaskRespList;
     }
+
+    /**
+     * @Description: 任务大派送转换成  GiveTaskResp 出去
+     * @param list
+     * @return java.util.List<com.pf.play.model.protocol.response.task.GiveTaskResp>
+     * @author long
+     * @date 2019/12/2 19:00
+     */
+    public  static List<GiveTaskResp> changGiveTask(List<DisWisemanInfo> list){
+        List<GiveTaskResp>   list1 = new ArrayList<>();
+        for (DisWisemanInfo disWisemanInfo:list){
+            GiveTaskResp  giveTaskResp  = new GiveTaskResp();
+            giveTaskResp.setIsDisplay(disWisemanInfo.getIsDisplay());
+            giveTaskResp.setTaskId(disWisemanInfo.getWisemanId());
+            giveTaskResp.setTaskLevel(disWisemanInfo.getRelativeLevel());
+            giveTaskResp.setTaskName(disWisemanInfo.getWisemanName());
+            giveTaskResp.setRemarks(disWisemanInfo.getRemarks());
+            giveTaskResp.setIsReceive(disWisemanInfo.getIsReceive());
+            list1.add(giveTaskResp);
+        }
+        return  list1;
+    }
+
 
 
 }

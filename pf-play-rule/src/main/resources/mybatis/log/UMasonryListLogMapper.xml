@@ -3,7 +3,7 @@
 <mapper namespace="com.pf.play.rule.core.mapper.UMasonryListLogMapper" >
   <sql id="Base_Column_List" >
     id, member_id, type, symbol_type, masonry_num, give_member_id, collect_member_id, 
-    curday, curhour, curminute, order_num, create_time, update_time, is_valid
+    curday, curhour, curminute, order_num, create_time, update_time, is_valid,date_format(create_time, '%Y-%m-%d' ) AS create_time_str
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UMasonryListLog" parameterType="java.lang.Long" >
     select 

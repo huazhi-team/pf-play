@@ -115,6 +115,10 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         VcMember  vcMember= TaskMethod.changvcMember(memberId);
         VcMember  vcMember1=TaskMethod.changvcMemberTOsuperiorId(memberId);
         VcMemberResource  vcMemberResource  =  ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(vcMember.getMemberId());
+        if(vcMemberResource==null){
+            vcMember1 =null;
+            return vcMember1;
+        }
         vcMember1.setTeamPeople(vcMemberResource.getTeamPeople());
         vcMember1.setDarenLevel(vcMember.getDarenLevel());
         vcMember1.setEmpiricalLevel(vcMember.getEmpiricalLevel());

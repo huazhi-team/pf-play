@@ -9,6 +9,7 @@ import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.MyEmpiricalResp;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
+import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
 import com.pf.play.model.protocol.response.uesr.MyVitalityResp;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
@@ -56,7 +57,6 @@ public class UserController {
      */
     @GetMapping("/myMasonry")
     public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
         try{
             log.info("----------:masonryInfo!");
             LoginReq loginReq1 = new LoginReq();
@@ -66,7 +66,8 @@ public class UserController {
             if(null==list||list.size()==0){
                 list =new  ArrayList();
             }
-            return JsonResult.successResult(list);
+            List<MyMasonryResp>  myMasonryResp = MyMethod.toMyMasonryResp(list);
+            return JsonResult.successResult(myMasonryResp);
         }catch (Exception e){
             e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");
@@ -91,11 +92,13 @@ public class UserController {
             List<MyFriendsResp>   list  = null;
             Integer   memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
             }
 
             VcMember            vcMember      = ComponentUtil.userInfoSevrice.getMySuperiorInfo(memberId);
+
+
             VcMemberResource vcMemberResource = ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);
             if(vcMember==null){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());

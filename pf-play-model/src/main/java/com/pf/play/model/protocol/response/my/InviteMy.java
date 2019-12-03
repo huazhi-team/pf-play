@@ -16,11 +16,11 @@ public class InviteMy {
      */
     private  Integer  teamPeople;
     /**
-     * 经验值
+     * 经验等级
      */
     private  Integer  empiricalLevel;
     /**
-     * 活跃值
+     * 达人等级
      */
     private  Integer  darenLevel;
     /**

@@ -7,14 +7,8 @@ import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.InviteMy;
 import com.pf.play.model.protocol.response.my.Vitality;
-import com.pf.play.model.protocol.response.uesr.MyEmpiricalResp;
-import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
-import com.pf.play.model.protocol.response.uesr.MyUserInfoResp;
-import com.pf.play.model.protocol.response.uesr.MyVitalityResp;
-import com.pf.play.rule.core.model.DisEmpiricalValueLevel;
-import com.pf.play.rule.core.model.DisVitalityValue;
-import com.pf.play.rule.core.model.VcMember;
-import com.pf.play.rule.core.model.VcMemberResource;
+import com.pf.play.model.protocol.response.uesr.*;
+import com.pf.play.rule.core.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,6 +219,24 @@ public class MyMethod {
         myUserInfoResp.setCity(vcMember.getCity());
         myUserInfoResp.setSex(vcMember.getSex());
         return myUserInfoResp;
+    }
+
+    /**
+     * @Description: 转换出我的资产
+     * @param uMasonryList
+     * @return java.util.List<com.pf.play.model.protocol.response.uesr.MyMasonryResp>
+     * @author long
+     * @date 2019/12/2 21:54
+     */
+    public static List<MyMasonryResp> toMyMasonryResp(List<UMasonryListLog> uMasonryList){
+        List<MyMasonryResp>  list  = new ArrayList<>();
+        for (UMasonryListLog uMasonryListLog:uMasonryList){
+            MyMasonryResp   myMasonryResp = new MyMasonryResp();
+            BeanUtils.copy(uMasonryListLog,myMasonryResp);
+            myMasonryResp.setCreateTime(uMasonryListLog.getCreateTimeStr());
+            list.add(myMasonryResp);
+        }
+        return list;
     }
 
 

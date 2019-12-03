@@ -13,6 +13,25 @@ import java.io.Serializable;
 public class RequestTrade extends BaseRequest implements Serializable {
     private static final long   serialVersionUID = 1233223331149L;
 
+    public String orderNo;
+    public String payPw;
+
     public RequestTrade(){
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public String getPayPw() {
+        return payPw;
+    }
+
+    public void setPayPw(String payPw) {
+        this.payPw = payPw;
     }
 }

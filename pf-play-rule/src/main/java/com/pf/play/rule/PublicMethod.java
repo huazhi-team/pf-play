@@ -12,16 +12,19 @@ import com.pf.play.model.protocol.response.order.ConsumerOrder;
 import com.pf.play.model.protocol.response.order.Order;
 import com.pf.play.model.protocol.response.order.ResponseOrder;
 import com.pf.play.model.protocol.response.price.ResponseDayPrice;
+import com.pf.play.model.protocol.response.trade.ResponseTrade;
 import com.pf.play.model.protocol.response.trade.ResponseTradeTime;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
+import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -139,6 +142,28 @@ public class PublicMethod {
     }
 
 
+    /**
+     * @Description: 公共的返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param empiricalLevel - 用户经验等级
+     * @param ratio - 比例值
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/13 21:45
+     */
+    public static String assembleRatioResult(long stime, String token, String sign, int empiricalLevel, String ratio){
+        ResponseConsumer dataModel = new ResponseConsumer();
+        dataModel.empiricalLevel = empiricalLevel;
+        dataModel.ratio = ratio;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
 
     /**
      * @Description: 查询固定信息时，校验基本数据是否非法
@@ -162,6 +187,60 @@ public class PublicMethod {
         // 校验用户是否登录
         memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
         return memberId;
+    }
+
+
+    /**
+     * @Description: 查询取用户手续费百分比的信息，校验基本数据是否非法
+     * @param requestConsumer - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkRatioData(RequestConsumer requestConsumer) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestConsumer == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00015.geteCode(), PfErrorCode.ENUM_ERROR.C00015.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestConsumer.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询用户手续费的查询条件
+     * @param memberId
+     * @return
+     * @author yoko
+     * @date 2019/11/29 11:57
+    */
+    public static ConsumerModel assembleServiceChargeQuery(long memberId){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(memberId);
+        return resBean;
+    }
+
+    /**
+     * @Description: TODO
+     * @param model
+     * @return ConsumerModel
+     * @author yoko
+     * @date 2019/11/29 13:47
+    */
+    public static void checkConsumerServiceChargeData(ConsumerModel model) throws Exception{
+        if (model == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00016.geteCode(), PfErrorCode.ENUM_ERROR.C00016.geteDesc());
+        }
+        if (StringUtils.isBlank(model.getRatio())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00017.geteCode(), PfErrorCode.ENUM_ERROR.C00017.geteDesc());
+        }
     }
 
 
@@ -830,6 +909,279 @@ public class PublicMethod {
         dataModel.setSign(sign);
         return JSON.toJSONString(dataModel);
     }
+
+
+    /**
+     * @Description: 添加订单流水数据是，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkTradeAddData(RequestTrade requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00004.geteCode(), PfErrorCode.ENUM_ERROR.T00004.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验订单号值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00005.geteCode(), PfErrorCode.ENUM_ERROR.T00005.geteDesc());
+        }
+        return memberId;
+    }
+
+
+
+    /**
+     * @Description: 组装查询订单的查询条件
+     * @param requestTrade - 查询的基本信息
+     * @param memberId - 用户ID
+     * @param ownType - 自己订单号是否需要包含在内：不为空则自己的订单不做显示
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderQueryByTrade(RequestTrade requestTrade, long memberId, int ownType){
+        OrderModel resBen = new OrderModel();
+        resBen.setMemberId(memberId);
+        resBen.setOrderNo(requestTrade.getOrderNo());
+        resBen.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        resBen.setOwnType(ownType);
+        return resBen;
+    }
+
+    /**
+     * @Description: 卖给TA时，校验订单信息
+     * @param orderModel - 订单信息
+     * @return void
+     * @author yoko
+     * @date 2019/11/28 16:55
+    */
+    public static void checkOrderBySell(OrderModel orderModel) throws Exception{
+        if (orderModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00006.geteCode(), PfErrorCode.ENUM_ERROR.T00006.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 组装查询用户基本信息的查询条件
+     * @param memberId
+     * @return ConsumerModel
+     * @author yoko
+     * @date 2019/11/28 21:18
+    */
+    public static ConsumerModel assembleConsumerQuery(long memberId){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(memberId);
+        return resBean;
+    }
+
+    /**
+     * @Description: 校验卖家的基本信息
+     * @param consumerModel - 用户基本信息
+     * @param payPassword - 用户支付密码
+     * @author yoko
+     * @date 2019/11/28 21:34
+    */
+    public static void checkSellConsumer(ConsumerModel consumerModel, String payPassword) throws Exception{
+        if (consumerModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00007.geteCode(), PfErrorCode.ENUM_ERROR.T00007.geteDesc());
+        }
+        // 卖家是否实已名认证
+        if (consumerModel.getIsCertification() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00008.geteCode(), PfErrorCode.ENUM_ERROR.T00008.geteDesc());
+        }
+        // 卖家是否设置了支付密码
+        if (StringUtils.isBlank(consumerModel.getPayPassword())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00009.geteCode(), PfErrorCode.ENUM_ERROR.T00009.geteDesc());
+        }
+
+        // 卖家是否输入了支付密码
+        if (StringUtils.isBlank(payPassword)){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00013.geteCode(), PfErrorCode.ENUM_ERROR.T00013.geteDesc());
+        }
+
+        // 支付密码是否正确
+        if (!consumerModel.getPayPassword().equals(payPassword)){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00014.geteCode(), PfErrorCode.ENUM_ERROR.T00014.geteDesc());
+        }
+
+        // 卖家是否是黑名单用户--用户当前状态：1、正常用户 2、黑名单
+        if (consumerModel.getIsActive() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00010.geteCode(), PfErrorCode.ENUM_ERROR.T00010.geteDesc());
+        }
+
+        // 卖家是否设置了收款账号：支付宝账号
+        if (StringUtils.isBlank(consumerModel.getFixedNum())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00011.geteCode(), PfErrorCode.ENUM_ERROR.T00011.geteDesc());
+        }
+
+    }
+
+
+    /**
+     * @Description: 校验买家的基本信息
+     * @param consumerModel
+     * @author yoko
+     * @date 2019/11/28 21:34
+     */
+    public static void checkBuyConsumer(ConsumerModel consumerModel) throws Exception{
+        if (consumerModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00012.geteCode(), PfErrorCode.ENUM_ERROR.T00012.geteDesc());
+        }
+    }
+
+
+    /**
+     * @Description: 组装订单交易流水数据
+     * @param orderModel - 订单信息
+    * @param sellConsumer - 卖家信息
+    * @param buyConsumer - 买家信息
+     * @return com.pf.play.rule.core.model.trade.TradeModel
+     * @author yoko
+     * @date 2019/11/29 14:14
+     */
+    public static TradeModel assembleTradeData(OrderModel orderModel, ConsumerModel sellConsumer, ConsumerModel buyConsumer){
+        TradeModel resBean = new TradeModel();
+        resBean.setOrderId(orderModel.getId());
+        resBean.setOrderNo(orderModel.getOrderNo());
+        resBean.setSellMemberId(sellConsumer.getMemberId());
+        resBean.setBuyMemberId(buyConsumer.getMemberId());
+        resBean.setTradeNum(orderModel.getTradeNum());
+        resBean.setTradePrice(orderModel.getTradePrice());
+        resBean.setTotalPrice(orderModel.getTotalPrice());
+        // 计算手续费：手续费=订单交易的数量*具体手续费
+        String serviceCharge = StringUtil.getMultiply(orderModel.getTradeNum(), StringUtil.getBigDecimalDivide(sellConsumer.getRatio(), String.valueOf(100)));
+        resBean.setServiceCharge(serviceCharge);
+        resBean.setSellNickname(sellConsumer.getNickname());
+        resBean.setBuyNickname(buyConsumer.getNickname());
+        resBean.setSellPhone(sellConsumer.getPhoneNum());
+        resBean.setBuyPhone(buyConsumer.getPhoneNum());
+        resBean.setSellFixedNum(sellConsumer.getFixedNum());
+        resBean.setBuyFixedNum(buyConsumer.getFixedNum());
+        resBean.setRatio(sellConsumer.getRatio());
+        return resBean;
+    }
+
+
+    /**
+     * @Description: T组装要冻结用户钻石的数据
+     * @param memberId - 用户ID
+     * @param tradeNum - 交易的钻石数量
+     * @param serviceCharge - 手续费
+     * @return com.pf.play.rule.core.model.consumer.ConsumerModel
+     * @author yoko
+     * @date 2019/11/29 17:56
+     */
+    public static ConsumerModel assembleConsumerAddReduceData(long memberId, String tradeNum, String serviceCharge){
+        ConsumerModel resBean = new ConsumerModel();
+//        serviceCharge = StringUtil.getBigDecimalDivide(serviceCharge, String.valueOf(100));
+//        serviceCharge =  StringUtil.getMultiply(tradeNum, serviceCharge);
+        String addReduceNum = StringUtil.getBigDecimalAdd(tradeNum, serviceCharge); // 订单要交易的数量 + 手续费 = 用户要冻结的钻石数量
+        resBean.setMemberId(memberId);
+        resBean.setAddReduceNum(addReduceNum);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 校验卖家是否有足够的资源进行支付订单
+     * @param ownNum - 卖家拥有的资源数量
+     * @param deductNum - 要扣减的资源数量
+     * @return void
+     * @author yoko
+     * @date 2019/11/29 18:10
+     */
+    public static void checkEnoughResources(String ownNum, String deductNum) throws Exception{
+        boolean flag = StringUtil.getBigDecimalSubtract(ownNum, deductNum);
+        if (!flag){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00017.geteCode(), PfErrorCode.ENUM_ERROR.T00017.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 订单交易流水时返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleTradeResult(long stime, String token, String sign){
+        ResponseTrade dataModel = new ResponseTrade();
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 校验策略类型1是否有数据部署
+     * @param strategyModel - 策略类型：1表示成交量虚假数据开关
+     * @return void
+     * @author yoko
+     * @date 2019/12/2 14:35
+    */
+    public static void checkStrategyShamData(StrategyModel strategyModel) throws Exception{
+        if (strategyModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00018.geteCode(), PfErrorCode.ENUM_ERROR.T00018.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 组装查询交易所当前买量、今日成交量的查询条件
+     * @param type - 查询类型：0表示查询当前买量，1表示查询今日成交量
+     * @return com.pf.play.rule.core.model.trade.TradeModel
+     * @author yoko
+     * @date 2019/12/2 17:53
+     */
+    public static TradeModel assembleOrderTradeNum(int type){
+        TradeModel resBean = new TradeModel();
+        if (type == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        }else if (type == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
+            resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        }
+
+        return resBean;
+    }
+
+    /**
+     * @Description: 交易所的当前交易量、今日成交量的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param buyTradeNum - 前买量
+     * @param sucTradeNum - 今日成交量
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleTradeDataResult(long stime, String token, String sign, String buyTradeNum, String sucTradeNum){
+        ResponseTrade dataModel = new ResponseTrade();
+        dataModel.setBuyTradeNum(buyTradeNum);
+        dataModel.setSucTradeNum(sucTradeNum);
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
 
 
 

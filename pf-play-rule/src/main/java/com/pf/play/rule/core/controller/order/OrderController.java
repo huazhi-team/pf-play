@@ -80,7 +80,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"phoneNum":"","nickname":"","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","sortType":"1", "pageNumber":1,"pageSize":3}
+     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","sortType":"1", "pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -386,7 +386,7 @@ public class OrderController {
      * 请求的属性类:RequestOrder
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
-     * 服务端加密字段:stime+token+秘钥=sign
+     * 服务端加密字段:超时时间+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getUnpaidData", method = {RequestMethod.POST})
     public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
@@ -416,7 +416,7 @@ public class OrderController {
             log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
-            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String sign = SignUtil.getSgin(strategyModel.getStgValue(), stime, token, secretKeySign); // 超时时间+stime+token+秘钥=sign
             String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(strategyModel.getStgValue()));
             // #插入流水
             // 数据加密

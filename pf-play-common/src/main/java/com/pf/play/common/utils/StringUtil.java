@@ -1362,4 +1362,79 @@ public class StringUtil {
 		return data;
 	}
 
+    /**
+     * @Description: 计算两数相乘
+     * @param x
+    *@param y
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/28 22:24
+     */
+	public static String getMultiply(String x, String y){
+        BigDecimal resDoble;
+        BigDecimal xx = new BigDecimal(x);
+        BigDecimal yy = new BigDecimal(y);
+        resDoble = xx.multiply(yy);
+        DecimalFormat sb = new DecimalFormat("###.##");
+        String str = sb.format(resDoble);
+        return str;
+    }
+
+    /**
+     * @Description: 计算两数相加
+     * @param x
+    *@param y
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/28 22:24
+     */
+    public static String getBigDecimalAdd(String x, String y){
+        BigDecimal resDoble;
+        BigDecimal xx = new BigDecimal(x);
+        BigDecimal yy = new BigDecimal(y);
+        resDoble = xx.add(yy);
+        DecimalFormat sb = new DecimalFormat("###.##");
+        String str = sb.format(resDoble);
+        return str;
+    }
+
+	/**
+	 * @Description: 计算两数相减
+	 * <p>值相减，如果不为负数，则返回true；反之则返回fasle</p>
+	 * @param x
+	*@param y
+	 * @return java.lang.String
+	 * @author yoko
+	 * @date 2019/11/28 22:24
+	 */
+	public static boolean getBigDecimalSubtract(String x, String y){
+		BigDecimal resDoble;
+		BigDecimal xx = new BigDecimal(x);
+		BigDecimal yy = new BigDecimal(y);
+		resDoble = xx.subtract(yy);
+		if (resDoble.signum() < 0){
+			return false;
+		}else {
+			return true;
+		}
+	}
+
+	/**
+	 * @Description: 计算两数相除
+	 * @param x
+	*@param y
+	 * @return java.lang.String
+	 * @author yoko
+	 * @date 2019/11/28 22:24
+	 */
+	public static String getBigDecimalDivide(String x, String y){
+		BigDecimal resDoble;
+		BigDecimal xx = new BigDecimal(x);
+		BigDecimal yy = new BigDecimal(y);
+		resDoble = xx.divide(yy);
+		DecimalFormat sb = new DecimalFormat("###.##");
+		String str = sb.format(resDoble);
+		return str;
+	}
+
 }

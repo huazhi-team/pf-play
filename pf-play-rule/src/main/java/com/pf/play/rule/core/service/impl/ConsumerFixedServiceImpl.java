@@ -9,6 +9,7 @@ import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.mapper.ConsumerFixedMapper;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
+import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.service.ConsumerFixedService;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
@@ -61,5 +62,20 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
             dataModel = (ConsumerFixedModel) consumerFixedMapper.findByObject(model);
         }
         return dataModel;
+    }
+
+    @Override
+    public ConsumerModel getConsumer(ConsumerModel model) throws Exception {
+        return consumerFixedMapper.getConsumer(model);
+    }
+
+    @Override
+    public ConsumerModel getConsumerServiceCharge(ConsumerModel model) throws Exception {
+        return consumerFixedMapper.getConsumerServiceCharge(model);
+    }
+
+    @Override
+    public int updateConsumerMasonry(ConsumerModel model) throws Exception {
+        return consumerFixedMapper.updateConsumerMasonry(model);
     }
 }

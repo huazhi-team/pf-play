@@ -20,6 +20,7 @@ public class RequestConsumer extends BaseRequest implements Serializable {
     public Integer fixedType;
     public String fixedNum;
 
+
     public RequestConsumer(){
     }
 
@@ -70,4 +71,5 @@ public class RequestConsumer extends BaseRequest implements Serializable {
     public void setFixedNum(String fixedNum) {
         this.fixedNum = fixedNum;
     }
+
 }

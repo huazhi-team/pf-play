@@ -9,7 +9,10 @@
     <sql id="Base_Column_List">
         a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
-        a.create_time,a.update_time,a.yn,b.invite_code,b.nickname
+        a.create_time,a.update_time,a.yn,
+        b.id AS order_trade_id,b.sell_member_id,b.buy_member_id,b.total_price,b.service_charge,b.sell_nickname,b.buy_nickname,
+        b.sell_phone,b.buy_phone,b.sell_fixed_num,b.buy_fixed_num,b.trade_status,b.picture_ads,b.ratio,b.pay_time,
+        b.receive_time,b.appeal_status AS sell_appeal_status,b.create_time AS trade_create_time
     </sql>
 
     <!-- 查询条件 -->
@@ -54,14 +57,15 @@
                     </if>
                 </otherwise>
             </choose>
-            <if test="inviteCode != null and inviteCode != '' " >
-                and b.invite_code = #{inviteCode}
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                and b.trade_status = #{tradeStatus}
             </if>
-            <if test="nickname != null and nickname != '' " >
-                and b.nickname = #{nickname}
+            <if test="sellAppealStatus != null and sellAppealStatus != '' " >
+                and b.appeal_status = #{sellAppealStatus}
             </if>
 
             and a.yn = 0
+            <!--and b.yn = 0-->
         </trim>
     </sql>
 
@@ -103,7 +107,7 @@
     <select id="findAll" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -111,7 +115,7 @@
     <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
     </select>
@@ -120,7 +124,7 @@
     <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause"/>
         limit 1
     </select>
@@ -129,7 +133,7 @@
     <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause_id"/>
     </select>
 
@@ -138,7 +142,7 @@
     <!-- 查询总数-->
     <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
         select count(1)
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -146,7 +150,7 @@
     <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join vc_member b on a.member_id = b.member_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
         limit #{start},#{end}
@@ -158,13 +162,16 @@
         <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
         <!--SELECT LAST_INSERT_ID() as id-->
         <!--</selectKey>-->
-        insert into tb_pf_order
+        insert into tb_pf_order_trade
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="orderNo != null and orderNo != '' " >
-                order_no,
+            <if test="orderId != null and orderId != '' " >
+                order_id,
             </if>
-            <if test="memberId != null and memberId != '' " >
-                member_id,
+            <if test="sellMemberId != null and sellMemberId != '' " >
+                sell_member_id,
+            </if>
+            <if test="buyMemberId != null and buyMemberId != '' " >
+                buy_member_id,
             </if>
             <if test="tradeNum != null and tradeNum != '' " >
                 trade_num,
@@ -172,11 +179,44 @@
             <if test="tradePrice != null and tradePrice != '' " >
                 trade_price,
             </if>
-            <if test="orderTradeStatus != null and orderTradeStatus != '' " >
-                order_trade_status,
+            <if test="totalPrice != null and totalPrice != '' " >
+                total_price,
             </if>
-            <if test="orderStatus != null and orderStatus != '' " >
-                order_status,
+            <if test="serviceCharge != null and serviceCharge != '' " >
+                service_charge,
+            </if>
+            <if test="sellNickname != null and sellNickname != '' " >
+                sell_nickname,
+            </if>
+            <if test="buyNickname != null and buyNickname != '' " >
+                buy_nickname,
+            </if>
+            <if test="sellPhone != null and sellPhone != '' " >
+                sell_phone,
+            </if>
+            <if test="buyPhone != null and buyPhone != '' " >
+                buy_phone,
+            </if>
+            <if test="sellFixedNum != null and sellFixedNum != '' " >
+                sell_fixed_num,
+            </if>
+            <if test="buyFixedNum != null and buyFixedNum != '' " >
+                buy_fixed_num,
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                trade_status,
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                picture_ads,
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                ratio,
+            </if>
+            <if test="payTime != null and payTime != '' " >
+                pay_time,
+            </if>
+            <if test="receiveTime != null and receiveTime != '' " >
+                receive_time,
             </if>
             <if test="appealStatus != null and appealStatus != '' " >
                 appeal_status,
@@ -200,11 +240,14 @@
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="orderNo != null and orderNo != '' " >
-                <![CDATA[  #{orderNo}, ]]>
+            <if test="orderId != null and orderId != '' " >
+                <![CDATA[  #{orderId}, ]]>
             </if>
-            <if test="memberId != null and memberId != '' " >
-                <![CDATA[  #{memberId}, ]]>
+            <if test="sellMemberId != null and sellMemberId != '' " >
+                <![CDATA[  #{sellMemberId}, ]]>
+            </if>
+            <if test="buyMemberId != null and buyMemberId != '' " >
+                <![CDATA[  #{buyMemberId}, ]]>
             </if>
             <if test="tradeNum != null and tradeNum != '' " >
                 <![CDATA[  #{tradeNum}, ]]>
@@ -212,11 +255,44 @@
             <if test="tradePrice != null and tradePrice != '' " >
                 <![CDATA[  #{tradePrice}, ]]>
             </if>
-            <if test="orderTradeStatus != null and orderTradeStatus != '' " >
-                <![CDATA[  #{orderTradeStatus}, ]]>
+            <if test="totalPrice != null and totalPrice != '' " >
+                <![CDATA[  #{totalPrice}, ]]>
             </if>
-            <if test="orderStatus != null and orderStatus != '' " >
-                <![CDATA[  #{orderStatus}, ]]>
+            <if test="serviceCharge != null and serviceCharge != '' " >
+                <![CDATA[  #{serviceCharge}, ]]>
+            </if>
+            <if test="sellNickname != null and sellNickname != '' " >
+                <![CDATA[  #{sellNickname}, ]]>
+            </if>
+            <if test="buyNickname != null and buyNickname != '' " >
+                <![CDATA[  #{buyNickname}, ]]>
+            </if>
+            <if test="sellPhone != null and sellPhone != '' " >
+                <![CDATA[  #{sellPhone}, ]]>
+            </if>
+            <if test="buyPhone != null and buyPhone != '' " >
+                <![CDATA[  #{buyPhone}, ]]>
+            </if>
+            <if test="sellFixedNum != null and sellFixedNum != '' " >
+                <![CDATA[  #{sellFixedNum}, ]]>
+            </if>
+            <if test="buyFixedNum != null and buyFixedNum != '' " >
+                <![CDATA[  #{buyFixedNum}, ]]>
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                <![CDATA[  #{tradeStatus}, ]]>
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                <![CDATA[  #{pictureAds}, ]]>
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                <![CDATA[  #{ratio}, ]]>
+            </if>
+            <if test="payTime != null and payTime != '' " >
+                <![CDATA[  #{payTime}, ]]>
+            </if>
+            <if test="receiveTime != null and receiveTime != '' " >
+                <![CDATA[  #{receiveTime}, ]]>
             </if>
             <if test="appealStatus != null and appealStatus != '' " >
                 <![CDATA[  #{appealStatus}, ]]>
@@ -242,13 +318,16 @@
 
     <!-- 更新基本信息 -->
     <update id="update" parameterType="com.pf.play.rule.core.model.trade.TradeModel">
-        UPDATE tb_pf_order a
+        UPDATE tb_pf_order_trade a
         <trim prefix="set" suffixOverrides=",">
-            <if test="orderNo != null and orderNo != '' " >
-                a.order_no = #{orderNo},
+            <if test="orderId != null and orderId != '' " >
+                a.order_id = #{orderId},
             </if>
-            <if test="memberId != null and memberId != '' " >
-                a.member_id = #{memberId},
+            <if test="sellMemberId != null and sellMemberId != '' " >
+                a.sell_member_id = #{sellMemberId},
+            </if>
+            <if test="buyMemberId != null and buyMemberId != '' " >
+                a.buy_member_id = #{buyMemberId},
             </if>
             <if test="tradeNum != null and tradeNum != '' " >
                 a.trade_num = #{tradeNum},
@@ -256,11 +335,44 @@
             <if test="tradePrice != null and tradePrice != '' " >
                 a.trade_price = #{tradePrice},
             </if>
-            <if test="orderTradeStatus != null and orderTradeStatus != '' " >
-                a.order_trade_status = #{orderTradeStatus},
+            <if test="totalPrice != null and totalPrice != '' " >
+                a.total_price = #{totalPrice},
             </if>
-            <if test="orderStatus != null and orderStatus != '' " >
-                a.order_status = #{orderStatus},
+            <if test="serviceCharge != null and serviceCharge != '' " >
+                a.service_charge = #{serviceCharge},
+            </if>
+            <if test="sellNickname != null and sellNickname != '' " >
+                a.sell_nickname = #{sellNickname},
+            </if>
+            <if test="buyNickname != null and buyNickname != '' " >
+                a.buy_nickname = #{buyNickname},
+            </if>
+            <if test="sellPhone != null and sellPhone != '' " >
+                a.sell_phone = #{sellPhone},
+            </if>
+            <if test="buyPhone != null and buyPhone != '' " >
+                a.buy_phone = #{buyPhone},
+            </if>
+            <if test="sellFixedNum != null and sellFixedNum != '' " >
+                a.sell_fixed_num = #{sellFixedNum},
+            </if>
+            <if test="buyFixedNum != null and buyFixedNum != '' " >
+                a.buy_fixed_num = #{buyFixedNum},
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                a.trade_status = #{tradeStatus},
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                a.ratio = #{ratio},
+            </if>
+            <if test="payTime != null and payTime != '' " >
+                a.pay_time = #{payTime},
+            </if>
+            <if test="receiveTime != null and receiveTime != '' " >
+                a.receive_time = #{receiveTime},
             </if>
             <if test="appealStatus != null and appealStatus != '' " >
                 a.appeal_status = #{appealStatus},
@@ -272,7 +384,7 @@
 
     <!-- 主要作用1.逻辑删除，2更新状态 -->
     <update id="manyOperation" parameterType="Object">
-        update tb_pf_order a
+        update tb_pf_order_trade a
         <trim prefix="set" suffixOverrides=",">
             <if test="yn != 0 and yn >0 " >
                 a.yn = #{yn},
@@ -282,20 +394,13 @@
     </update>
 
 
-    <!-- 取消订单 -->
-    <update id="cancelOrder" parameterType="Object">
-        update tb_pf_order a
-        <trim prefix="set" suffixOverrides=",">
-            <if test="orderStatus != null and orderStatus != '' " >
-                a.order_status = #{orderStatus},
-            </if>
-            a.update_time = NOW().
-        </trim>
-        where 1=1
-        and a.order_no = #{orderNo} and a.member_id = #{memberId}
-        and a.order_trade_status = 0 and a.order_status = 1
-        and a.yn = 0
-    </update>
+    <!-- 计算当前买量、今日成交量-->
+    <select id="getOrderTradeNum" parameterType="Object" resultType="java.lang.String">
+        select
+          sum(a.trade_num) as trade_data_num
+        from tb_pf_order a
+        <include refid="Example_Where_Clause"/>
+    </select>
 
 
 

@@ -18,6 +18,9 @@ public class ResponseConsumer extends BaseResponse implements Serializable {
     public Integer fixedType;
     public String fixedNum;
 
+    public Integer empiricalLevel;
+    public String ratio;
+
     public ResponseConsumer(){
 
     }

@@ -39,4 +39,15 @@ public interface PfCacheKey {
      */
     String LOCK_ORDER = "-6";
 
+    /**
+     * 用户在操作他的钻石，需要对其进行锁定
+     * 所以在变量名称前加了lock
+     */
+    String LOCK_CONSUMER = "-7";
+
+    /**
+     * 当前买量、今日成交量
+     */
+    String ORDER_TRADE_NUM = "-8";
+
 }

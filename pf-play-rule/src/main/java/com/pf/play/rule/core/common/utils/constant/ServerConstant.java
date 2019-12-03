@@ -27,6 +27,11 @@ public class ServerConstant {
         public static final int SIZE_VALUE_TWO = 2;
 
         /**
+         * 值是否等于3的判断条件
+         */
+        public static final int SIZE_VALUE_THREE = 3;
+
+        /**
          * 字符串值等于1
          */
         public static final String STR_VALUE_ONE = "1";

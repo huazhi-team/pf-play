@@ -14,9 +14,9 @@ public class JsonResult<T> implements Serializable {
 
 	private static final long serialVersionUID = -110632011249276581L;
 	// 返回状态码:0代表正常，非零代表错误，-1表示数据为空
-	private String code;
-	private boolean success;
-	private String msg;
+	private String errcode;
+	private boolean message;
+	private String content;
 	private T data;
 	private String sgid;
 	private String cgid;
@@ -30,8 +30,8 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> successResult(T data) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setCode("0");
-		jsonResult.setSuccess(true);
+		jsonResult.setErrcode("0");
+		jsonResult.setMessage(true);
 		jsonResult.setData(data);
 		return jsonResult;
 	}
@@ -44,8 +44,8 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> successResult(T data, String cgid, String sgid) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setCode("0");
-		jsonResult.setSuccess(true);
+		jsonResult.setErrcode("0");
+		jsonResult.setMessage(true);
 		jsonResult.setData(data);
 		jsonResult.setCgid(cgid);
 		jsonResult.setSgid(sgid);
@@ -63,9 +63,9 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(String msg, String code) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setCode(code);
-		jsonResult.setSuccess(false);
-		jsonResult.setMsg(msg);
+		jsonResult.setErrcode(code);
+		jsonResult.setMessage(false);
+		jsonResult.setContent(msg);
 		jsonResult.setData(null);
 		return jsonResult;
 	}
@@ -80,9 +80,9 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(String msg, String code, String cgid, String sgid) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setCode(code);
-		jsonResult.setSuccess(false);
-		jsonResult.setMsg(msg);
+		jsonResult.setErrcode(code);
+		jsonResult.setMessage(false);
+		jsonResult.setContent(msg);
 		jsonResult.setData(null);
 		jsonResult.setCgid(cgid);
 		jsonResult.setSgid(sgid);
@@ -98,36 +98,36 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(T data, String msg, String resultCode) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setCode(resultCode);
-		jsonResult.setSuccess(false);
-		jsonResult.setMsg(msg);
+		jsonResult.setErrcode(resultCode);
+		jsonResult.setMessage(false);
+		jsonResult.setContent(msg);
 		jsonResult.setData(data);
 		return jsonResult;
 	}
 
 
-	public boolean isSuccess() {
-		return success;
+	public String getErrcode() {
+		return errcode;
 	}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
+	public void setErrcode(String errcode) {
+		this.errcode = errcode;
 	}
 
-	public String getCode() {
-		return code;
+	public boolean isMessage() {
+		return message;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setMessage(boolean message) {
+		this.message = message;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getContent() {
+		return content;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public T getData() {

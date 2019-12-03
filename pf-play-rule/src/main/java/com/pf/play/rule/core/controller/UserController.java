@@ -96,7 +96,7 @@ public class UserController {
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
             }
 
-            VcMember            vcMember      = ComponentUtil.userInfoSevrice.getMySuperiorInfo(memberId);
+            VcMember     vcMember    = ComponentUtil.userInfoSevrice.getMySuperiorInfo(memberId);
 
 
             VcMemberResource vcMemberResource = ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);

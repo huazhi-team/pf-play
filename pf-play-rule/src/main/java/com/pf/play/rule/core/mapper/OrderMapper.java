@@ -54,4 +54,23 @@ public interface OrderMapper<T> extends BaseDao<T> {
      * @date 2019/12/3 11:31
      */
     public int updateOrderStatus(OrderModel model);
+
+
+    /**
+     * @Description: 获取用户的已完成的订单数据的总行数
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public int countFinishOrder(OrderModel model);
+
+    /**
+     * @Description: 获取用户的已完成的订单数据
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public List<OrderModel> getFinishOrderList(OrderModel model);
 }

@@ -66,7 +66,7 @@ public class ServerConstant {
 
     /**
      * 策略的枚举
-     * 策略类型：1表示成交量虚假数据开关，2表示交易所时间控制，3买家付款超时时间
+     * 策略类型：1表示成交量虚假数据开关，2表示交易所时间控制，3买家付款超时时间，4卖家确认收款超时时间
      * 策略整形值:当策略类型等于1时（此字段值1表示虚假数据处于关闭，等于2表示开启虚假数据），等于2时（此字段值1表示双休日不交易，2表示交易）
      * 策略值：字段stg_type等于1，字段stg_num_value等于2时，则根据本字段的数据乘以倍数，等于2，表示交易时间的时间段
      */
@@ -76,6 +76,7 @@ public class ServerConstant {
         STG_TRADE_TIME_WEEKEND_CLOSE(2, 1, ""),
         STG_TRADE_TIME_WEEKEND_OPEN(2, 2, ""),
         STG_BUY_OVERTIME(3, 0, ""),
+        STG_SELL_OVERTIME(4, 0, ""),
         ;
         private int stgType;
         private int stgNumValue;

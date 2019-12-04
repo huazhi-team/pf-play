@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * @Description 订单流水的属性
@@ -52,9 +53,14 @@ public class OrderModel extends BasePage implements Serializable {
     private Integer orderStatus;
 
     /**
-     * 订单申诉状态：1无申诉，2申诉，3已处理
+     * 订单流水-订单申诉状态：1无申诉，2申诉，3已处理
      */
     private Integer appealStatus;
+
+    /**
+     * 订单交易流水-订单申诉状态：1无申诉，2申诉，3已处理
+     */
+    private Integer tradeAppealStatus;
 
     /**
      * 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时
@@ -142,6 +148,57 @@ public class OrderModel extends BasePage implements Serializable {
      * update table set status = 1 where status = 0
      */
     private Integer oldStatus;
+
+    /**
+     * 订单流水的状态集合
+     */
+    private List<Integer> orderTradeStatusList;
+
+    /**
+     * 订单交易流水的状态集合
+     */
+    private List<Integer> tradeStatusList;
+
+    /**
+     * 卖家会员ID
+     */
+    private Long sellMemberId;
+
+    /**
+     * 买家会员ID
+     */
+    private Long buyMemberId;
+
+    /**
+     * 手续费
+     */
+    private String serviceCharge;
+
+    /**
+     *卖家昵称
+     */
+    private String sellNickname;
+
+    /**
+     * 买家昵称
+     */
+    private String buyNickname;
+
+    /**
+     * 买家的支付时间
+     */
+    private String payTime;
+
+    /**
+     * 卖家的确认收款时间
+     */
+    private String receiveTime;
+
+    /**
+     * 订单类型：1求购订单，2卖出订单
+     * 让客户端好判断订单；如用户求购完成的订单为1，用户卖出完成的订单为2
+     */
+    private Integer orderType;
 
     public Long getId() {
         return id;
@@ -361,5 +418,85 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setOldStatus(Integer oldStatus) {
         this.oldStatus = oldStatus;
+    }
+
+    public List<Integer> getOrderTradeStatusList() {
+        return orderTradeStatusList;
+    }
+
+    public void setOrderTradeStatusList(List<Integer> orderTradeStatusList) {
+        this.orderTradeStatusList = orderTradeStatusList;
+    }
+
+    public List<Integer> getTradeStatusList() {
+        return tradeStatusList;
+    }
+
+    public void setTradeStatusList(List<Integer> tradeStatusList) {
+        this.tradeStatusList = tradeStatusList;
+    }
+
+    public Long getSellMemberId() {
+        return sellMemberId;
+    }
+
+    public void setSellMemberId(Long sellMemberId) {
+        this.sellMemberId = sellMemberId;
+    }
+
+    public Long getBuyMemberId() {
+        return buyMemberId;
+    }
+
+    public void setBuyMemberId(Long buyMemberId) {
+        this.buyMemberId = buyMemberId;
+    }
+
+    public String getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(String serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public String getSellNickname() {
+        return sellNickname;
+    }
+
+    public void setSellNickname(String sellNickname) {
+        this.sellNickname = sellNickname;
+    }
+
+    public String getBuyNickname() {
+        return buyNickname;
+    }
+
+    public void setBuyNickname(String buyNickname) {
+        this.buyNickname = buyNickname;
+    }
+
+    public String getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(String payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getReceiveTime() {
+        return receiveTime;
+    }
+
+    public void setReceiveTime(String receiveTime) {
+        this.receiveTime = receiveTime;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 }

@@ -46,4 +46,14 @@ public interface OrderService<T> extends BaseService<T> {
     public boolean updateOrderStatus(OrderModel model) throws Exception;
 
 
+    /**
+     * @Description: 获取用户的已完成的订单数据
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public List<OrderModel> getFinishOrderList(OrderModel model) throws Exception;
+
+
 }

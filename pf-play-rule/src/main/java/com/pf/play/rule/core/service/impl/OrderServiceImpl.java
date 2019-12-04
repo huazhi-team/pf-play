@@ -71,4 +71,12 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
         }
         return true;
     }
+
+    @Override
+    public List<OrderModel> getFinishOrderList(OrderModel model) throws Exception {
+        Integer rowCount = orderMapper.countFinishOrder(model);
+        model.setRowCount(rowCount);
+        List<OrderModel> list = orderMapper.getFinishOrderList(model);
+        return list;
+    }
 }

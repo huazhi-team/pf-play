@@ -18,8 +18,17 @@ public class ConsumerOrder implements Serializable {
     public Integer orderTradeStatus;
     public Integer orderStatus;
     public Integer appealStatus;
+    public String pictureAds;
     public String createTime;
     public String updateTime;
+    public String serviceCharge;
+    public String sellNickname;
+    public String buyNickname;
+    public String tradeCreateTime;
+    public String payTime;
+    public String receiveTime;
+    public Integer orderType;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -91,5 +100,69 @@ public class ConsumerOrder implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(String serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public String getSellNickname() {
+        return sellNickname;
+    }
+
+    public void setSellNickname(String sellNickname) {
+        this.sellNickname = sellNickname;
+    }
+
+    public String getBuyNickname() {
+        return buyNickname;
+    }
+
+    public void setBuyNickname(String buyNickname) {
+        this.buyNickname = buyNickname;
+    }
+
+    public String getTradeCreateTime() {
+        return tradeCreateTime;
+    }
+
+    public void setTradeCreateTime(String tradeCreateTime) {
+        this.tradeCreateTime = tradeCreateTime;
+    }
+
+    public String getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(String payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getReceiveTime() {
+        return receiveTime;
+    }
+
+    public void setReceiveTime(String receiveTime) {
+        this.receiveTime = receiveTime;
+    }
+
+    public String getPictureAds() {
+        return pictureAds;
+    }
+
+    public void setPictureAds(String pictureAds) {
+        this.pictureAds = pictureAds;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 }

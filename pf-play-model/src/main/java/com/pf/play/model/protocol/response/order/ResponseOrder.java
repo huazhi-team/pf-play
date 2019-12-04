@@ -20,6 +20,8 @@ public class ResponseOrder  extends BaseResponse implements Serializable {
 
     public List<ConsumerOrder> coList;
 
+    public Integer rowCount;
+
     public ResponseOrder(){
 
     }

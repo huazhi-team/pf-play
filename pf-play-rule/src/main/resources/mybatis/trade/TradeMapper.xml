@@ -57,6 +57,15 @@
                     </if>
                 </otherwise>
             </choose>
+            <if test="orderId != null and orderId != '' " >
+                and b.order_id = #{orderId}
+            </if>
+            <if test="sellMemberId != null and sellMemberId != '' " >
+                and b.sell_member_id = #{sellMemberId}
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                and b.trade_status = #{tradeStatus}
+            </if>
             <if test="tradeStatus != null and tradeStatus != '' " >
                 and b.trade_status = #{tradeStatus}
             </if>
@@ -401,6 +410,32 @@
         from tb_pf_order a
         <include refid="Example_Where_Clause"/>
     </select>
+
+
+    <!-- 修改订单状态：交易状态：1超时，2正常进行中，3问题申诉，4确认已付款（买家等待），5确认已收款（卖家确认） -->
+    <update id="updateTradeStatus" parameterType="Object">
+        update tb_pf_order_trade a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+                a.pay_time = NOW(),
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                a.trade_status = #{tradeStatus},
+            </if>
+            <if test="sellMemberId != null and sellMemberId != '' " >
+                a.receive_time = NOW(),
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.order_id = #{orderId}
+        and a.trade_status = #{oldStatus}
+        and a.yn = 0
+        <if test="sellMemberId != null and sellMemberId != '' " >
+            and a.sell_member_id = #{sellMemberId}
+        </if>
+    </update>
 
 
 

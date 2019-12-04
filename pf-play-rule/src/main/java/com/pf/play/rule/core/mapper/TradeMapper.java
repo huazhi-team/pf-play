@@ -25,4 +25,16 @@ public interface TradeMapper<T> extends BaseDao<T> {
      * @date 2019/12/2 14:45
      */
     public String getOrderTradeNum(TradeModel model);
+
+    /**
+     * @Description: 修改订单状态：交易状态：1超时，2正常进行中，3问题申诉，4确认已付款（买家等待），5确认已收款（卖家确认）
+     * <p>
+     *     买家确认付款时：会有图片值这个字段
+     * </p>
+     * @param model
+     * @return boolean
+     * @author yoko
+     * @date 2019/12/3 11:31
+     */
+    public int updateTradeStatus(TradeModel model);
 }

@@ -40,4 +40,22 @@ public interface ConsumerFixedMapper<T> extends BaseDao<T> {
      * @date 2019/12/2 11:29
      */
     public int updateConsumerMasonry(ConsumerModel model);
+
+    /**
+     * @Description: 用户资源加钻石
+     * @param model - 用户信息：用户ID、用户要加的钻石个数
+     * @return
+     * @author yoko
+     * @date 2019/12/3 21:36
+    */
+    public int updateConsumerAddMasonry(ConsumerModel model);
+
+    /**
+     * @Description: 用户资源减钻石：这里减的是冻结的钻石
+     * @param model - 用户信息：用户ID、用户要减的钻石个数
+     * @return
+     * @author yoko
+     * @date 2019/12/3 21:36
+     */
+    public int updateConsumerSubtractMasonry(ConsumerModel model);
 }

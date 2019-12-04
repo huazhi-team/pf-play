@@ -349,7 +349,7 @@
             <if test="orderStatus != null and orderStatus != '' " >
                 a.order_status = #{orderStatus},
             </if>
-            a.update_time = NOW().
+            a.update_time = NOW()
         </trim>
         where 1=1
         and a.order_no = #{orderNo} and a.member_id = #{memberId}
@@ -375,6 +375,24 @@
         <include refid="Example_Order_By"/>
         limit #{start},#{end}
     </select>
+
+
+    <!-- 修改订单状态：订单交易状态、订单状态 -->
+    <update id="updateOrderStatus" parameterType="Object">
+        update tb_pf_order a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderStatus != null and orderStatus != '' " >
+                a.order_status = #{orderStatus},
+            </if>
+            <if test="orderTradeStatus != null and orderTradeStatus != '' " >
+                a.order_trade_status = #{orderTradeStatus},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.order_no = #{orderNo}
+        and a.yn = 0
+    </update>
 
 
 

@@ -192,7 +192,7 @@ public class TradeController {
 
 
     /**
-     * @Description: 卖给买家/也就是添加订单交易流水
+     * @Description: 卖家卖给买家/也就是添加订单交易流水
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -200,11 +200,20 @@ public class TradeController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/td/addData
      * 请求的属性类:RequestTrade
-     * 必填字段:{"orderNo":"order_no_11","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"orderNo":"order_no_2","payPw":"3","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * UPDATE tb_pf_order SET order_trade_status = 0 WHERE order_no = '';
      * UPDATE tb_pf_order_trade SET yn = 1 WHERE order_id =;
+     * result=={
+     *     "errcode": "0",
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJzaWduIjoiMGU3Nzc4NDdkYjMwYmMwZDhmZTExYTYxY2Y3OWI4YmIiLCJzdGltZSI6MTU3NTQyNjMzNTQ0NywidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912041025250000001",
+     *     "cgid": ""
+     * }
      */
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
     public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
@@ -249,8 +258,10 @@ public class TradeController {
             ConsumerModel sellConsumerModel = PublicMethod.assembleConsumerAddReduceData(memberId, tradeModel.getTradeNum(), tradeModel.getServiceCharge());
             // 校验卖家是否有足够的钻石进行支付
             PublicMethod.checkEnoughResources(sellConsumer.getDayMasonry(), sellConsumerModel.getAddReduceNum());
+            // 组装修改订单号状态的数据
+            OrderModel orderUpStatus = PublicMethod.assembleUpdataOrderStatusData(orderModel.getOrderNo(),ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, null);
             // 正式生成订单
-            ComponentUtil.tradeService.createOrderTrade(tradeModel, sellConsumerModel);
+            ComponentUtil.tradeService.createOrderTrade(tradeModel, sellConsumerModel, orderUpStatus);
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -262,6 +273,7 @@ public class TradeController {
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // #提醒买家 - 卖家已卖出钻石，请买家进行支付
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
@@ -270,6 +282,163 @@ public class TradeController {
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
+
+
+
+
+    /**
+     * @Description: 买家确认支付
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/td/confirmPay
+     * 请求的属性类:RequestTrade
+     * 必填字段:{"orderNo":"order_no_1","pictureAds":"https://pics7.baidu.com/feed/21a4462309f790528810a506738b00cf7bcbd57d.jpeg?token=13e1f88d6796436f9bee0f740d8cc7b3&s=0E21D2055E721094748468B70300A002","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+pictureAds+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": "0",
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJzaWduIjoiNzBkNDZlYzNmZGI3MWI4MjQ5YjkxYjY4ZmY3NGNiOWIiLCJzdGltZSI6MTU3NTQyNjgyNDE4MywidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912041033300000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/confirmPay", method = {RequestMethod.POST})
+    public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "1");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkTradeConfirmPayData(requestTrade);
+            token = requestTrade.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 首先根据订单号查询是否有此订单信息
+            OrderModel orderQuery = PublicMethod.assembleOrderQueryByConfirmPay(requestTrade, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+            // check订单是否存在
+            PublicMethod.checkOrderByConfirmPay(orderModel);
+            // 更新订单流水、订单交易流水的订单交易状态：更新成确认已付款
+            TradeModel upTradeModel = PublicMethod.assembleUpTradeStatusByConfirmPay(orderModel.getId(), requestTrade.pictureAds, ServerConstant.TradeStatusEnum.PAY.getType(), ServerConstant.TradeStatusEnum.ACTION.getType());
+            OrderModel upOrderModel = PublicMethod.assembleUpOrderStatusByConfirmPay(orderModel.getOrderNo(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            ComponentUtil.tradeService.updateOrderAndOrderTradeStatus(upTradeModel, upOrderModel);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleTradeResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // #提醒卖家 - 买家已付款，卖家需要核实是否收到款
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 卖家确认已收款
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/td/confirmRpt
+     * 请求的属性类:RequestTrade
+     * 必填字段:{"orderNo":"order_no_1","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": "0",
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJzaWduIjoiYWQyYzFlZjQxNjMwM2I5OTcyNTJiM2QxZTg0ZDMwMzEiLCJzdGltZSI6MTU3NTQyNzcyMzY4NCwidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912041048340000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/confirmRpt", method = {RequestMethod.POST})
+    public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkTradeConfirmReceiptData(requestTrade);
+            token = requestTrade.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 首先根据订单号查询是否有此订单信息
+            OrderModel orderQuery = PublicMethod.assembleOrderQueryByConfirmRpt(requestTrade, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+            OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+            // check订单是否存在
+            PublicMethod.checkOrderByConfirmReceipt(orderModel);
+            TradeModel tradeQuery = PublicMethod.assembleTradeQueryByConfirmReceipt(orderModel.getId(), memberId, ServerConstant.TradeStatusEnum.PAY.getType());
+            TradeModel tradeModel = (TradeModel) ComponentUtil.tradeService.findByObject(tradeQuery);
+            // 组装卖家要扣除在冻结的钻石个数
+            ConsumerModel sellConsumerModel = PublicMethod.assembleSellConsumerSubtractMasonry(tradeModel);
+            // 组装买家要加的钻石个数
+            ConsumerModel buyConsumerModel = PublicMethod.assembleBuyConsumerAddMasonry(tradeModel);
+            // 更新订单流水：A.订单交易状态更新成完成. B.订单状态更新成交易完成
+            // 更新订单交易流水：A.交易状态更新成确认已收款（卖家确认）
+            // 卖家冻结钻石扣除、买家钻石加上
+            TradeModel upTradeModel = PublicMethod.assembleUpTradeStatusByConfirmReceipt(orderModel.getId(), memberId, ServerConstant.TradeStatusEnum.MAKE_COLLECTIONS.getType(), ServerConstant.TradeStatusEnum.PAY.getType());
+            OrderModel upOrderModel = PublicMethod.assembleOrderUpByConfirmReceipt(requestTrade, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
+            ComponentUtil.tradeService.tradeFinish(upTradeModel, upOrderModel, sellConsumerModel, buyConsumerModel);
+
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleTradeResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // #提醒买家 - 卖家已确认收款，买家需要核实是否收到钻石
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
 
 
 

@@ -112,6 +112,43 @@ public class ServerConstant {
         }
     }
 
+    /**
+     * @Description: 订单交易流水的交易状态
+     * @author yoko
+     * @date 2019/12/3 16:16
+    */
+    public enum TradeStatusEnum{
+        OVERTTIME(1, "超时"),
+        ACTION(2, "正常进行中"),
+        QUESTION(3, "问题申诉"),
+        PAY(4, "确认已付款"),
+        MAKE_COLLECTIONS(5, "确认已收款"),
+        ;
+        private int type;
+        private String desc;
+
+        private TradeStatusEnum(int type, String desc) {
+            this.type = type;
+            this.desc = desc;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+    }
+
 
 
 

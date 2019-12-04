@@ -15,6 +15,7 @@ public class RequestTrade extends BaseRequest implements Serializable {
 
     public String orderNo;
     public String payPw;
+    public String pictureAds;
 
     public RequestTrade(){
     }
@@ -33,5 +34,13 @@ public class RequestTrade extends BaseRequest implements Serializable {
 
     public void setPayPw(String payPw) {
         this.payPw = payPw;
+    }
+
+    public String getPictureAds() {
+        return pictureAds;
+    }
+
+    public void setPictureAds(String pictureAds) {
+        this.pictureAds = pictureAds;
     }
 }

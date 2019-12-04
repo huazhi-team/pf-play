@@ -42,7 +42,7 @@ public class OrderModel extends BasePage implements Serializable {
     private String tradePrice;
 
     /**
-     * 订单交易状态：0初始化，1锁定，2完成
+     * 订单交易状态：0初始化，1锁定，2确认付款，3完成
      */
     private Integer orderTradeStatus;
 
@@ -136,6 +136,12 @@ public class OrderModel extends BasePage implements Serializable {
      * 交易时间：可以理解为卖家卖给买家的时间
      */
     private String tradeCreateTime;
+
+    /**
+     * 老的状态：类似于SQL如下
+     * update table set status = 1 where status = 0
+     */
+    private Integer oldStatus;
 
     public Long getId() {
         return id;
@@ -346,5 +352,14 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setTradeCreateTime(String tradeCreateTime) {
         this.tradeCreateTime = tradeCreateTime;
+    }
+
+
+    public Integer getOldStatus() {
+        return oldStatus;
+    }
+
+    public void setOldStatus(Integer oldStatus) {
+        this.oldStatus = oldStatus;
     }
 }

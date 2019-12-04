@@ -195,6 +195,23 @@
     </update>
 
 
+    <!-- 用户资源减钻石：这里减的是冻结的钻石 -->
+    <update id="updateConsumerSubtractMasonry" parameterType="Object">
+        update vc_member_resource a
+        set a.frozen_masonry = a.frozen_masonry - (#{addReduceNum} + 0)
+        where 1=1
+        and a.member_id = #{memberId}
+    </update>
+
+    <!-- 用户资源加钻石 -->
+    <update id="updateConsumerAddMasonry" parameterType="Object">
+        update vc_member_resource a
+        set a.day_masonry = a.day_masonry + (#{addReduceNum} + 0)
+        where 1=1
+        and a.member_id = #{memberId}
+    </update>
+
+
 
 
 

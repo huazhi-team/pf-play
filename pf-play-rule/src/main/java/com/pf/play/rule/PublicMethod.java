@@ -632,7 +632,7 @@ public class PublicMethod {
      * @Description: 组装查询用户购买的订单（买入订单）列表的查询条件
      * @param requestOrder - 查询的基本信息
      * @param memberId - 用户ID
-     * @param orderTradeStatus - 订单交易状态：0初始化(我的购入订单)，1锁定(我的代付款订单)，2完成
+     * @param orderTradeStatus - 订单交易状态：0初始化(我的购入订单)，1锁定(我的代付款订单)，3确认付款，3完成
      * @param orderStatus - 订单状态：1正常，2取消，3完成交易；因为这里的订单交易状态是买入的订单状态（初始化状态），只会查询订单正常状态
      * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
      * @return OrderModel
@@ -732,7 +732,7 @@ public class PublicMethod {
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00008.geteCode(), PfErrorCode.ENUM_ERROR.D00008.geteDesc());
         }
         if (orderModel.getOrderStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-            // 订单交易状态：0初始化，1锁定，2完成；
+            // 订单交易状态：0初始化，1锁定，2确认付款，3完成；
             // 订单交易状态不等于0的订单无法取消
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00009.geteCode(), PfErrorCode.ENUM_ERROR.D00009.geteDesc());
         }
@@ -872,7 +872,7 @@ public class PublicMethod {
      * @Description: 组装查询待付款的订单的查询条件
      * @param requestOrder - 订单信息
      * @param memberId - 用户ID
-     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2完成 --这里查询状态为1的
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成 --这里查询状态为1的
      * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
      * @return
      * @author yoko
@@ -1182,6 +1182,267 @@ public class PublicMethod {
         return JSON.toJSONString(dataModel);
     }
 
+
+    /**
+     * @Description: 组装修改订单号的状态的方法
+     * @param orderNo - 订单号
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成
+     * @param orderStatus - 订单状态：1正常，2取消，3完成交易
+     * @return com.pf.play.rule.core.model.order.OrderModel
+     * @author yoko
+     * @date 2019/12/3 11:42
+     */
+    public static OrderModel assembleUpdataOrderStatusData(String orderNo, Integer orderTradeStatus, Integer orderStatus){
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(orderNo);
+        if (orderTradeStatus != null){
+            resBean.setOrderTradeStatus(orderTradeStatus);
+        }
+        if (orderStatus != null){
+            resBean.setOrderStatus(orderStatus);
+        }
+        return resBean;
+
+    }
+
+
+    /**
+     * @Description: 买家确认支付，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkTradeConfirmPayData(RequestTrade requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00019.geteCode(), PfErrorCode.ENUM_ERROR.T00019.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验订单号值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00025.geteCode(), PfErrorCode.ENUM_ERROR.T00025.geteDesc());
+        }
+
+        // 校验第三方支付凭证（截图图片地址）
+        if (StringUtils.isBlank(requestTrade.getPictureAds())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00020.geteCode(), PfErrorCode.ENUM_ERROR.T00020.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 组装查询订单的查询条件
+     * @param requestTrade - 查询的基本信息
+     * @param memberId - 用户ID
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderQueryByConfirmPay(RequestTrade requestTrade, long memberId, int orderTradeStatus){
+        OrderModel resBen = new OrderModel();
+        resBen.setMemberId(memberId);
+        resBen.setOrderNo(requestTrade.getOrderNo());
+        resBen.setOrderTradeStatus(orderTradeStatus);
+        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 买家确认支付时，校验订单信息
+     * @param orderModel - 订单信息
+     * @return void
+     * @author yoko
+     * @date 2019/11/28 16:55
+     */
+    public static void checkOrderByConfirmPay(OrderModel orderModel) throws Exception{
+        if (orderModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00021.geteCode(), PfErrorCode.ENUM_ERROR.T00021.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 组装要更新的订单交易流水的交易状态的数据
+     * @param orderId - 订单号的主键ID
+     * @param pictureAds - 图片地址
+     * @param tradeStatus - 交易状态（更改后）
+     * @param oldStatus - 交易状态（更改前）
+     * @return com.pf.play.rule.core.model.trade.TradeModel
+     * @author yoko
+     * @date 2019/12/3 16:03
+     */
+    public static TradeModel assembleUpTradeStatusByConfirmPay(long orderId, String pictureAds, int tradeStatus, int oldStatus){
+        TradeModel resBean = new TradeModel();
+        resBean.setOrderId(orderId);
+        if (!StringUtils.isBlank(pictureAds)){
+            resBean.setPictureAds(pictureAds);
+        }
+        resBean.setTradeStatus(tradeStatus);
+        resBean.setOldStatus(oldStatus);
+        return resBean;
+    }
+
+    public static OrderModel assembleUpOrderStatusByConfirmPay(String orderNo, int orderTradeStatus, int oldStatus){
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(orderNo);
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        resBean.setOldStatus(oldStatus);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 卖家确认已收款，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkTradeConfirmReceiptData(RequestTrade requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00023.geteCode(), PfErrorCode.ENUM_ERROR.T00023.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验订单号值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00024.geteCode(), PfErrorCode.ENUM_ERROR.T00024.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 组装查询要更新的订单状态
+     * @param requestTrade - 查询的基本信息
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成
+     * @param orderStatus - 订单状态：1正常，2取消，3完成交易
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderUpByConfirmReceipt(RequestTrade requestTrade, int orderTradeStatus, int orderStatus){
+        OrderModel resBen = new OrderModel();
+        resBen.setOrderNo(requestTrade.getOrderNo());
+        resBen.setOrderTradeStatus(orderTradeStatus);
+        resBen.setOrderStatus(orderStatus);
+        return resBen;
+    }
+
+    /**
+     * @Description: 组装查询订单信息的查询条件
+     * @param requestTrade - 订单基本信息
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/3 21:03
+    */
+    public static OrderModel assembleOrderQueryByConfirmRpt(RequestTrade requestTrade, int orderTradeStatus){
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 卖家确认已收款时，校验订单信息
+     * @param orderModel - 订单信息
+     * @return void
+     * @author yoko
+     * @date 2019/11/28 16:55
+     */
+    public static void checkOrderByConfirmReceipt(OrderModel orderModel) throws Exception{
+        if (orderModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00027.geteCode(), PfErrorCode.ENUM_ERROR.T00027.geteDesc());
+        }
+    }
+
+
+    /**
+     * @Description: 组装要更新的订单交易流水的交易状态：更新成完成交易（确认已收款（卖家确认））
+     * @param orderId - 订单号的主键ID
+     * @param tradeStatus - 交易状态（更改后）
+     * @param oldStatus - 交易状态（更改前）
+     * @return com.pf.play.rule.core.model.trade.TradeModel
+     * @author yoko
+     * @date 2019/12/3 16:03
+     */
+    public static TradeModel assembleUpTradeStatusByConfirmReceipt(long orderId, long memberId, int tradeStatus, int oldStatus){
+        TradeModel resBean = new TradeModel();
+        resBean.setOrderId(orderId);
+        resBean.setSellMemberId(memberId);
+        resBean.setTradeStatus(tradeStatus);
+        resBean.setOldStatus(oldStatus);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装查询订单交易流水的查询条件
+     * @param orderId - 订单号的主键ID
+     * @param sellMemberId - 卖家的用户ID
+     * @param tradeStatus - 交易状态
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/3 21:03
+     */
+    public static TradeModel assembleTradeQueryByConfirmReceipt(long orderId, long sellMemberId, int tradeStatus){
+        TradeModel resBean = new TradeModel();
+        resBean.setOrderId(orderId);
+        resBean.setSellMemberId(sellMemberId);
+        resBean.setTradeStatus(tradeStatus);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装卖家要扣除的冻结的钻石数
+     * @param tradeModel - 订单交易流水的信息
+     * @return
+     * @author yoko
+     * @date 2019/12/3 22:17
+    */
+    public static ConsumerModel assembleSellConsumerSubtractMasonry(TradeModel tradeModel){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(tradeModel.getSellMemberId());
+        String addReduceNum = StringUtil.getBigDecimalAdd(tradeModel.getTradeNum(), tradeModel.getServiceCharge());
+        resBean.setAddReduceNum(addReduceNum);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装买家要加的钻石数
+     * @param tradeModel - 订单交易流水的信息
+     * @return
+     * @author yoko
+     * @date 2019/12/3 22:17
+     */
+    public static ConsumerModel assembleBuyConsumerAddMasonry(TradeModel tradeModel){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(tradeModel.getBuyMemberId());
+        resBean.setAddReduceNum(tradeModel.getTradeNum());
+        return resBean;
+    }
 
 
 

@@ -6,6 +6,7 @@ import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
+import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.mapper.OrderMapper;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.service.OrderService;
@@ -60,5 +61,14 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
         model.setRowCount(rowCount);
         List<OrderModel> list = orderMapper.getUnpaidOrderList(model);
         return list;
+    }
+
+    @Override
+    public boolean updateOrderStatus(OrderModel model) throws Exception {
+        int num = orderMapper.updateOrderStatus(model);
+        if (num == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00012.geteCode(), PfErrorCode.ENUM_ERROR.D00012.geteDesc());
+        }
+        return true;
     }
 }

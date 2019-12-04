@@ -39,7 +39,7 @@ public class TradeModel extends BasePage implements Serializable {
     private String tradePrice;
 
     /**
-     * 订单交易状态：0初始化，1锁定，2完成
+     * 订单交易状态：0初始化，1锁定，2确认付款，3完成
      */
     private Integer orderTradeStatus;
 
@@ -224,6 +224,12 @@ public class TradeModel extends BasePage implements Serializable {
      * 这两个字段值都用此字段
      */
     private String tradeDataNum;
+
+    /**
+     * 老的状态：类似于SQL如下
+     * update table set status = 1 where status = 0
+     */
+    private Integer oldStatus;
 
     public Long getId() {
         return id;
@@ -552,5 +558,13 @@ public class TradeModel extends BasePage implements Serializable {
 
     public void setTradeDataNum(String tradeDataNum) {
         this.tradeDataNum = tradeDataNum;
+    }
+
+    public Integer getOldStatus() {
+        return oldStatus;
+    }
+
+    public void setOldStatus(Integer oldStatus) {
+        this.oldStatus = oldStatus;
     }
 }

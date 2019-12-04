@@ -48,13 +48,11 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
             throw  new ServiceException(ErrorCode.ENUM_ERROR.USERINFO_ERRPR0.geteCode(),ErrorCode.ENUM_ERROR.USERINFO_ERRPR0.geteDesc());
         }
 
-
-        VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenId(),LoginMethod.getToken());
-
+        VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenid(),LoginMethod.getToken());
         vcThirdPartyMapper.updateByWxOpenId(vcThirdParty);
 
         /**************是否有用户信息**************/
-        UserInfoModel userInfoModel = ComponentUtil.userInfoSevrice.getUserInfo(loginReq.getLoginType(),loginReq.getWxOpenId(),
+        UserInfoModel userInfoModel = ComponentUtil.userInfoSevrice.getUserInfo(loginReq.getLoginType(),loginReq.getWxOpenid(),
                 loginReq.getPhone(),loginReq.getPassword());
 
         if (StringUtil.isEmpty(userInfoModel.getToken())){
@@ -74,7 +72,7 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
     @Override
     public boolean checkDateNormal(LoginReq loginReq) {
         if(loginReq.getLoginType()==1){
-            if(StringUtils.isBlank(loginReq.getWxOpenId())){
+            if(StringUtils.isBlank(loginReq.getWxOpenid())){
                 return false;
             }
         }else if(loginReq.getLoginType()==1){

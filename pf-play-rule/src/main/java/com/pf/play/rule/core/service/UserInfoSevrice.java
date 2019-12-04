@@ -2,6 +2,7 @@ package com.pf.play.rule.core.service;
 
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
+import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.rule.core.common.service.BaseService;
 import com.pf.play.rule.core.model.DisVitalityValue;
 import com.pf.play.rule.core.model.UserInfoModel;
@@ -44,6 +45,8 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
     boolean   updateMemeber(VcMember vcMember);
 
     boolean   isToken(String  token);
+
+    MyFriendsResp toMyFriensResp(Integer memberId, Integer superiorId)throws  Exception;
 
 
 }

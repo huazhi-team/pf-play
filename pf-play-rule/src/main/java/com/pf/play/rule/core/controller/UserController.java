@@ -7,6 +7,7 @@ import com.pf.play.model.protocol.request.uesr.UpdateUserReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
+import com.pf.play.model.protocol.response.task.GiveTaskResultResp;
 import com.pf.play.model.protocol.response.uesr.MyEmpiricalResp;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
@@ -16,6 +17,7 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.UMasonryListLog;
+import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.model.VcMemberResource;
 import com.pf.play.rule.util.ComponentUtil;
@@ -61,7 +63,7 @@ public class UserController {
         try{
             log.info("----------:masonryInfo!");
             LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenId(userCommonReq.getWxOpenid());
+            loginReq1.setWxOpenid(userCommonReq.getWxOpenId());
             loginReq1.setToken(userCommonReq.getToken());
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
             if(null==list||list.size()==0){
@@ -92,25 +94,19 @@ public class UserController {
             log.info("----------:myTeam!");
             List<MyFriendsResp>   list  = null;
             Integer   memberId =0;
+            Integer   superiorId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                UserInfoModel userInfoModel   = ComponentUtil.userMasonryService.queryTokenSuperiorId(userCommonReq.getToken(),
+                            userCommonReq.getWxOpenId());
+                if(userInfoModel==null){
+                    throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+                }
+                superiorId = userInfoModel.getSuperiorId();
+                memberId = userInfoModel.getMemberId();
+
             }
-
-            VcMember     vcMember    = ComponentUtil.userInfoSevrice.getMySuperiorInfo(memberId);
-
-
-            VcMemberResource vcMemberResource = ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);
-            if(vcMember==null){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
-            }
-            if(vcMemberResource==null){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
-            }
-
-            List<VcMember>      vcMemberList  = ComponentUtil.userInfoSevrice.getMyUpInfo(memberId);
-
-            MyFriendsResp myFriendsResp   =  MyMethod.toMyFriendsResp(vcMember,vcMemberResource,vcMemberList);
+            MyFriendsResp myFriendsResp   =  ComponentUtil.userInfoSevrice.toMyFriensResp(memberId,superiorId);
             return JsonResult.successResult(myFriendsResp);
         }catch (Exception e){
             e.printStackTrace();
@@ -137,7 +133,7 @@ public class UserController {
             Integer   memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
             VcMemberResource  vcMemberResource =null;
             if(memberId!=0){
@@ -168,6 +164,7 @@ public class UserController {
      * @date 2019/11/27 22:45
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
+//    @PostMapping("/myVitalityValue")
     @PostMapping("/myVitalityValue")
     public JsonResult<Object> myVitalityValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
@@ -177,7 +174,7 @@ public class UserController {
             Integer   memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
             VcMemberResource  vcMemberResource =null;
             if(memberId!=0){
@@ -217,8 +214,8 @@ public class UserController {
             Integer   memberId =0;
 
             boolean flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }else{
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
@@ -236,7 +233,7 @@ public class UserController {
 
 
     /**
-     * @Description: TODO
+     * @Description: 用户信息编辑
      * @param request
     * @param response
     * @param updateUserReq
@@ -244,7 +241,7 @@ public class UserController {
      * @author long
      * @date 2019/11/28 16:41
      */
-    @GetMapping("/editUserInfo")
+    @PostMapping("/editUserInfo")
     public JsonResult<Object> editUserInfo(HttpServletRequest request, HttpServletResponse response, UpdateUserReq updateUserReq){
         JsonResult<Object>     result  = null;
         try{
@@ -253,14 +250,14 @@ public class UserController {
             Integer   memberId =0;
 
             boolean  flag =  MyMethod.checkUqdateUser(updateUserReq);
-            if(flag){
+            if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
 
             UserCommonReq userCommonReq =MyMethod.uqdateUserToUserCommon(updateUserReq);
             flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }else{
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
@@ -269,19 +266,21 @@ public class UserController {
 
             flag  = ComponentUtil.userInfoSevrice.updateMemeber(vcMember);
 
-            return JsonResult.successResult(flag);
+            GiveTaskResultResp  giveTaskResultResp = new GiveTaskResultResp();
+            giveTaskResultResp.setResult(flag);
+            return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
             e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");
         }
     }
 
-    @GetMapping("/userReceiveTaskReward")
+    @PostMapping("/userReceiveTaskReward")
     public JsonResult<Object> userReceiveTaskReward(HttpServletRequest request, HttpServletResponse response, CommonReq commonReq){
         JsonResult<Object>     result  = null;
         try{
             LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenId("slllsdjdjsa");
+            loginReq1.setWxOpenid("slllsdjdjsa");
             loginReq1.setToken("0423837aee5d4d96a2cf868d5fc2d47d");
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
             if(null==list||list.size()==0){

@@ -57,7 +57,7 @@ public class TaskController {
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             Integer     memberId =  0 ;
             if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
             List<DisTaskType> list = ComponentUtil.taskService.queryReceiveTask(memberId);
             List<ReceiveTaskResp>  receiveTaskRespList = TaskMethod.changReceiveTaskResp(list);
@@ -83,7 +83,7 @@ public class TaskController {
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }else {
                 return JsonResult.successResult(null);
             }
@@ -116,7 +116,7 @@ public class TaskController {
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }else{
                 return JsonResult.successResult(null);
             }
@@ -189,7 +189,7 @@ public class TaskController {
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(!flag){
-                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenid());
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
 
             if(memberId==0){
@@ -220,9 +220,9 @@ public class TaskController {
         try{
             List<DisWisemanInfo>  list  = new ArrayList<>();
             log.info("----------:exeGiveTask!");
-            String    token  ="d9680065409547b69746912de48ee8d4";
-            String    wxOpenId  = "slllsdjdjsa";
-            Integer   taskId    = 1;
+//            String    token  ="d9680065409547b69746912de48ee8d4";
+//            String    wxOpenId  = "slllsdjdjsa";
+//            Integer   taskId    = 1;
             boolean   cheakFlag  = TaskMethod.checkUserTaskIsEffective(taskReq);
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());

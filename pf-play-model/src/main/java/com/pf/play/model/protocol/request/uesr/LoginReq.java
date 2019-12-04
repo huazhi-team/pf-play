@@ -10,7 +10,7 @@ public class LoginReq extends BaseReq {
     /****
      * 微信openid
      */
-    private String wxOpenId;
+    private String wxOpenid;
     /**
      * 登陆类型  1、是微信 2、手机号+密码
      */
@@ -24,12 +24,13 @@ public class LoginReq extends BaseReq {
      */
     private String password;
 
-    public String getWxOpenId() {
-        return wxOpenId;
+
+    public String getWxOpenid() {
+        return wxOpenid;
     }
 
-    public void setWxOpenId(String wxOpenId) {
-        this.wxOpenId = wxOpenId;
+    public void setWxOpenid(String wxOpenid) {
+        this.wxOpenid = wxOpenid;
     }
 
     public Integer getLoginType() {

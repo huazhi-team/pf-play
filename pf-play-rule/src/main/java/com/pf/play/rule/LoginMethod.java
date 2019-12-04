@@ -29,8 +29,8 @@ public class LoginMethod {
     public  static LoginReq changLoginReq(LoginReq loginReq){
         LoginReq   loginReq1   = new LoginReq();
         if(loginReq.getLoginType()==1){
-            if(!StringUtils.isBlank(loginReq.getWxOpenId())){
-                loginReq1.setWxOpenId(loginReq.getWxOpenId());
+            if(!StringUtils.isBlank(loginReq.getWxOpenid())){
+                loginReq1.setWxOpenid(loginReq.getWxOpenid());
             }
         }
         return   loginReq1;
@@ -52,7 +52,9 @@ public class LoginMethod {
             token= ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
             flag  = ComponentUtil.userInfoSevrice.isToken(token);
         }
-        ComponentUtil.redisService.onlyData(token, "1");
+
+        String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+        ComponentUtil.redisService.onlyData(tokenstr, "1");
         return  token;
     }
 
@@ -98,7 +100,7 @@ public class LoginMethod {
      */
     public static boolean  checkRemoveSignOutToken(LoginReq loginReq){
         boolean   flag = true ;
-        if(StringUtils.isBlank(loginReq.getWxOpenId())){
+        if(StringUtils.isBlank(loginReq.getWxOpenid())){
             return  false ;
         }
         flag   = ComponentUtil.userInfoSevrice.isToken(loginReq.getToken());
@@ -111,11 +113,11 @@ public class LoginMethod {
         return    flag;
     }
 
-    public static VcThirdParty  changLoginReqToVcThirdParty(LoginReq loginReq){
+    public static VcThirdParty  changLoginReqToVcThirdParty(UserCommonReq updateUserReq){
         VcThirdParty vcThirdParty = new VcThirdParty();
         vcThirdParty.setTokenExpire(0);
         vcThirdParty.setToken("");
-        vcThirdParty.setWxOpenid(loginReq.getWxOpenId());
+        vcThirdParty.setWxOpenid(updateUserReq.getWxOpenId());
         return vcThirdParty;
     }
 

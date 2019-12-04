@@ -2,6 +2,7 @@ package com.pf.play.rule.core.service.impl;
 
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
+import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
@@ -16,6 +17,7 @@ import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.CommonService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.util.ComponentUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -219,7 +221,7 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         vcThirdParty.setToken(token);
         String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
         String tokenExist  = (String)ComponentUtil.redisService.get(tokenstr);
-        if(tokenExist.equals("1")){
+        if(!StringUtils.isBlank(tokenExist)&&tokenExist.equals("1")){
             return     flag;
         }
         
@@ -230,4 +232,18 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         return     flag ;
     }
 
+    @Override
+    public MyFriendsResp toMyFriensResp(Integer memberId, Integer superiorId)throws  ServiceException   {
+        VcMember     vcMember    = ComponentUtil.userInfoSevrice.getMySuperiorInfo(superiorId);
+        VcMemberResource vcMemberResource = ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);
+        if(vcMember==null){
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+        }
+        if(vcMemberResource==null){
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+        }
+        List<VcMember>      vcMemberList  = ComponentUtil.userInfoSevrice.getMyUpInfo(memberId);
+        MyFriendsResp   myFriendsResp = MyMethod.toMyFriendsResp(vcMember,vcMemberResource,vcMemberList);
+        return  myFriendsResp;
+    }
 }

@@ -102,7 +102,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     @Override
     public List<UMasonryListLog> toKenQueryMasonryInfo(LoginReq loginReq)throws  Exception {
         Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(loginReq.getToken(),
-                                                                        loginReq.getWxOpenId());
+                                                                        loginReq.getWxOpenid());
         if(memberId==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteCode(),
                                             ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteDesc());
@@ -143,6 +143,32 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
         return model.getMemberId();
     }
 
+
+
+    @Override
+    public UserInfoModel queryTokenSuperiorId(String token,String wxOpenId) {
+        UserInfoModel  model =null;
+        try{
+            String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+            String rsTokens =(String) ComponentUtil.redisService.get(tokens);
+            if(rsTokens==null||!rsTokens.equals("1")){
+                return  null ;
+            }
+
+            UserInfoModel  userInfoModel = new  UserInfoModel();
+            userInfoModel.setToken(token);
+            userInfoModel.setWxOpenid(wxOpenId);
+            model  = userInfoMapper.select(userInfoModel);
+            if(null == model||model.getMemberId()==0){
+                return  null ;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return model;
+    }
+
     /**
      * @Description: 获取有效的砖石类型
      * @param
@@ -159,6 +185,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
         }
         return masonryTypelist;
     }
+
 
 
 

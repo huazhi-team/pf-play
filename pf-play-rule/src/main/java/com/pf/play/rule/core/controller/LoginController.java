@@ -8,6 +8,12 @@ import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.uesr.LoginResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.LoginMethod;
+import com.pf.play.rule.MyMethod;
+import com.pf.play.rule.TaskMethod;
+import com.pf.play.rule.core.common.exception.ServiceException;
+import com.pf.play.rule.core.common.utils.constant.CacheKey;
+import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
+import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.VcThirdParty;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
@@ -51,17 +57,14 @@ public class LoginController {
 
 
     @PostMapping("/signOut")
-    public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
+    public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, UserCommonReq updateUserReq){
         JsonResult<Object>     result  = null;
         try{
             log.info("----------:signOut!");
-            boolean  flag   =   LoginMethod.checkRemoveSignOutToken(loginReq);
-
-            if(flag){
-                VcThirdParty vcThirdParty =LoginMethod.changLoginReqToVcThirdParty(loginReq);
-                ComponentUtil.loginService.signOut(vcThirdParty);
-            }
-
+            String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, updateUserReq.getToken());
+            ComponentUtil.redisService.remove(tokenstr);
+            VcThirdParty  vcThirdParty = LoginMethod.changLoginReqToVcThirdParty(updateUserReq);
+            ComponentUtil.loginService.signOut(vcThirdParty);
             return JsonResult.successResult(null);
         }catch (Exception e){
             e.printStackTrace();

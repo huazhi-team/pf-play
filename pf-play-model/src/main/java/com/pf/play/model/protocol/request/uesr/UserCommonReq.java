@@ -8,15 +8,15 @@ package com.pf.play.model.protocol.request.uesr;
  */
 public class UserCommonReq {
 
-    private String  wxOpenid;
+    private String  wxOpenId;
     private String  token;
 
-    public String getWxOpenid() {
-        return wxOpenid;
+    public String getWxOpenId() {
+        return wxOpenId;
     }
 
-    public void setWxOpenid(String wxOpenid) {
-        this.wxOpenid = wxOpenid;
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
     }
 
     public String getToken() {

@@ -585,7 +585,7 @@ public class TaskMethod {
         boolean    flag = true ;
         if(StringUtils.isBlank(userCommonReq.getToken())){
             flag = false;
-        }else if(StringUtils.isBlank(userCommonReq.getWxOpenid())){
+        }else if(StringUtils.isBlank(userCommonReq.getWxOpenId())){
             flag = false;
         }
         return flag;

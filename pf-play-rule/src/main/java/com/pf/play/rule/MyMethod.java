@@ -161,7 +161,7 @@ public class MyMethod {
     public static UserCommonReq uqdateUserToUserCommon(UpdateUserReq updateUserReq){
         UserCommonReq userCommonReq = new UserCommonReq();
         userCommonReq.setToken(updateUserReq.getToken());
-        userCommonReq.setWxOpenid(updateUserReq.getWxOpenId());
+        userCommonReq.setWxOpenId(updateUserReq.getWxOpenId());
         return  userCommonReq;
     }
 
@@ -174,7 +174,7 @@ public class MyMethod {
      */
     public static boolean checkUqdateUser(UpdateUserReq updateUserReq){
         boolean  flag = true;
-        if(updateUserReq.getSix()==0){
+        if(updateUserReq.getSex()==0){
             flag = false;
         }else if(StringUtil.isEmpty(updateUserReq.getWxOpenId())||
                     StringUtil.isEmpty(updateUserReq.getToken())||
@@ -199,7 +199,7 @@ public class MyMethod {
         vcMember1.setMemberId(memberId);
 //        vcMember1.setMemberAdd(updateUserReq.getMemberAdd());
 //        vcMember1.setNickname(updateUserReq.getNickname());
-        vcMember1.setSex(updateUserReq.getSix());
+        vcMember1.setSex(updateUserReq.getSex());
         vcMember1.setBirthday(updateUserReq.getBirthday());
         vcMember1.setProvince(updateUserReq.getProvince());
         vcMember1.setCity(updateUserReq.getCity());

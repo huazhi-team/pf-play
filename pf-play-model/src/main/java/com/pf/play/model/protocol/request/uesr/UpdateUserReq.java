@@ -11,7 +11,7 @@ public class UpdateUserReq {
     private String wxOpenId;
     private String nickname;
     private String memberAdd;
-    private Integer six;
+    private Integer sex;
     private String birthday;
     private String province;
     private String city;
@@ -48,12 +48,12 @@ public class UpdateUserReq {
         this.memberAdd = memberAdd;
     }
 
-    public Integer getSix() {
-        return six;
+    public Integer getSex() {
+        return sex;
     }
 
-    public void setSix(Integer six) {
-        this.six = six;
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     public String getBirthday() {

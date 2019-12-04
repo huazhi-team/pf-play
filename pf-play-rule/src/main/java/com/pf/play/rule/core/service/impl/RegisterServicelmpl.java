@@ -82,24 +82,24 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         /**************用户信息是否注册*****************/
         flag = ComponentUtil.registerService.checkRegister(registerReq);
         if(!flag){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR0.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR0.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.R000001.geteCode(),ErrorCode.ENUM_ERROR.R000001.geteDesc());
         }
         /**************邀请码是否正确*****************/
         VcMember  vcMember = ComponentUtil.registerService.checkInviteCode(registerReq);
         if(null==vcMember){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR2.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR2.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.R000002.geteCode(),ErrorCode.ENUM_ERROR.R000002.geteDesc());
         }
         /**************申请新的邀请码*****************/
         String   strName  = ComponentUtil.registerService.createInviteCode(registerReq.getPhone());
         String[]   InviteAdd  = strName.split(",");
         if(InviteAdd.length!=3){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.R000003.geteCode(),ErrorCode.ENUM_ERROR.R000003.geteDesc());
         }
 
         /**************添加用户信息*****************/
         flag = ComponentUtil.registerService.addUserInfo(registerReq,InviteAdd,vcMember.getMemberId(),vcMember.getExtensionMemberId(),InviteAdd[2]);
         if(!flag){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.R000003.geteCode(),ErrorCode.ENUM_ERROR.R000003.geteDesc());
         }else{
             /********** 添加redis *********/
             addRedis(registerReq,InviteAdd);
@@ -187,36 +187,11 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
 
         Integer  createTime  =  Integer.parseInt(DateUtil.timeStamp());
         Integer  loginTime  =  createTime;
-        Date     createdate =  DateUtil.currentTimestamp();
 
 //        VcMember  memberModel = new VcMember();  //会员信息
         Integer  memberId  = ComponentUtil.generateService.getMemberId();
         VcMember  vcMember =RegisterMethod.insertVcMember( memberId,  registerReq, SecureUUID, superiorId, extensionMemberId);
-//        memberModel.setMemberId(memberId);
-//        memberModel.setDeviceId(registerReq.getDeviceId());
-//        memberModel.setOwnerMemberId(registerReq.getOwner());
-//        memberModel.setMemberAdd(registerReq.getMemberAdd());
-//        memberModel.setNickname(registerReq.getWxName());
-//        memberModel.setMemberCode("C"+registerReq.getPhone());
-//        if(registerReq.getOwner()==0){
-//            memberModel.setMemberType(2);
-//        }else{
-//            memberModel.setMemberType(1);
-//        }
-//        memberModel.setInviteCode(SecureUUID[0]);
-//        memberModel.setTradingAddress(SecureUUID[1]);
-//        memberModel.setCreateTime(createTime);
-//        memberModel.setLoginTime(loginTime);
-//        memberModel.setSuperiorId(superiorId);
-//        memberModel.setExtensionMemberId(extensionMemberId+","+superiorId);
 
-
-//        VcAccountRelation  accountRelationModel = new VcAccountRelation();//账户信息
-//        accountRelationModel.setMemberId(memberId);
-//        accountRelationModel.setAccountNum(registerReq.getPhone());
-//        accountRelationModel.setCreateTime(createTime);
-//        accountRelationModel.setUpdateTime(loginTime);
-//        accountRelationModel.setAccountType(registerReq.getRegisterType());
         VcAccountRelation  accountRelationModel =RegisterMethod.insertVcAccountRelation(memberId,registerReq.getPhone(),registerReq.getRegisterType());
 
         VcThirdParty   vcThirdPartyModel  = RegisterMethod.insertVcThirdParty(memberId,registerReq.getWxRefresh(),registerReq.getWxOpenid(),registerReq.getWxUnionid(),token); //三方资源信息
@@ -225,20 +200,10 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
 
 
         VcMemberResource   vcMemberResourceModel  =  RegisterMethod.insertVcMemberResource(memberId);
-//        VcMemberGive   vcMemberGive  =  RegisterSingleton.getInstance().getVcMemberGive();
+
 
         UTaskHave  uTaskHave =RegisterMethod.insertUTaskHave(memberId);//会员资源
-//        vcMemberResourceModel.setMemberId(memberId);
-//        vcMemberResourceModel.setActiveValue();
-//        vcMemberResourceModel.setCreateTime(createdate);
-//        vcMemberResourceModel.setUpdateTime(new Date());
-//
-//
-//        if(vcMemberGive==null||vcMemberGive.getActiveValue()<=0){//没有获取到值
-//            vcMemberResourceModel.setActiveValue(activeValue);
-//        }else{
-//            vcMemberResourceModel.setActiveValue(vcMemberGive.getActiveValue());
-//        }
+
 
         UMasonrySummary  uMasonrySummary = RegisterMethod.insertUMasonrySummary(memberId);
         try{
@@ -246,7 +211,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.getMessage());
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteCode(),ErrorCode.ENUM_ERROR.REGISTER_ERROR3.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.R000003.geteCode(),ErrorCode.ENUM_ERROR.R000003.geteDesc());
         }
         return  true;
     }

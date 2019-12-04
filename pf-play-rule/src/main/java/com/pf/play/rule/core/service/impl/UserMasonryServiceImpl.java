@@ -22,6 +22,7 @@ import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.service.UserMasonryService;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.util.ComponentUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -125,7 +126,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
         try{
             String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
             String rsTokens =(String) ComponentUtil.redisService.get(tokens);
-            if(rsTokens==null||!rsTokens.equals("1")){
+            if(StringUtils.isBlank(rsTokens)||!rsTokens.equals("1")){
                 return  0 ;
             }
 

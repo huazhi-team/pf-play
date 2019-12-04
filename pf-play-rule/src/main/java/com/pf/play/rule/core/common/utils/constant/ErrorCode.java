@@ -37,65 +37,59 @@ public class ErrorCode {
      */
     public enum ENUM_ERROR {
 //        PROGRAM
-        PARAMETER_ERROR("-255","信息验证不通过",1,"信息验证不通过"),
+        PARAMETER_ERROR("-255","信息验证不通过","信息验证不通过"),
 
-        REGISTER_ERROR0("-1000","用户已经注册！",1,""),
-        REGISTER_ERROR1("-1001","该用户已经注册！",1,""),
-        REGISTER_ERROR2("-1002","无效的邀请码！",1,""),
-        REGISTER_ERROR3("-1003","网络异常，请重新进行添加！",1,""),
+        /********************注册信息*****************************/
+        R000001("R000001","用户已经注册！","用户已经注册！"),
+        R000002("R000002","无效的邀请码！","无效的邀请码！"),
+        R000003("R000003","网络异常，请重新进行添加！",""),
 
-        USERINFO_ERRPR0("-2000","用户信息验证不通过！",1,""),
-        USERINFO_ERRPR1("-2001","根据用户信息，查询不到用户信息！",1,""),
-
-
-        USERMASONRY_ERRPR0("-3000","用户信息验证不通过！",1,""),
+        U000001("U000001","错误,请重试!","用户信息验证不通过！"),
+        U000002("U000002","错误,请重试!","根据用户信息，查询不到用户信息！"),
 
 
-        REALNAME_ERRPR0("-4000","用户信息不存在！",1,""),
-        REALNAME_ERRPR1("-4001","插入待处理表失败！",1,""),
+        USERMASONRY_ERRPR0("-3000","用户信息验证不通过！",""),
 
 
+        REALNAME_ERRPR0("-4000","用户信息不存在！",""),
+        REALNAME_ERRPR1("-4001","插入待处理表失败！",""),
 
 
-        TASK_ERRPR0("-5000","该用户为实名制！",1,"该用户为实名制!"),
-        TASK_ERRPR1("-5001","服务异常，请重试！",1,"task 任务id失败"),
-        TASK_ERRPR2("-5002","服务异常，请重试！",1,"没有该用户信息！"),
-        TASK_ERRPR3("-5003","用户金额不足，不能进行领取",1,"用户金额不足，不能进行领取"),
-        TASK_ERRPR4("-5004","任务持有数不够",1,"任务持有数不够"),
-        TASK_ERRPR5("-5005","金额不够，无法进行领取",1,"金额不够，无法进行领取"),
-        TASK_ERRPR6("-5006","服务异常，请重试！",1,"修改数据失败"),
-        TASK_ERRPR7("-5007","服务异常，请重试！",1,"程序内部异常，导致空指针！"),
-        TASK_ERRPR8("-5008","该用户没满足条件，无法领取",1,"该用户没满足条件，无法领取"),
-        TASK_ERRPR9("-5009","服务异常，请重试！",1,"找不到对应的taskId信息"),
-        TASK_ERRPR10("-5010","服务异常，请重试！",1,"该类用户可以加入黑名单！"),
+        TASK_ERRPR0("-5000","该用户为实名制！","该用户为实名制!"),
+        TASK_ERRPR1("-5001","服务异常，请重试！","task 任务id失败"),
+        TASK_ERRPR2("-5002","服务异常，请重试！","没有该用户信息！"),
+        TASK_ERRPR3("-5003","用户金额不足，不能进行领取","用户金额不足，不能进行领取"),
+        TASK_ERRPR4("-5004","任务持有数不够","任务持有数不够"),
+        TASK_ERRPR5("-5005","金额不够，无法进行领取","金额不够，无法进行领取"),
+        TASK_ERRPR6("-5006","服务异常，请重试！","修改数据失败"),
+        TASK_ERRPR7("-5007","服务异常，请重试！","程序内部异常，导致空指针！"),
+        TASK_ERRPR8("-5008","该用户没满足条件，无法领取","该用户没满足条件，无法领取"),
+        TASK_ERRPR9("-5009","服务异常，请重试！","找不到对应的taskId信息"),
+        TASK_ERRPR10("-5010","服务异常，请重试！","该类用户可以加入黑名单！"),
 
 
         ;
 
+        /**
+         * 错误码
+         */
         private String eCode;
+        /**
+         * 给客户端看的错误信息
+         */
         private String eDesc;
-        private Integer isDisplay;
-        private String  defaultValue;
-        public Integer getIsDisplay() {
-            return isDisplay;
-        }
-        public void setIsDisplay(Integer isDisplay) {
-            this.isDisplay = isDisplay;
-        }
+        /**
+         * 插入数据库的错误信息
+         */
+        private String dbDesc;
 
-        public String getDefaultValue() {
-            return defaultValue;
-        }
 
-        public void setDefaultValue(String defaultValue) {
-            this.defaultValue = defaultValue;
-        }
 
-        private ENUM_ERROR(String eCode, String eDesc,Integer isDisplay,String defaultValue) {
+
+        private ENUM_ERROR(String eCode, String eDesc,String dbDesc) {
             this.eCode = eCode;
             this.eDesc = eDesc;
-            this.isDisplay = isDisplay;
-            this.defaultValue  = defaultValue;
+            this.dbDesc  = dbDesc;
         }
 
         public String geteCode() {
@@ -112,6 +106,14 @@ public class ErrorCode {
 
         public void seteDesc(String eDesc) {
             this.eDesc = eDesc;
+        }
+
+        public String getDbDesc() {
+            return dbDesc;
+        }
+
+        public void setDbDesc(String dbDesc) {
+            this.dbDesc = dbDesc;
         }
     }
 }

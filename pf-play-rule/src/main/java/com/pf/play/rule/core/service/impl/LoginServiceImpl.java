@@ -45,7 +45,7 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
         /************参数是否正确*************/
         boolean  flag = ComponentUtil.loginService.checkDateNormal(loginReq);
         if(!flag){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.USERINFO_ERRPR0.geteCode(),ErrorCode.ENUM_ERROR.USERINFO_ERRPR0.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.U000001.geteCode(),ErrorCode.ENUM_ERROR.U000001.geteDesc());
         }
 
         VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenid(),LoginMethod.getToken());
@@ -56,7 +56,7 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
                 loginReq.getPhone(),loginReq.getPassword());
 
         if (StringUtil.isEmpty(userInfoModel.getToken())){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.USERINFO_ERRPR1.geteCode(),ErrorCode.ENUM_ERROR.USERINFO_ERRPR1.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.U000002.geteCode(),ErrorCode.ENUM_ERROR.U000002.geteDesc());
         }
         BeanUtils.copy(userInfoModel,userInfoResp);
         return userInfoResp;

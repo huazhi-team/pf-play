@@ -55,4 +55,7 @@ public interface TaskService  <T> extends BaseService<T> {
 
     boolean  addRewardTaskLog(Integer memberId, Integer taskId)throws Exception;
 
+    boolean  activeValueUpdateUserInfo(UvitalityValueList  uVitalityValueList);
+
+
 }

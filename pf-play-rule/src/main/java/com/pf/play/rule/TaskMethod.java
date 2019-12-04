@@ -11,6 +11,7 @@ import com.pf.play.model.protocol.response.task.GiveTaskResp;
 import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
 import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
 import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
+import com.pf.play.rule.core.mapper.VcMemberResourceMapper;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
@@ -791,6 +792,24 @@ public class TaskMethod {
             list1.add(giveTaskResp);
         }
         return  list1;
+    }
+
+
+
+
+
+    /**
+     * @Description: 修改用户
+     * @param memberId
+     * @return com.pf.play.rule.core.model.UvitalityValueList
+     * @author long
+     * @date 2019/11/30 13:32
+     */
+    public static  VcMemberResource   testChangUvitalityValueList(Integer  memberId){
+        VcMemberResource  vcMemberResource  =new VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setFrozenMasonry(11.2F);
+        return   vcMemberResource;
     }
 
 

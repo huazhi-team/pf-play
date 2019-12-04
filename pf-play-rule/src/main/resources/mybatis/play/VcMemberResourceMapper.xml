@@ -154,7 +154,7 @@
         day_ext_masonry = #{dayExtMasonry},
       </if>
       <if test="frozenMasonry != null" >
-        frozen_masonry = #{frozenMasonry},
+        frozen_masonry = frozen_masonry - #{frozenMasonry},
       </if>
       <if test="empiricalValue != null" >
         empirical_value = #{empiricalValue},

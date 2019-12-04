@@ -466,18 +466,21 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     public void openUpdateTask() {
         while (true){
             log.debug("=======================");
-            List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
-            if(list.size()!=0){
-                UvitalityValueList uvitalityValueList  =TaskMethod.changUvitalityValueList(list);
-                uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
-//                ComponentUtil.taskService.updateUserVitalityValue(list);
-            }else{
-                try{
-                    Thread.sleep(600000);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+//            VcMemberResource   vcMemberResource =TaskMethod.testChangUvitalityValueList(9);
+//            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource) ;
+
+//            List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
+//            if(list.size()!=0){
+//                UvitalityValueList uvitalityValueList  =TaskMethod.changUvitalityValueList(list);
+//                uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
+////                ComponentUtil.taskService.updateUserVitalityValue(list);
+//            }else{
+//                try{
+//                    Thread.sleep(600000);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 
@@ -521,5 +524,26 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcRewardReceive  vcRewardReceive   = TaskMethod.changeUpdateRewardReceive(memberId,taskId);
         ComponentUtil.transactionalService.receiveTaskUpdateInfo(uTaskHave,vcRewardReceive);
         return true;
+    }
+
+    @Override
+    public boolean activeValueUpdateUserInfo(UvitalityValueList uVitalityValueList) {
+        //查询用户信息
+
+        //筛选用户有哪些需要变更的
+
+        //计算大家的活力值
+
+        //先算团队活力值
+
+        //英雄活力值
+
+        //联盟活力值
+
+        //等级条件是否满足
+
+        //字段更新
+
+        return false;
     }
 }

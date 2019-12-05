@@ -61,10 +61,19 @@ public class LoginController {
         JsonResult<Object>     result  = null;
         try{
             log.info("----------:signOut!");
+
+            Integer  memberId =0;
+           boolean flag = TaskMethod.checkTokenAndWxOpenid(updateUserReq);
+            if(flag){
+                memberId = ComponentUtil.userMasonryService.queryTokenMemberId(updateUserReq.getToken(), updateUserReq.getWxOpenId());
+            }else{
+                return JsonResult.successResult(null);
+            }
             String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, updateUserReq.getToken());
             ComponentUtil.redisService.remove(tokenstr);
             VcThirdParty  vcThirdParty = LoginMethod.changLoginReqToVcThirdParty(updateUserReq);
             ComponentUtil.loginService.signOut(vcThirdParty);
+            ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,"");
             return JsonResult.successResult(null);
         }catch (Exception e){
             e.printStackTrace();

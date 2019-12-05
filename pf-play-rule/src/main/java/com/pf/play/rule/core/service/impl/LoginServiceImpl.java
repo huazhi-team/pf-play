@@ -14,6 +14,7 @@ import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.UserInfoMapper;
 import com.pf.play.rule.core.mapper.VcThirdPartyMapper;
 import com.pf.play.rule.core.model.UserInfoModel;
+import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.model.VcThirdParty;
 import com.pf.play.rule.core.service.LoginService;
 import com.pf.play.rule.util.ComponentUtil;
@@ -59,6 +60,9 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
             throw  new ServiceException(ErrorCode.ENUM_ERROR.U000002.geteCode(),ErrorCode.ENUM_ERROR.U000002.geteDesc());
         }
         BeanUtils.copy(userInfoModel,userInfoResp);
+        ComponentUtil.userInfoSevrice.userSynchronousQhr(userInfoModel.getMemberId(),userInfoModel.getToken());
+
+
         return userInfoResp;
     }
 

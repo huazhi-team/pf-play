@@ -36,4 +36,7 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
      * @date 2019/11/21 16:47
      */
     public void updatePayPassword(UserInfoModel model);
+
+
+
 }

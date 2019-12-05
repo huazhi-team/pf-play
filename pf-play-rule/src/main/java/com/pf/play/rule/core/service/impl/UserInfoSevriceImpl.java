@@ -1,5 +1,8 @@
 package com.pf.play.rule.core.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.pf.play.common.utils.HttpGetUtil;
+import com.pf.play.model.protocol.request.uesr.SynchronousReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
@@ -245,5 +248,25 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         List<VcMember>      vcMemberList  = ComponentUtil.userInfoSevrice.getMyUpInfo(memberId);
         MyFriendsResp   myFriendsResp = MyMethod.toMyFriendsResp(vcMember,vcMemberResource,vcMemberList);
         return  myFriendsResp;
+    }
+
+    @Override
+    public Boolean userSynchronousQhr(Integer memberId,String token) {
+        boolean  flag  = false ;
+        try{
+            VcMember  vcMember   =TaskMethod.getMember(memberId);
+            VcMember  vcMember1  = vcMemberMapper.selectByPrimaryKey(vcMember);
+            String   param = MyMethod.toSynchronousResp(vcMember1,token);
+            String   rs = HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
+            SynchronousReq req =JSON.parseObject(rs, SynchronousReq.class);
+            if(req !=null){
+                if(req.getErrcode()==0){
+                    flag=true;
+                }
+            }
+        }catch (Exception  e){
+            e.printStackTrace();
+        }
+        return flag;
     }
 }

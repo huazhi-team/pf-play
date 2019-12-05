@@ -21,4 +21,8 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(VcMemberResource record);
 
     int updateByPrimaryKey(VcMemberResource record);
+
+    int updateAddmemberResource(VcMemberResource record);
+
+    List<VcMemberResource> selectMemberId(VcMemberResource record);
 }

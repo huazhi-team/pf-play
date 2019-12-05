@@ -814,4 +814,51 @@ public class TaskMethod {
 
 
 
+    /**
+     * @Description: 用户表转换成修改上级id
+     * @param vcMember
+     * @return java.util.List<java.lang.Integer>
+     * @author long
+     * @date 2019/12/4 19:23
+     */
+    public  static   List<Integer>   getSuperiorIdList(VcMember vcMember){
+        List<Integer>  list  = new ArrayList<>();
+        try{
+            if(vcMember != null){
+                if(!StringUtils.isBlank(vcMember.getExtensionMemberId())){
+                    String []  superiorId  = vcMember.getExtensionMemberId().split(",");
+                    for(int  i= 0 ;i<superiorId.length; i++){
+                        list.add(Integer.parseInt(superiorId[i]));
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  list ;
+    }
+
+    /**
+     * @Description: 准备好二级经验值更新
+     * @param uVitalityValueList
+     * @return java.util.List<java.util.Map<java.lang.String,java.lang.Float>>
+     * @author long
+     * @date 2019/12/4 20:12
+     */
+    public static  List<Map<String,Float>>   getTwoLevelActiveValue(UvitalityValueList uVitalityValueList){
+        List<Map<String,Float>>  list  =  new ArrayList<>();
+        Map<String,Float>  map  = new HashMap<>();
+        map.put("myMemberId",uVitalityValueList.getActiveValue());
+        map.put("superiorMemberId",(uVitalityValueList.getActiveValue()*0.05F));
+        list.add(map);
+        return list;
+    }
+
+
+    public static  VcMemberResource   getVcMemberResource(List<Integer> idList){
+        VcMemberResource  vcMemberResource = new VcMemberResource();
+        vcMemberResource.setIdList(idList);
+        return vcMemberResource;
+    }
+
 }

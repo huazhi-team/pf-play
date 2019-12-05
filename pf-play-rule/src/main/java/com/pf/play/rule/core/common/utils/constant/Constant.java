@@ -46,5 +46,7 @@ public class Constant {
     public  static  int  TASK_TYPE_HISTORY    =  1 ;
     public  static  int  TASK_TYPE_EXISTING   =  2 ;
 
+    public  static  String    USER_SYNCHRONOUS_URL="http://192.168.1.25:9093/qhr/api/syncUserInfo";
+
 
 }

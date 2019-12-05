@@ -48,5 +48,6 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
 
     MyFriendsResp toMyFriensResp(Integer memberId, Integer superiorId)throws  Exception;
 
+    Boolean    userSynchronousQhr(Integer memberId,String token);
 
 }

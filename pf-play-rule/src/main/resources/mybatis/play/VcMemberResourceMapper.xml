@@ -214,4 +214,92 @@
       is_valid = #{isValid,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateAddmemberResource" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="produceMasonryCount != null" >
+        produce_masonry_count = #{produceMasonryCount},
+      </if>
+      <if test="extensionMasonryCount != null" >
+        extension_masonry_count = #{extensionMasonryCount},
+      </if>
+      <if test="dayMasonry != null" >
+        day_masonry = #{dayMasonry},
+      </if>
+      <if test="dayExtMasonry != null" >
+        day_ext_masonry = #{dayExtMasonry},
+      </if>
+      <if test="frozenMasonry != null" >
+        frozen_masonry = frozen_masonry - #{frozenMasonry},
+      </if>
+      <if test="empiricalValue != null" >
+        empirical_value = #{empiricalValue},
+      </if>
+      <if test="activeValue != null" >
+        active_value = #{activeValue},
+      </if>
+      <if test="pushPeople != null" >
+        push_people = #{pushPeople},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid},
+      </if>
+      <if test="empiricalLevel != null" >
+        empirical_level = #{empiricalLevel},
+      </if>
+      <if test="isVitalityValue != null" >
+        is_vitality_value = #{isVitalityValue},
+      </if>
+      <if test="darenLevel != null" >
+        daren_level = #{darenLevel},
+      </if>
+      <if test="teamPeople != null" >
+        team_people = #{teamPeople},
+      </if>
+      <if test="teamActive != null" >
+        team_active = #{teamActive},
+      </if>
+      <if test="heroActive != null" >
+        hero_active = #{heroActive},
+      </if>
+      <if test="allianceActive != null" >
+        alliance_active = #{allianceActive},
+      </if>
+    </set>
+    where 1=1
+    <if test="idList != null and idList.size()>0">
+      and member_id in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+
+  <select id="selectMemberId" resultType="com.pf.play.rule.core.model.VcMemberResource"  >
+    select
+    <include refid="Base_Column_List" />
+    from vc_member_resource
+    where 1=1
+    <if test="idList != null and idList.size()>0">
+      and member_id in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
+
+
+
 </mapper>

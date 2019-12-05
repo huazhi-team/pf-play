@@ -1,5 +1,7 @@
 package com.pf.play.rule.core.model;
 
+import java.util.List;
+
 public class VcMember {
     /**
      * 
@@ -186,6 +188,11 @@ public class VcMember {
      * 城市
      */
     private String city;
+
+    /**
+     * 批量更新的状态
+     */
+    private List<Integer> idList ;
 
     public String getUpdateTimeStr() {
         return updateTimeStr;
@@ -425,5 +432,13 @@ public class VcMember {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public List<Integer> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Integer> idList) {
+        this.idList = idList;
     }
 }

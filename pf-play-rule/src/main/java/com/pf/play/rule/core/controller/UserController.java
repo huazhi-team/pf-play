@@ -268,6 +268,9 @@ public class UserController {
 
             GiveTaskResultResp  giveTaskResultResp = new GiveTaskResultResp();
             giveTaskResultResp.setResult(flag);
+
+            //同步给动态信息
+            ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,updateUserReq.getToken());
             return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
             e.printStackTrace();

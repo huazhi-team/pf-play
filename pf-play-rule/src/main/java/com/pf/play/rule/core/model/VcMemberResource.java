@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class VcMemberResource {
     /**
@@ -160,6 +161,9 @@ public class VcMemberResource {
      * @mbggenerated
      */
     private String phone;
+
+
+    private List<Integer> idList;
 
     /**
      * 是否实名制
@@ -366,5 +370,13 @@ public class VcMemberResource {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public List<Integer> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Integer> idList) {
+        this.idList = idList;
     }
 }

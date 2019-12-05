@@ -529,11 +529,17 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Override
     public boolean activeValueUpdateUserInfo(UvitalityValueList uVitalityValueList) {
         //查询用户信息
-
+        VcMember       vcMember   =  TaskMethod.getMember(uVitalityValueList.getMemberId());
+        VcMember       vcMember1  =   vcMemberMapper.selectByMemberId(vcMember);
+        //查询用户需要修改的
+        List<Integer>  updateList  =   TaskMethod.getSuperiorIdList(vcMember1);
         //筛选用户有哪些需要变更的
 
-        //计算大家的活力值
+        //准备好二级活力值更新
+        List<Map<String,Float>>  listTwo =TaskMethod.getTwoLevelActiveValue(uVitalityValueList);
 
+//        VcMemberResource  vcMemberResource  = TaskMethod.getVcMemberResource(updateList);
+//        List<VcMemberResource>   listTeam  =vcMemberResourceMapper.selectMemberId(vcMemberResource);
         //先算团队活力值
 
         //英雄活力值
@@ -545,5 +551,10 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         //字段更新
 
         return false;
+    }
+
+    @Override
+    public VcMember getTeamExtensionMemberInfo(List<Integer> list, Integer type,Integer activeValue) {
+        return null;
     }
 }

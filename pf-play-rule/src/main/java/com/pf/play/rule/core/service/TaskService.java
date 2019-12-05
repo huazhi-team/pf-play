@@ -57,5 +57,6 @@ public interface TaskService  <T> extends BaseService<T> {
 
     boolean  activeValueUpdateUserInfo(UvitalityValueList  uVitalityValueList);
 
+    VcMember getTeamExtensionMemberInfo(List<Integer> list,Integer type,Integer activeValue);
 
 }

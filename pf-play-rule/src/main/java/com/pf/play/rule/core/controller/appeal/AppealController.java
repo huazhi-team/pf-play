@@ -236,8 +236,72 @@ public class AppealController {
             // 校验sign
 
             // 更新申诉数据
-            AppealModel appealModel = PublicMethod.assembleAppealUpdate(requestAppeal, memberId);
+            AppealModel appealModel = PublicMethod.assembleAppealUpdateActive(requestAppeal, memberId);
             ComponentUtil.appealService.updateActive(appealModel);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+    /**
+     * @Description: 更新被申诉的数据
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/al/upPassive
+     * 请求的属性类:RequestAppeal
+     * 必填字段:{"id":1,"refuteDescribe":"更新_反驳原因_1","refuteReplenish":"更新_反驳补充_1","refutePictureAds":"http://www.baidu.com","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:id+refuteDescribe+refutePictureAds+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": "0",
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJzaWduIjoiN2RkNWM1ODEyZTc3OTRmNWYxNDg5OTIwM2Q2YmIxZGEiLCJzdGltZSI6MTU3NTU1NTQzODI4NSwidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912052216580000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/upPassive", method = {RequestMethod.POST})
+    public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "4");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkUpPassiveData(requestAppeal);
+            token = requestAppeal.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 更新被申诉数据
+            AppealModel appealModel = PublicMethod.assembleAppealUpdatePassive(requestAppeal, memberId);
+            ComponentUtil.appealService.updatePassive(appealModel);
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign

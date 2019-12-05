@@ -1718,7 +1718,7 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/12/5 15:01
      */
-    public static AppealModel assembleAppealUpdate(RequestAppeal requestAppeal, long memberId){
+    public static AppealModel assembleAppealUpdateActive(RequestAppeal requestAppeal, long memberId){
         AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
         resBen.setMemberId(memberId);
         return resBen;
@@ -1740,6 +1740,56 @@ public class PublicMethod {
         dataModel.setToken(token);
         dataModel.setSign(sign);
         return JSON.toJSONString(dataModel);
+    }
+
+
+
+    /**
+     * @Description: 更新被申诉数据时，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkUpPassiveData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00006.geteCode(), PfErrorCode.ENUM_ERROR.A00006.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+
+        // 校验被告提供的反驳原因
+        if (StringUtils.isBlank(requestAppeal.getRefuteDescribe())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00007.geteCode(), PfErrorCode.ENUM_ERROR.A00007.geteDesc());
+        }
+
+        // 校验凭证（图片）-被告的反驳图片
+        if (StringUtils.isBlank(requestAppeal.getRefutePictureAds())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00008.geteCode(), PfErrorCode.ENUM_ERROR.A00008.geteDesc());
+        }
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装更新被申诉数据的数据-反驳数据
+     * @param requestAppeal - 反驳的基本信息
+     * @param memberId - 用户
+     * @return com.pf.play.rule.core.model.appeal.AppealModel
+     * @author yoko
+     * @date 2019/12/5 15:01
+     */
+    public static AppealModel assembleAppealUpdatePassive(RequestAppeal requestAppeal, long memberId){
+        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBen.setInvolveMemberId(memberId);
+        return resBen;
     }
 
 

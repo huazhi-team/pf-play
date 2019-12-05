@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.AppealMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.order_id,a.member_id,a.appeal_describe,a.appeal_replenish,a.picture_ads,a.identity_type,
+        a.involve_member_id,a.refute_describe,a.refute_replenish,a.refute_picture_ads,a.appeal_result,a.remark,
+        a.curday,a.run_num,a.run_status,a.create_time,a.update_time,a.ts_time,a.yn,
+        b.id as order_trade_id,b.sell_member_id,b.buy_member_id,b.trade_num,b.trade_price,b.service_charge,
+        b.sell_nickname,b.buy_nickname,b.sell_phone,b.buy_phone,b.sell_fixed_num,b.buy_fixed_num,b.trade_status,
+        b.picture_ads as trade_picture_ads,b.ratio,b.pay_time,b.receive_time,b.appeal_status,b.total_price,b.run_num,b.run_status,
+        b.create_time as order_trade_time,
+        c.order_no
+    </sql>
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                and a.member_id = #{memberId}
+            </if>
+            <if test="involveMemberId != null and involveMemberId != '' " >
+                and a.involve_member_id = #{involveMemberId}
+            </if>
+            <if test="identityType != null and identityType != '' " >
+                and a.identity_type = #{identityType}
+            </if>
+            <if test="appealResult != null and appealResult != '' " >
+                and a.appeal_result = #{appealResult}
+            </if>
+            <if test="orderNo != null and orderNo != '' " >
+                and c.order_no = #{orderNo}
+            </if>
+            and a.yn = 0
+        </trim>
+    </sql>
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.pf.play.rule.core.model.appeal.AppealModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.appeal.AppealModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause"/>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.appeal.AppealModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.appeal.AppealModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+
+    <!-- 查询总数-->
+    <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+        select count(1)
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询分页列表 -->
+    <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.appeal.AppealModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_pf_order_appeal a left join tb_pf_order_trade b on a.order_id = b.order_id and b.yn =0
+        left join tb_pf_order c on a.order_id = c.id and c.yn =0
+        <include refid="Example_Where_Clause"/>
+        ORDER BY a.create_time DESC
+        limit #{start},#{end}
+    </select>
+
+
+    <!-- 添加基本信息 -->
+    <insert id="add" parameterType="com.pf.play.rule.core.model.appeal.AppealModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_pf_order_appeal
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderId != null and orderId != '' " >
+                order_id,
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                member_id,
+            </if>
+            <if test="appealDescribe != null and appealDescribe != '' " >
+                appeal_describe,
+            </if>
+            <if test="appealReplenish != null and appealReplenish != '' " >
+                appeal_replenish,
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                picture_ads,
+            </if>
+            <if test="identityType != null and identityType != '' " >
+                identity_type,
+            </if>
+            <if test="involveMemberId != null and involveMemberId != '' " >
+                involve_member_id,
+            </if>
+            <if test="refuteDescribe != null and refuteDescribe != '' " >
+                refute_describe,
+            </if>
+            <if test="refuteReplenish != null and refuteReplenish != '' " >
+                refute_replenish,
+            </if>
+            <if test="refutePictureAds != null and refutePictureAds != '' " >
+                refute_picture_ads,
+            </if>
+            <if test="appealResult != null and appealResult != '' " >
+                appeal_result,
+            </if>
+            <if test="remark != null and remark != '' " >
+                remark,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                run_num,
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                run_status,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderId != null and orderId != '' " >
+                <![CDATA[  #{orderId}, ]]>
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                <![CDATA[  #{memberId}, ]]>
+            </if>
+            <if test="appealDescribe != null and appealDescribe != '' " >
+                <![CDATA[  #{appealDescribe}, ]]>
+            </if>
+            <if test="appealReplenish != null and appealReplenish != '' " >
+                <![CDATA[  #{appealReplenish}, ]]>
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                <![CDATA[  #{pictureAds}, ]]>
+            </if>
+            <if test="identityType != null and identityType != '' " >
+                <![CDATA[  #{identityType}, ]]>
+            </if>
+            <if test="involveMemberId != null and involveMemberId != '' " >
+                <![CDATA[  #{involveMemberId}, ]]>
+            </if>
+            <if test="refuteDescribe != null and refuteDescribe != '' " >
+                <![CDATA[  #{refuteDescribe}, ]]>
+            </if>
+            <if test="refuteReplenish != null and refuteReplenish != '' " >
+                <![CDATA[  #{refuteReplenish}, ]]>
+            </if>
+            <if test="refutePictureAds != null and refutePictureAds != '' " >
+                <![CDATA[  #{refutePictureAds}, ]]>
+            </if>
+            <if test="appealResult != null and appealResult != '' " >
+                <![CDATA[  #{appealResult}, ]]>
+            </if>
+            <if test="remark != null and remark != '' " >
+                <![CDATA[  #{remark}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                <![CDATA[  #{runNum}, ]]>
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                <![CDATA[  #{runStatus}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <!-- 更新基本信息 -->
+    <update id="update" parameterType="com.pf.play.rule.core.model.appeal.AppealModel">
+        UPDATE tb_pf_order_appeal a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderId != null and orderId != '' " >
+                a.order_id = #{orderId},
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                a.member_id = #{memberId},
+            </if>
+            <if test="appealDescribe != null and appealDescribe != '' " >
+                a.appeal_describe = #{appealDescribe},
+            </if>
+            <if test="appealReplenish != null and appealReplenish != '' " >
+                a.appeal_replenish = #{appealReplenish},
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+            </if>
+            <if test="identityType != null and identityType != '' " >
+                a.identity_type = #{identityType},
+            </if>
+            <if test="involveMemberId != null and involveMemberId != '' " >
+                a.involve_member_id = #{involveMemberId},
+            </if>
+            <if test="refuteDescribe != null and refuteDescribe != '' " >
+                a.refute_describe = #{refuteDescribe},
+            </if>
+            <if test="refuteReplenish != null and refuteReplenish != '' " >
+                a.refute_replenish = #{refuteReplenish},
+            </if>
+            <if test="refutePictureAds != null and refutePictureAds != '' " >
+                a.refute_picture_ads = #{refutePictureAds},
+            </if>
+            <if test="appealResult != null and appealResult != '' " >
+                a.appeal_result = #{appealResult},
+            </if>
+            <if test="remark != null and remark != '' " >
+                a.remark = #{remark},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        <include refid="Example_Where_Clause"/>
+    </update>
+
+    <!-- 主要作用1.逻辑删除，2更新状态 -->
+    <update id="manyOperation" parameterType="Object">
+        update tb_pf_order_appeal a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yn != 0 and yn >0 " >
+                a.yn = #{yn},
+            </if>
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+    <!-- 申诉人进行更新 -->
+    <update id="updateActive" parameterType="Object">
+        update tb_pf_order_appeal a
+        <trim prefix="set" suffixOverrides=",">
+            a.appeal_describe = #{appealDescribe},
+            a.appeal_replenish = #{appealReplenish},
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        <if test="id != null and id != '' " >
+            and a.id = #{id}
+        </if>
+        <if test="orderId != null and orderId != '' " >
+            and a.order_id = #{orderId}
+        </if>
+        and a.member_id = #{memberId}
+        and a.yn = 0
+    </update>
+
+
+
+    <!-- 反驳人进行更新 -->
+    <update id="updatePassive" parameterType="Object">
+        update tb_pf_order_appeal a
+        <trim prefix="set" suffixOverrides=",">
+            a.refute_describe = #{refuteDescribe},
+            a.refute_replenish = #{refuteReplenish},
+            <if test="refutePictureAds != null and refutePictureAds != '' " >
+                a.refute_picture_ads = #{refutePictureAds},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        <if test="id != null and id != '' " >
+            and a.id = #{id}
+        </if>
+        <if test="orderId != null and orderId != '' " >
+            and a.order_id = #{orderId}
+        </if>
+        and a.involve_member_id = #{involveMemberId}
+        and a.yn = 0
+    </update>
+
+
+</mapper>

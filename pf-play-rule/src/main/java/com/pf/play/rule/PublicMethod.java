@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
 import com.pf.play.common.utils.StringUtil;
+import com.pf.play.model.protocol.request.appeal.RequestAppeal;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.request.order.RequestOrder;
 import com.pf.play.model.protocol.request.trade.RequestTrade;
+import com.pf.play.model.protocol.response.appeal.Appeal;
+import com.pf.play.model.protocol.response.appeal.ResponseAppeal;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
 import com.pf.play.model.protocol.response.order.ConsumerOrder;
 import com.pf.play.model.protocol.response.order.Order;
@@ -18,6 +21,7 @@ import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.UserInfoModel;
+import com.pf.play.rule.core.model.appeal.AppealModel;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
 import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
@@ -1568,6 +1572,170 @@ public class PublicMethod {
         if (rowCount != null){
             dataModel.rowCount = rowCount;
         }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+    /**
+     * @Description: 查询获取我的申诉时，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkActiveData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00001.geteCode(), PfErrorCode.ENUM_ERROR.A00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+        return memberId;
+    }
+
+    /**
+     * @Description: 组装查询申诉数据的查询条件
+     * @param requestAppeal - 申诉的基本信息
+     * @param memberId - 用户
+     * @param type - 查询数据类型：0表示我的申诉，1表示被申诉
+     * @return com.pf.play.rule.core.model.appeal.AppealModel
+     * @author yoko
+     * @date 2019/12/5 15:01
+     */
+    public static AppealModel assembleAppealQuery(RequestAppeal requestAppeal, long memberId, int type){
+        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
+        if(type == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            resBen.setMemberId(memberId);
+        }else {
+            resBen.setInvolveMemberId(memberId);
+        }
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 申诉的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param appealList - 申诉信息
+     * @param rowCount - 总行数
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleAppealResult(long stime, String token, String sign, List <AppealModel> appealList, Integer rowCount){
+        ResponseAppeal dataModel = new ResponseAppeal();
+        if (appealList != null && appealList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            List<Appeal> dataList = BeanUtils.copyList(appealList, Appeal.class);
+            dataModel.aList = dataList;
+        }
+        if (rowCount != null){
+            dataModel.rowCount = rowCount;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 查询获取被申诉时，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkPassiveData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00002.geteCode(), PfErrorCode.ENUM_ERROR.A00002.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+        return memberId;
+    }
+
+
+
+    /**
+     * @Description: 更新申诉数据时，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkUpActiveData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00003.geteCode(), PfErrorCode.ENUM_ERROR.A00003.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+
+        // 校验申诉原因
+        if (StringUtils.isBlank(requestAppeal.getAppealDescribe())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00004.geteCode(), PfErrorCode.ENUM_ERROR.A00004.geteDesc());
+        }
+
+        // 校验凭证（图片）
+        if (StringUtils.isBlank(requestAppeal.getPictureAds())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00005.geteCode(), PfErrorCode.ENUM_ERROR.A00005.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 组装更新申诉数据的数据
+     * @param requestAppeal - 申诉的基本信息
+     * @param memberId - 用户
+     * @return com.pf.play.rule.core.model.appeal.AppealModel
+     * @author yoko
+     * @date 2019/12/5 15:01
+     */
+    public static AppealModel assembleAppealUpdate(RequestAppeal requestAppeal, long memberId){
+        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBen.setMemberId(memberId);
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 更新申诉、更新被申诉的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleUpAppealResult(long stime, String token, String sign){
+        ResponseAppeal dataModel = new ResponseAppeal();
         dataModel.setStime(stime);
         dataModel.setToken(token);
         dataModel.setSign(sign);

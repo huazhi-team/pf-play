@@ -79,4 +79,9 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
         List<OrderModel> list = orderMapper.getFinishOrderList(model);
         return list;
     }
+
+    @Override
+    public int updateOrderAppealStatus(OrderModel model) {
+        return orderMapper.updateOrderAppealStatus(model);
+    }
 }

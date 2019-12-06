@@ -609,7 +609,19 @@
 
 
 
-
+    <!-- 更新订单流水的申诉状态 -->
+    <update id="updateOrderAppealStatus" parameterType="Object">
+        update tb_pf_order a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appealStatus != null and appealStatus != '' " >
+                a.appeal_status = #{appealStatus},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
 
 
 

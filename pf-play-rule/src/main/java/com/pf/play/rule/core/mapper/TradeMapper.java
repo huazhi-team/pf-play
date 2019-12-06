@@ -37,4 +37,13 @@ public interface TradeMapper<T> extends BaseDao<T> {
      * @date 2019/12/3 11:31
      */
     public int updateTradeStatus(TradeModel model);
+
+    /**
+     * @Description: 更新订单交易流水的申诉状态
+     * @param model
+     * @return int
+     * @author yoko
+     * @date 2019/12/6 17:10
+     */
+    public int updateTradeAppealStatus(TradeModel model);
 }

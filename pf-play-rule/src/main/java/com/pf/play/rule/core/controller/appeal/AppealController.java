@@ -13,6 +13,7 @@ import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.appeal.AppealModel;
 import com.pf.play.rule.core.model.order.OrderModel;
+import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -302,6 +303,95 @@ public class AppealController {
             // 更新被申诉数据
             AppealModel appealModel = PublicMethod.assembleAppealUpdatePassive(requestAppeal, memberId);
             ComponentUtil.appealService.updatePassive(appealModel);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 添加申诉的数据
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/al/addData
+     * 请求的属性类:RequestAppeal
+     * 必填字段:{"orderNo":"order_no_1","appealDescribe":"更新_申诉原因_1","appealReplenish":"更新_申诉补充_1","pictureAds":"http://www.baidu.com","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:id+appealDescribe+pictureAds+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": "0",
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJzaWduIjoiMWZmN2VmNTQzOTBiZDI5M2U5MjI1NzYzYTlhNzUzNjMiLCJzdGltZSI6MTU3NTU1Mzc4MDY1MywidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912052149100000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/addData", method = {RequestMethod.POST})
+    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkAddAppealData(requestAppeal);
+            token = requestAppeal.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 首先根据订单号查询是否有此订单信息
+            OrderModel orderQuery = PublicMethod.assembleOrderQueryByAppeal(requestAppeal.getOrderNo());
+            OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+            PublicMethod.checkOrderByAppeal(orderModel);
+
+            // 判断订单号是否重复申诉
+            AppealModel appealQuery = PublicMethod. assembleAppealQuery(orderModel.getId());
+            AppealModel checkAppealModel = (AppealModel) ComponentUtil.appealService.findByObject(appealQuery);
+            PublicMethod.checkAppealData(checkAppealModel);
+
+            // 判断用户在此订单中是属于买家还是卖家：true=买家；false=卖家
+            int identityType = PublicMethod.checkIdentityType(orderModel, memberId);// 身份类别：是买家还是卖家；1买家，2卖家
+
+            // 查询订单交易流水：订单号主键ID + 用户身份（买家or卖家）
+            TradeModel tradeQuery = PublicMethod.assembleTradeQueryByAppeal(orderModel.getId(), memberId, identityType);
+            TradeModel tradeModel = (TradeModel) ComponentUtil.tradeService.findByObject(tradeQuery);
+            PublicMethod.checkTradeData(tradeModel, memberId, identityType);
+
+
+            // 组装要新增的申诉数据
+            AppealModel appealModel = PublicMethod.assembleAppealAddData(requestAppeal, tradeModel, memberId, identityType);
+            // 组装要更新的订单流水的申诉状态数据
+            OrderModel upOrderModel = PublicMethod.assembleUpOrderAppealStatus(orderModel);
+            // 组装要更新的订单交易流水的申诉状态数据
+            TradeModel upTradeModel = PublicMethod.assembleUpTradeAppealStatus(tradeModel);
+            ComponentUtil.appealService.addAppeal(appealModel, upOrderModel, upTradeModel);
+
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign

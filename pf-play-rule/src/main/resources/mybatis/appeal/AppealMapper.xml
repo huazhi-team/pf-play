@@ -25,6 +25,9 @@
             <if test="id != null and id != '' " >
                 and a.id = #{id}
             </if>
+            <if test="orderId != null and orderId != '' " >
+                and a.order_id = #{orderId}
+            </if>
             <if test="memberId != null and memberId != '' " >
                 and a.member_id = #{memberId}
             </if>

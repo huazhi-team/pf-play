@@ -82,4 +82,13 @@ public interface TradeService<T> extends BaseService<T> {
      * @date 2019/12/3 21:20
     */
     public void tradeFinish(TradeModel tradeModel, OrderModel orderModel, ConsumerModel sellConsumer, ConsumerModel buyConsumer) throws Exception;
+
+    /**
+     * @Description: 更新订单交易流水的申诉状态
+     * @param model
+     * @return int
+     * @author yoko
+     * @date 2019/12/6 17:10
+    */
+    public int updateTradeAppealStatus(TradeModel model);
 }

@@ -1793,6 +1793,216 @@ public class PublicMethod {
     }
 
 
+    /**
+     * @Description: 添加申诉数据时，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkAddAppealData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00009.geteCode(), PfErrorCode.ENUM_ERROR.A00009.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+
+        // 校验订单号
+        if (StringUtils.isBlank(requestAppeal.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00010.geteCode(), PfErrorCode.ENUM_ERROR.A00010.geteDesc());
+        }
+
+        // 校验申诉原因
+        if (StringUtils.isBlank(requestAppeal.getAppealDescribe())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00011.geteCode(), PfErrorCode.ENUM_ERROR.A00011.geteDesc());
+        }
+
+        // 校验凭证（图片）
+        if (StringUtils.isBlank(requestAppeal.getPictureAds())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00012.geteCode(), PfErrorCode.ENUM_ERROR.A00012.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 组装查询订单的查询条件
+     * @param orderNo - 订单号
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderQueryByAppeal(String orderNo){
+        OrderModel resBen = new OrderModel();
+        resBen.setOrderNo(orderNo);
+        return resBen;
+    }
+
+    /**
+     * @Description: 添加申诉时，校验订单信息
+     * @param orderModel - 订单信息
+     * @return void
+     * @author yoko
+     * @date 2019/11/28 16:55
+     */
+    public static void checkOrderByAppeal(OrderModel orderModel) throws Exception{
+        if (orderModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00013.geteCode(), PfErrorCode.ENUM_ERROR.A00013.geteDesc());
+        }
+    }
+
+
+    /**
+     * @Description: 根据订单号的memberId来判断用户的身份是买家还是卖家
+     * <p>如果用户是买家，则订单号信息里面的memberId是等于方法的第二个参数的值的；如果不相等，则属于卖家</p>
+     * @param orderModel - 订单信息
+    * @param memberId - 用户ID
+     * @return boolean - 返回true=买家(1)；返回false=卖家(2)
+     * @author yoko
+     * @date 2019/12/6 14:41
+     */
+    public static int checkIdentityType(OrderModel orderModel, long memberId){
+        int identityType; // 身份类别：是买家还是卖家；1买家，2卖家
+        if (orderModel.getMemberId() == memberId){
+            identityType = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE;
+        }else{
+            identityType = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO;
+        }
+        return identityType;
+    }
+
+
+
+    /**
+     * @Description: 组装查询订单交易流水的查询条件
+     * @param orderId - 订单号主键ID
+     * @param memberId - 用户ID
+     * @param identityType - 用户的身份：1买家，2卖家
+     * @return com.pf.play.rule.core.model.trade.TradeModel
+     * @author yoko
+     * @date 2019/12/6 15:19
+     */
+    public static TradeModel assembleTradeQueryByAppeal(long orderId, long memberId, int identityType){
+        TradeModel resBean = new TradeModel();
+        resBean.setOrderId(orderId);
+        if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            resBean.setBuyMemberId(memberId);
+        }else if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            resBean.setSellMemberId(memberId);
+        }
+        return resBean;
+    }
+
+    /**
+     * @Description: 校验订单交易流水的数据
+     * @param tradeModel - 订单交易流水
+     * @param memberId - 用户ID
+     * @param identityType - 身份类别：是买家还是卖家；1买家，2卖家
+     * @return void
+     * @author yoko
+     * @date 2019/12/6 15:27
+    */
+    public static void checkTradeData(TradeModel tradeModel, long memberId, int identityType) throws Exception{
+        if (tradeModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00014.geteCode(), PfErrorCode.ENUM_ERROR.A00014.geteDesc());
+        }
+        if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            if (tradeModel.getBuyMemberId() != memberId){
+                throw new ServiceException(PfErrorCode.ENUM_ERROR.A00015.geteCode(), PfErrorCode.ENUM_ERROR.A00015.geteDesc());
+            }
+        }
+        if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            if (tradeModel.getSellMemberId() != memberId){
+                throw new ServiceException(PfErrorCode.ENUM_ERROR.A00016.geteCode(), PfErrorCode.ENUM_ERROR.A00016.geteDesc());
+            }
+        }
+    }
+
+
+
+    /**
+     * @Description: 组装要新增的申诉的数据
+     * @param requestAppeal - 申诉的数据
+     * @param tradeModel - 订单交易流水信息
+     * @param memberId - 用户ID
+     * @param identityType - 身份类别：是买家还是卖家；1买家，2卖家
+     * @return com.pf.play.rule.core.model.appeal.AppealModel
+     * @author yoko
+     * @date 2019/12/6 16:02
+     */
+    public static AppealModel assembleAppealAddData(RequestAppeal requestAppeal, TradeModel tradeModel, long memberId, int identityType){
+        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBen.setOrderId(tradeModel.getOrderId());
+        resBen.setMemberId(memberId);
+        resBen.setIdentityType(identityType);
+        if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 申诉人如果是买家；则涉及的用户ID是卖家（反驳人）
+            resBen.setInvolveMemberId(tradeModel.getSellMemberId());
+        }else if(identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            // 申诉人如果是卖家；则涉及的用户ID是买家（反驳人）
+            resBen.setInvolveMemberId(tradeModel.getBuyMemberId());
+        }
+        resBen.setCurday(DateUtil.getDayNumber(new Date()));
+        return resBen;
+    }
+
+
+    /**
+     * @Description: 组装要订单的申诉状态更新的数据
+     * @param orderModel - 订单信息
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/6 17:25
+    */
+    public static OrderModel assembleUpOrderAppealStatus(OrderModel orderModel){
+        OrderModel resBean = new OrderModel();
+        resBean.setId(orderModel.getId());
+        resBean.setAppealStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装要订单交易流水的申诉状态更新的数据
+     * @param tradeModel - 订单交易流水信息
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/6 17:25
+     */
+    public static TradeModel assembleUpTradeAppealStatus(TradeModel tradeModel){
+        TradeModel resBean = new TradeModel();
+        resBean.setId(tradeModel.getOrderTradeId());
+        resBean.setAppealStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装查询申诉的查询条件
+     * @param orderId
+     * @return
+     * @author yoko
+     * @date 2019/12/6 19:17
+    */
+    public static AppealModel assembleAppealQuery(long orderId){
+        AppealModel resBean = new AppealModel();
+        resBean.setOrderId(orderId);
+        return resBean;
+    }
+
+    public static void checkAppealData(AppealModel appealModel) throws Exception{
+        if (appealModel != null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00017.geteCode(), PfErrorCode.ENUM_ERROR.A00017.geteDesc());
+        }
+    }
+
+
 
     public static void main(String [] args){
 

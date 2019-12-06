@@ -14,6 +14,7 @@ public class RequestAppeal extends BaseRequest implements Serializable {
     private static final long   serialVersionUID = 1233223332140L;
 
     public Long id;
+    public String orderNo;
     public String appealDescribe;
     public String appealReplenish;
     public String pictureAds;
@@ -79,5 +80,13 @@ public class RequestAppeal extends BaseRequest implements Serializable {
 
     public void setRefutePictureAds(String refutePictureAds) {
         this.refutePictureAds = refutePictureAds;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 }

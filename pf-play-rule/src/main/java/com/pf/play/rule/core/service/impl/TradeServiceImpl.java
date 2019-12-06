@@ -137,6 +137,11 @@ public class TradeServiceImpl<T> extends BaseServiceImpl<T> implements TradeServ
         ComponentUtil.redisIdService.delLock(lockKey_buyConsumer);
     }
 
+    @Override
+    public int updateTradeAppealStatus(TradeModel model) {
+        return tradeMapper.updateTradeAppealStatus(model);
+    }
+
     /**
      * @Description: 执行订单交易
      * @param tradeModel - 订单交易流水信息

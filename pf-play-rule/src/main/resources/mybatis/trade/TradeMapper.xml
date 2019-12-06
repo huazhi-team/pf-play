@@ -10,7 +10,7 @@
         a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
         a.create_time,a.update_time,a.yn,
-        b.id AS order_trade_id,b.sell_member_id,b.buy_member_id,b.total_price,b.service_charge,b.sell_nickname,b.buy_nickname,
+        b.id AS order_trade_id,b.order_id,b.sell_member_id,b.buy_member_id,b.total_price,b.service_charge,b.sell_nickname,b.buy_nickname,
         b.sell_phone,b.buy_phone,b.sell_fixed_num,b.buy_fixed_num,b.trade_status,b.picture_ads,b.ratio,b.pay_time,
         b.receive_time,b.appeal_status AS sell_appeal_status,b.create_time AS trade_create_time
     </sql>
@@ -74,7 +74,7 @@
             </if>
 
             and a.yn = 0
-            <!--and b.yn = 0-->
+            and b.yn = 0
         </trim>
     </sql>
 
@@ -435,6 +435,22 @@
         <if test="sellMemberId != null and sellMemberId != '' " >
             and a.sell_member_id = #{sellMemberId}
         </if>
+    </update>
+
+
+
+    <!-- 更新订单交易流水的申诉状态 -->
+    <update id="updateTradeAppealStatus" parameterType="Object">
+        update tb_pf_order_trade a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appealStatus != null and appealStatus != '' " >
+                a.appeal_status = #{appealStatus},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
     </update>
 
 

@@ -27,6 +27,7 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0'
     implementation('commons-codec:commons-codec:1.10')
+    compile group: 'com.aliyun', name: 'aliyun-java-sdk-core', version: '4.4.9'
 }
 
 test {

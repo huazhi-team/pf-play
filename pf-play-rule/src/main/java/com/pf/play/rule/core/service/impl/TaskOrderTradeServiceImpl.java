@@ -3,6 +3,10 @@ package com.pf.play.rule.core.service.impl;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.TaskOrderTradeMapper;
+import com.pf.play.rule.core.model.consumer.ConsumerModel;
+import com.pf.play.rule.core.model.order.OrderModel;
+import com.pf.play.rule.core.model.task.base.StatusModel;
+import com.pf.play.rule.core.model.violate.OrderViolateModel;
 import com.pf.play.rule.core.service.TaskOrderTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +31,10 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
 
     public BaseDao<T> getDao() {
         return taskOrderTradeMapper;
+    }
+
+    @Override
+    public void taskActoinByBuy(OrderViolateModel orderViolateModel, OrderModel orderModel, ConsumerModel consumerModel, StatusModel statusModel) throws Exception {
+
     }
 }

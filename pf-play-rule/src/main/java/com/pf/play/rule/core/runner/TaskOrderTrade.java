@@ -65,10 +65,11 @@ public class TaskOrderTrade {
 //                    // 判断买家需要确认支付是否超时
 //                    int differMinute = DateUtil.dateSubtract(data.getCreateTime());
 //                    if (differMinute >= Integer.parseInt(buyOverTime.getStgValue())){
-//                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻
+//                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻 D.订单交易流水的runStatus状态更新成完成
+////                        段峰
 //
 //                    }else{
-//                        // 发送提醒信息：提醒买家及时支付
+//                        // #发送提醒信息：提醒买家及时支付
 //
 //                    }
 //                }else if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.PAY.getType()){

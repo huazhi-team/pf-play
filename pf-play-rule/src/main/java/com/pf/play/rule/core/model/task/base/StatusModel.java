@@ -53,8 +53,8 @@ public class StatusModel implements Serializable {
      * 日期
      */
     private Integer curday;
-    private Integer startCurday;
-    private Integer endCurday;
+    private Integer curdayStart;
+    private Integer curdayEnd;
 
 
     public Long getId() {
@@ -97,20 +97,20 @@ public class StatusModel implements Serializable {
         this.curday = curday;
     }
 
-    public Integer getStartCurday() {
-        return startCurday;
+    public Integer getCurdayStart() {
+        return curdayStart;
     }
 
-    public void setStartCurday(Integer startCurday) {
-        this.startCurday = startCurday;
+    public void setCurdayStart(Integer curdayStart) {
+        this.curdayStart = curdayStart;
     }
 
-    public Integer getEndCurday() {
-        return endCurday;
+    public Integer getCurdayEnd() {
+        return curdayEnd;
     }
 
-    public void setEndCurday(Integer endCurday) {
-        this.endCurday = endCurday;
+    public void setCurdayEnd(Integer curdayEnd) {
+        this.curdayEnd = curdayEnd;
     }
 
     public List<Integer> getStatusList() {

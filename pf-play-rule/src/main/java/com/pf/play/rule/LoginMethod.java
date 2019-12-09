@@ -88,6 +88,7 @@ public class LoginMethod {
         loginResp.setNickname(userInfoResp.getNickname());
         loginResp.setCity(userInfoResp.getCity());
         loginResp.setProvince(userInfoResp.getProvince());
+        loginResp.setMemberId(userInfoResp.getMemberId());
         return  loginResp;
     }
 

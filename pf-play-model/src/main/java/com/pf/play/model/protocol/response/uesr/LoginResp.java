@@ -8,6 +8,7 @@ package com.pf.play.model.protocol.response.uesr;
  */
 public class LoginResp {
     private   String   token ;
+    private   Integer  memberId ;
     private   String   nickname;
     private   Integer  sex;
     private   String   birthday;
@@ -60,5 +61,13 @@ public class LoginResp {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 }

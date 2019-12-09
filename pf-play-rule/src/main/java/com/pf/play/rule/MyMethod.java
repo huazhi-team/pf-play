@@ -252,64 +252,7 @@ public class MyMethod {
      * @date 2019/12/5 10:12
      */
     public static  String    toSynchronousResp(VcMember  vcMember,String token){
-//        List<Synchronous>   list = new ArrayList<>();
         SynchronousResp  synchronousResp = new SynchronousResp();
-//        Synchronous  synchronous1 = new Synchronous();
-//        synchronous1.setKey("member_id");
-//        synchronous1.setValue(vcMember.getMemberId());
-//        list.add(synchronous1);
-//
-//        Synchronous  synchronous2 = new Synchronous();
-//        synchronous2.setKey("member_add");
-//        synchronous2.setValue(vcMember.getMemberAdd());
-//        list.add(synchronous2);
-//
-//        Synchronous  synchronous3 = new Synchronous();
-//        synchronous3.setKey("nickname");
-//        synchronous3.setValue(vcMember.getNickname());
-//        list.add(synchronous3);
-//
-//        Synchronous  synchronous4 = new Synchronous();
-//        synchronous4.setKey("member_code");
-//        synchronous4.setValue(vcMember.getMemberCode());
-//        list.add(synchronous4);
-//
-//        Synchronous  synchronous5 = new Synchronous();
-//        synchronous5.setKey("is_certification");
-//        synchronous5.setValue(vcMember.getIsCertification());
-//        list.add(synchronous5);
-//
-//        Synchronous  synchronous6 = new Synchronous();
-//        synchronous6.setKey("create_time");
-//        synchronous6.setValue(vcMember.getCreateTime());
-//        list.add(synchronous6);
-//
-//        Synchronous  synchronous7 = new Synchronous();
-//        synchronous7.setKey("sex");
-//        synchronous7.setValue(vcMember.getSex());
-//        list.add(synchronous6);
-//
-//        Synchronous  synchronous8 = new Synchronous();
-//        synchronous8.setKey("birthday");
-//        synchronous8.setValue(vcMember.getBirthday());
-//        list.add(synchronous8);
-//
-//
-//        Synchronous  synchronous9 = new Synchronous();
-//        synchronous9.setKey("province");
-//        synchronous9.setValue(vcMember.getProvince());
-//        list.add(synchronous9);
-//
-//        Synchronous  synchronous10 = new Synchronous();
-//        synchronous10.setKey("city");
-//        synchronous10.setValue(vcMember.getCity());
-//        list.add(synchronous10);
-//
-//        Synchronous  synchronous11 = new Synchronous();
-//        synchronous11.setKey("token");
-//        synchronous11.setValue(vcMember.getToken());
-//        list.add(synchronous11);
-
         synchronousResp.setToken(token);
         synchronousResp.setMember_id(vcMember.getMemberId());
         synchronousResp.setMember_add(vcMember.getMemberAdd());
@@ -323,7 +266,6 @@ public class MyMethod {
         synchronousResp.setProvince(vcMember.getProvince());
         synchronousResp.setCity(vcMember.getCity());
         return JSON.toJSONString(synchronousResp);
-//        return list;
     }
 
 

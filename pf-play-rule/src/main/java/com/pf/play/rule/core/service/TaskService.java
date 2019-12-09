@@ -55,8 +55,14 @@ public interface TaskService  <T> extends BaseService<T> {
 
     boolean  addRewardTaskLog(Integer memberId, Integer taskId)throws Exception;
 
-    boolean  activeValueUpdateUserInfo(UvitalityValueList  uVitalityValueList);
+    boolean  activeValueUpdateUserInfo(UvitalityValueList  uVitalityValueList) throws  Exception;
 
     VcMember getTeamExtensionMemberInfo(List<Integer> list,Integer type,Integer activeValue);
+
+    void     uqdateLevel(Integer memberId);
+
+    boolean  isHaveSeniority(Integer level,Integer currentLevel,Integer memberId);
+
+    Integer  CheckCondition(Integer level,Integer currentLevel,Integer memberId);
 
 }

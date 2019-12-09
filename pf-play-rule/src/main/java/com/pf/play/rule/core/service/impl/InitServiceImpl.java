@@ -4,11 +4,14 @@ import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.DisTaskAttributeMapper;
 import com.pf.play.rule.core.mapper.DisTaskTypeMapper;
+import com.pf.play.rule.core.mapper.DisVitalityValueMapper;
 import com.pf.play.rule.core.mapper.UTaskHaveMapper;
 import com.pf.play.rule.core.model.DisTaskAttribute;
 import com.pf.play.rule.core.model.DisTaskType;
+import com.pf.play.rule.core.model.DisVitalityValue;
 import com.pf.play.rule.core.service.InitService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
+import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
 
     @Autowired
     private DisTaskTypeMapper disTaskTypeMapper;
+
+    @Autowired
+    private DisVitalityValueMapper disVitalityValueMapper;
 
     @Autowired
     private DisTaskAttributeMapper disTaskAttributeMapper;
@@ -69,5 +75,16 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
         TaskSingleton.getInstance().setAttributeTypeList1(attributeList1);//条件任务属性
         TaskSingleton.getInstance().setAttributeTypeList2(attributeList2);//奖励任务属性
         TaskSingleton.getInstance().setAttributeTypeList3(attributeList3);//消耗任务属性
+    }
+
+    @Override
+    public void initVitalityInfo() {
+        List<DisVitalityValue> list =  disVitalityValueMapper.selectByPrimaryKey();
+        EmpiricalVitalitySingleton.getInstance().setDisVitalityValue(list);
+    }
+
+    @Override
+    public void initEmpiricalInfo() {
+
     }
 }

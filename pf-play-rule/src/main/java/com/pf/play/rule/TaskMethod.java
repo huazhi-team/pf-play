@@ -13,6 +13,7 @@ import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
 import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
 import com.pf.play.rule.core.mapper.VcMemberResourceMapper;
 import com.pf.play.rule.core.model.*;
+import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
@@ -823,42 +824,101 @@ public class TaskMethod {
      */
     public  static   List<Integer>   getSuperiorIdList(VcMember vcMember){
         List<Integer>  list  = new ArrayList<>();
+        List<Integer>  uplist  = new ArrayList<>();
         try{
             if(vcMember != null){
                 if(!StringUtils.isBlank(vcMember.getExtensionMemberId())){
                     String []  superiorId  = vcMember.getExtensionMemberId().split(",");
-                    for(int  i= 0 ;i<superiorId.length; i++){
+                    for(int  i= 0 ;i<superiorId.length-1; i++){
                         list.add(Integer.parseInt(superiorId[i]));
                     }
                 }
             }
+
+            for(int  i =1 ;i<=list.size();i++){
+                uplist.add(list.get(list.size()-i));
+            }
+
+
+
+
+
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
-        return  list ;
+        return  uplist ;
     }
 
-    /**
-     * @Description: 准备好二级经验值更新
-     * @param uVitalityValueList
-     * @return java.util.List<java.util.Map<java.lang.String,java.lang.Float>>
-     * @author long
-     * @date 2019/12/4 20:12
-     */
-    public static  List<Map<String,Float>>   getTwoLevelActiveValue(UvitalityValueList uVitalityValueList){
-        List<Map<String,Float>>  list  =  new ArrayList<>();
-        Map<String,Float>  map  = new HashMap<>();
-        map.put("myMemberId",uVitalityValueList.getActiveValue());
-        map.put("superiorMemberId",(uVitalityValueList.getActiveValue()*0.05F));
-        list.add(map);
-        return list;
-    }
+//    /**
+//     * @Description: 准备自己经验值更新
+//     * @param uVitalityValueList
+//     * @return java.util.List<java.util.Map<java.lang.String,java.lang.Float>>
+//     * @author long
+//     * @date 2019/12/4 20:12
+//     */
+//    public static  VcMemberResource   getMyActiveValue(UvitalityValueList uVitalityValueList){
+//        VcMemberResource  vcMemberResource  =  new VcMemberResource();
+//        vcMemberResource.setMemberId(uVitalityValueList.getMemberId());
+//        vcMemberResource.setActiveValue(uVitalityValueList.getActiveValue());
+//        return vcMemberResource;
+//    }
 
 
     public static  VcMemberResource   getVcMemberResource(List<Integer> idList){
         VcMemberResource  vcMemberResource = new VcMemberResource();
         vcMemberResource.setIdList(idList);
         return vcMemberResource;
+    }
+
+    /**
+     * @Description: 组合成修改的团队活力值或者自己的活力值方法
+     * @param memberId
+    * @param activeValue
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/5 22:27
+     */
+    public static  VcMemberResource   getUqdateMyActiveValue(Integer memberId,Float activeValue){
+        VcMemberResource  vcMemberResource= new VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setActiveValue(activeValue);
+        return   vcMemberResource ;
+    }
+
+    /**
+     * @Description: 团队需要修改的值
+     * @param memberId
+    * @param activeValue
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/6 9:49
+     */
+    public static  VcMemberResource   getUqdateTeamActive(Integer memberId,Float activeValue){
+        VcMemberResource  vcMemberResource  = new  VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setTeamActive(activeValue);
+        return   vcMemberResource;
+    }
+
+
+    public static   Integer   getLevel(VcMember  vcMember,VcMemberResource  queryVcMember){
+        Integer   level  =  0  ;
+        List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
+        for(DisVitalityValue  disVitalityValue:list){
+            if(queryVcMember.getDarenLevel()==0){
+                continue;
+            }
+
+            if(disVitalityValue.getPushNumber()>vcMember.getPushPeople()||
+                    disVitalityValue.getTeamVitalitNum()>queryVcMember.getTeamActive()||
+                        disVitalityValue.getAllianceVitalitNum()>queryVcMember.getAllianceActive()){
+                break;
+            }
+            level++;
+        }
+        return level;
     }
 
 }

@@ -295,4 +295,58 @@
     where 1=1
     and superior_id = #{superiorId}
   </select>
+
+  <select id="selectByIsCertificationNum" resultType="com.pf.play.rule.core.model.VcMember" >
+    select  IFNULL(count(member_id),0) as push_people  from   vc_member
+    where  is_certification = 2
+    and superior_id = #{superiorId}
+  </select>
+
+
+  <select id="selectIsLevel" resultType="com.pf.play.rule.core.model.VcMember" >
+        select member_id from  vc_member  a
+		inner  JOIN  vc_member_resource  b
+		on  a.member_id =b.member_id
+		where   1=1
+        <if test="darenLevel != null" >
+          and b.daren_level = #{darenLevel},
+        </if>
+        <if test="superiorId != null" >
+          and a.superior_id  = #{superiorId},
+        </if>
+  </select>
+
+
+  <select id="selectIsLevel2Where" resultType="com.pf.play.rule.core.model.VcMember" >
+        select member_id from  vc_member  a
+		inner  JOIN  vc_member_resource  b
+		on  a.member_id =b.member_id
+		where   1=1
+		and  a.superior_id  =#{superiorId}
+		order by  team_active  DESC
+		limit  2
+  </select>
+
+
+  <select id="selectIsLevel2Where1" resultType="com.pf.play.rule.core.model.VcMember" >
+        select member_id from  vc_member  a
+		inner  JOIN  vc_member_resource  b
+		on  a.member_id =b.member_id
+		where   1=1
+        <if test="idList != null and idList.size()>0">
+          and member_id not in
+          <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+
+      <if test="idList != null and idList.size()>0">
+        and
+      </if>
+  </select>
+
+
+
+
+
 </mapper>

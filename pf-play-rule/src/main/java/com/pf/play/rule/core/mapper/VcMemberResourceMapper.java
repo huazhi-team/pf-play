@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.mapper;
 
 import com.pf.play.rule.core.common.dao.BaseDao;
+import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.model.VcMemberResource;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,4 +26,10 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
     int updateAddmemberResource(VcMemberResource record);
 
     List<VcMemberResource> selectMemberId(VcMemberResource record);
+
+    int updateHeroActive(VcMember vcMember);
+
+    int updateAllianceActive(VcMember vcMember);
+
+    int updateTeamActive(VcMemberResource record);
 }

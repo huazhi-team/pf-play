@@ -189,6 +189,11 @@ public class VcMember {
      */
     private String city;
 
+
+    /***
+     * 直推总人数
+     */
+    private Integer pushPeople;
     /**
      * 批量更新的状态
      */
@@ -440,5 +445,13 @@ public class VcMember {
 
     public void setIdList(List<Integer> idList) {
         this.idList = idList;
+    }
+
+    public Integer getPushPeople() {
+        return pushPeople;
+    }
+
+    public void setPushPeople(Integer pushPeople) {
+        this.pushPeople = pushPeople;
     }
 }

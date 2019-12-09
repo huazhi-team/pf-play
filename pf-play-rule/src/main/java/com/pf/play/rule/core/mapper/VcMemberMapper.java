@@ -37,6 +37,10 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
      */
     public void updatePayPassword(UserInfoModel model);
 
+    VcMember  selectByIsCertificationNum(VcMember vcMember) ;
+
+    VcMember  selectIsLevel(VcMember vcMember) ;
+
 
 
 }

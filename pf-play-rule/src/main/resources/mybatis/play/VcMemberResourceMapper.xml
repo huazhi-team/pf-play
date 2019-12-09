@@ -10,6 +10,11 @@
     DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%s") create_time_str,
     is_valid
   </sql>
+
+  <!--<sql id="Base_Column_count" >-->
+    <!--sum()-->
+  <!--</sql>-->
+
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMemberResource"  >
     select 
     <include refid="Base_Column_List" />
@@ -299,7 +304,41 @@
     </if>
   </select>
 
+    <!-- 修改英雄活力值 -->
+    <update id="updateHeroActive" parameterType="com.pf.play.rule.core.model.VcMember" >
+        update vc_member_resource v,( select   IFNULL(sum(b.active_value),0) as  active_value
+                from  vc_member a  inner JOIN   vc_member_resource b
+                on    a.member_id=  b.member_id
+                where  a.superior_id=#{memberId}
+                order  by   b.active_value desc
+                limit  2) d   set    v.hero_active = d.active_value
+                where  v.member_id = #{memberId}
+    </update>
 
+
+    <!--修改联盟活力值 -->
+    <update id="updateAllianceActive" parameterType="com.pf.play.rule.core.model.VcMember" >
+        update vc_member_resource   set    alliance_active = team_active-hero_active
+                where  member_id = #{memberId}
+    </update>
+
+
+    <!--修改团队活力值 -->
+    <update id="updateTeamActive" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+        UPDATE vc_member_resource c,
+            (
+            SELECT
+                IFNULL( sum( b.active_value ), 0 ) AS active_value
+            FROM
+                vc_member a
+                INNER JOIN vc_member_resource b ON a.member_id = b.member_id
+            WHERE
+                a.superior_id = #{memberId}
+                ) d
+                SET c.team_people = d.active_value
+            WHERE
+                c.member_id = #{memberId}
+    </update>
 
 
 </mapper>

@@ -32,9 +32,12 @@ public class RegisTerRunner implements ApplicationRunner {
 
         log.debug("任务类型初始化！");
         ComponentUtil.initService.initTask();
+
+//        log.debug("经验值初始化！");
+//        ComponentUtil.initService.initVitalityInfo();
 //
-        log.debug("更新用户活力值明细表！");
-        ComponentUtil.taskService.openUpdateTask();
+//        log.debug("更新用户活力值明细表！");
+//        ComponentUtil.taskService.openUpdateTask();
 
     }
 

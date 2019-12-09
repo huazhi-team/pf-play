@@ -10,4 +10,8 @@ import com.pf.play.rule.core.common.service.BaseService;
  */
 public interface InitService<T> extends BaseService<T> {
      void initTask();
+
+     void initVitalityInfo();
+
+     void initEmpiricalInfo();
 }

@@ -11,6 +11,7 @@ import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.TaskService;
+import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
@@ -464,8 +465,17 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
      */
     @Override
     public void openUpdateTask() {
+        UvitalityValueList uVitalityValueList = new UvitalityValueList();
+        uVitalityValueList.setMemberId(2);
+//        ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
         while (true){
             log.debug("=======================");
+            try{
+                ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 //            VcMemberResource   vcMemberResource =TaskMethod.testChangUvitalityValueList(9);
 //            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource) ;
 
@@ -527,24 +537,35 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     }
 
     @Override
-    public boolean activeValueUpdateUserInfo(UvitalityValueList uVitalityValueList) {
+    public boolean activeValueUpdateUserInfo(UvitalityValueList uVitalityValueList)throws  Exception {
         //查询用户信息
         VcMember       vcMember   =  TaskMethod.getMember(uVitalityValueList.getMemberId());
         VcMember       vcMember1  =   vcMemberMapper.selectByMemberId(vcMember);
         //查询用户需要修改的
-        List<Integer>  updateList  =   TaskMethod.getSuperiorIdList(vcMember1);
+        VcMemberResource  updateMyResource =   TaskMethod.getUqdateMyActiveValue(uVitalityValueList.getMemberId(),uVitalityValueList.getActiveValue());
+
+        int   uqdateCount  =  vcMemberResourceMapper.updateByPrimaryKeySelective(updateMyResource);
+
+        if(uqdateCount!=0){
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
+        }
+        //团队活力值的
+        List<Integer>    updateList =   TaskMethod.getSuperiorIdList(vcMember1);
+
+        for(Integer memberId :updateList){  //挨个变扭更新 英雄活力 和联盟活力值
+            VcMemberResource  updateMyResource1 = TaskMethod.getUqdateTeamActive(memberId,uVitalityValueList.getActiveValue());
+
+            VcMember     updateVcMember   =  TaskMethod.getMember(memberId);
+            VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
+            VcMemberResource   rsVcMemberResource      =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource); //查询等级信息
+            ComponentUtil.transactionalService.updataActiveValue(updateMyResource1,updateVcMember);
+        }
+
         //筛选用户有哪些需要变更的
 
-        //准备好二级活力值更新
-        List<Map<String,Float>>  listTwo =TaskMethod.getTwoLevelActiveValue(uVitalityValueList);
+        //升星查询（当前等级，上一级条件）
 
-//        VcMemberResource  vcMemberResource  = TaskMethod.getVcMemberResource(updateList);
-//        List<VcMemberResource>   listTeam  =vcMemberResourceMapper.selectMemberId(vcMemberResource);
-        //先算团队活力值
 
-        //英雄活力值
-
-        //联盟活力值
 
         //等级条件是否满足
 
@@ -555,6 +576,77 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public VcMember getTeamExtensionMemberInfo(List<Integer> list, Integer type,Integer activeValue) {
+        return null;
+    }
+
+    @Override
+    public void uqdateLevel(Integer memberId) {
+        //当前用户信息
+        VcMemberResource   vcMemberResource  = new VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+
+        VcMember  vcMember   = new VcMember();
+        VcMember  rsVcMember = vcMemberMapper.selectByIsCertificationNum(vcMember); //直推人数
+
+        VcMemberResource  queryVcMember=vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource); //资源情况
+        if(queryVcMember==null){
+            return;
+        }
+
+        Integer  level  = TaskMethod.getLevel(rsVcMember,queryVcMember);
+
+//        List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
+
+        //有没有实名制，直推的人，团队活跃度，联盟活跃度
+
+
+        //
+    }
+
+    /**
+     * @Description: 该用户能不能执行更新等级
+     * @param level
+    * @param currentLevel
+     * @return boolean
+     * @author long
+     * @date 2019/12/6 20:45
+     */
+    @Override
+    public boolean isHaveSeniority(Integer level,Integer currentLevel,Integer memberId) {
+        boolean   flag  = true ;
+        if(level==currentLevel){
+            flag =   false ;
+        }else{
+
+        }
+        return flag;
+    }
+
+    @Override
+    public Integer CheckCondition(Integer level, Integer currentLevel, Integer memberId) {
+        while(level==currentLevel){
+            if(level==1){
+                level=1;
+                break;
+            }else if(level==2){
+                VcMember vcMember = new  VcMember();
+                vcMember.setSuperiorId(memberId);
+                vcMember.setDarenLevel(2);
+                VcMember    vcMember1   =  vcMemberMapper.selectIsLevel(vcMember);
+            }else  if(level==3){
+                    VcMember vcMember = new  VcMember();
+                    vcMember.setSuperiorId(memberId);
+                    VcMember    vcMember1   =  vcMemberMapper.selectIsLevel(vcMember);
+
+                    vcMemberMapper.selectIsLevel(vcMember);
+
+            }else if(level==4){
+
+            }else if(level==5){
+
+            }
+            level--;
+        }
         return null;
     }
 }

@@ -110,4 +110,12 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         uTaskHaveMapper.insertSelective(uTaskHave);
         vcRewardReceiveMapper.updateByPrimaryKeySelective(resource);
     }
+
+
+    @Override
+    public void updataActiveValue(VcMemberResource  resource, VcMember vcMember) {
+        vcMemberResourceMapper.updateTeamActive(resource);
+        vcMemberResourceMapper.updateHeroActive(vcMember);
+        vcMemberResourceMapper.updateAllianceActive(vcMember);
+    }
 }

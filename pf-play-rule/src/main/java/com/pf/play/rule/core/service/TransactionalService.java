@@ -22,4 +22,7 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  receiveTaskUpdateInfo(UTaskHave uTaskHave,VcRewardReceive resource);
 
+
+    void  updataActiveValue(VcMemberResource  resource, VcMember vcMember);
+
 }

@@ -43,37 +43,38 @@ public class TaskOrderTrade {
      * @author yoko
      * @date 2019/12/6 20:25
     */
-    @Scheduled(cron = "1 * * * * ?")
-    public void orderTradeCheckTimeOver() throws Exception{
-        log.info("==============orderTradeCheckTimeOver=====================start");
-        // 获取买家确认付款的超时时间
-        StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
-        StrategyModel buyOverTime = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
-        // 获取卖家要确认订单收款的超时时间
-        StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
-        StrategyModel sellOverTime = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
-        // 查询要跑的数据
-        StatusModel statusQuery = TaskOrderTradeMethod.assembleTaskOrderTradeStatusQuery(limitNum);
-        List<TaskOrderTradeModel> synchroList = ComponentUtil.taskOrderTradeService.findByCondition(statusQuery);
-        for (TaskOrderTradeModel data : synchroList){
-            //锁住这个订单交易流水
-            String lockKey = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_TRADE, data.getId());
-            boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
-            if (flagLock){
-                if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.ACTION.getType()){
-                    // 买家需要确认支付
-                    // 判断买家需要确认支付是否超时
-                    int differMinute = DateUtil.dateSubtract(data.getCreateTime());
-                    if (differMinute >= Integer.parseInt(buyOverTime.getStgValue())){
-                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻
-                    }else{
-                        // 发送提醒信息：提醒买家及时支付
-
-                    }
-                }else if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.PAY.getType()){
-                    // 卖家需要确认收款
-                }
-            }
-        }
-    }
+//    @Scheduled(cron = "1 * * * * ?")
+//    public void orderTradeCheckTimeOver() throws Exception{
+//        log.info("==============orderTradeCheckTimeOver=====================start");
+//        // 获取买家确认付款的超时时间
+//        StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
+//        StrategyModel buyOverTime = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+//        // 获取卖家要确认订单收款的超时时间
+//        StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
+//        StrategyModel sellOverTime = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+//        // 查询要跑的数据
+//        StatusModel statusQuery = TaskOrderTradeMethod.assembleTaskOrderTradeStatusQuery(limitNum);
+//        List<TaskOrderTradeModel> synchroList = ComponentUtil.taskOrderTradeService.findByCondition(statusQuery);
+//        for (TaskOrderTradeModel data : synchroList){
+//            //锁住这个订单交易流水
+//            String lockKey = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_TRADE, data.getId());
+//            boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
+//            if (flagLock){
+//                if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.ACTION.getType()){
+//                    // 买家需要确认支付
+//                    // 判断买家需要确认支付是否超时
+//                    int differMinute = DateUtil.dateSubtract(data.getCreateTime());
+//                    if (differMinute >= Integer.parseInt(buyOverTime.getStgValue())){
+//                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻
+//
+//                    }else{
+//                        // 发送提醒信息：提醒买家及时支付
+//
+//                    }
+//                }else if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.PAY.getType()){
+//                    // 卖家需要确认收款
+//                }
+//            }
+//        }
+//    }
 }

@@ -58,6 +58,18 @@ public class ServerConstant {
         public static final String REDIS_LOCK_TAG = "lock";
 
 
+        /**
+         * 运行计算状态：：0初始化，1锁定，2计算失败，3计算成功，4扣量
+         * 这里3表示成功
+         */
+        public static final int RUN_STATUS_THREE = 3;
+
+        /**
+         * 跑数据被执行了5次为上限
+         */
+        public static final int RUN_NUM_FIVE = 5;
+
+
     }
 
 
@@ -115,6 +127,9 @@ public class ServerConstant {
 
     /**
      * @Description: 订单交易流水的交易状态
+     * <p>
+     *     交易状态：1超时，2正常进行中，3问题申诉，4确认已付款（买家等待），5确认已收款（卖家确认）
+     * </p>
      * @author yoko
      * @date 2019/12/3 16:16
     */
@@ -149,7 +164,6 @@ public class ServerConstant {
             this.desc = desc;
         }
     }
-
 
 
 

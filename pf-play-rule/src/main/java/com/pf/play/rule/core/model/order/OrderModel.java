@@ -499,4 +499,12 @@ public class OrderModel extends BasePage implements Serializable {
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
+
+    public Integer getTradeAppealStatus() {
+        return tradeAppealStatus;
+    }
+
+    public void setTradeAppealStatus(Integer tradeAppealStatus) {
+        this.tradeAppealStatus = tradeAppealStatus;
+    }
 }

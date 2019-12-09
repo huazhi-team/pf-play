@@ -50,4 +50,10 @@ public interface PfCacheKey {
      */
     String ORDER_TRADE_NUM = "-8";
 
+    /**
+     * task操作订单交易流水；
+     * 如果多台服务器运行，会出现问题，所以在变量名称前加了lock
+     */
+    String LOCK_TRADE = "-9";
+
 }

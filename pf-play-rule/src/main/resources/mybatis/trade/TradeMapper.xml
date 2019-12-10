@@ -454,6 +454,21 @@
     </update>
 
 
+    <!-- 修改订单状态：交易状态：1超时，2正常进行中，3问题申诉，4确认已付款（买家等待），5确认已收款（卖家确认） -->
+    <update id="updateTradeOverTime" parameterType="Object">
+        update tb_pf_order_trade a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                a.trade_status = #{tradeStatus},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+
 
 
 

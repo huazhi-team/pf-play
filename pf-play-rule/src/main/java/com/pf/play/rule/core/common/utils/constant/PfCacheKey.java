@@ -56,4 +56,14 @@ public interface PfCacheKey {
      */
     String LOCK_TRADE = "-9";
 
+    /**
+     * task跑数据时：买家推送支付提醒信息的缓存
+     */
+    String BUY_ORDER_SEND_MSG = "-10";
+
+    /**
+     * task跑数据时：卖家推送确认收款提醒信息的缓存
+     */
+    String SELL_ORDER_SEND_MSG = "-11";
+
 }

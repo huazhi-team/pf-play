@@ -91,4 +91,15 @@ public interface TradeService<T> extends BaseService<T> {
      * @date 2019/12/6 17:10
     */
     public int updateTradeAppealStatus(TradeModel model);
+
+
+
+    /**
+     * @Description: 更新订单交易流水超时的状态
+     * @param model - 订单交易流水信息
+     * @return int
+     * @author yoko
+     * @date 2019/12/10 10:05
+     */
+    public int updateTradeOverTime(TradeModel model);
 }

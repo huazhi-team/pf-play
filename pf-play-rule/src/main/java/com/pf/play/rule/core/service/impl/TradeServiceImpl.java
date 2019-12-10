@@ -142,6 +142,11 @@ public class TradeServiceImpl<T> extends BaseServiceImpl<T> implements TradeServ
         return tradeMapper.updateTradeAppealStatus(model);
     }
 
+    @Override
+    public int updateTradeOverTime(TradeModel model) {
+        return tradeMapper.updateTradeOverTime(model);
+    }
+
     /**
      * @Description: 执行订单交易
      * @param tradeModel - 订单交易流水信息

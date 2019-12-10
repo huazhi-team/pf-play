@@ -65,7 +65,7 @@ public interface OrderService<T> extends BaseService<T> {
     public int updateOrderAppealStatus(OrderModel model);
 
     /**
-     * @Description: 更新订单是否超时
+     * @Description: 更新订单超时的状态
      * @param model - 订单信息
      * @return int
      * @author yoko

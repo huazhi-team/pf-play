@@ -13,6 +13,7 @@ import com.pf.play.rule.core.model.task.base.StatusModel;
 import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.core.model.violate.OrderViolateModel;
 import com.pf.play.rule.util.ComponentUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description 订单交易流水的task任务类
@@ -35,6 +37,12 @@ public class TaskOrderTrade {
 
     @Value("${task.limit.num}")
     private int limitNum;
+
+
+    /**
+     * 10分钟
+     */
+    public long TEN_MIN = 10;
 
     /**
      * @Description: 计算订单交易流水数据-计算超时
@@ -80,8 +88,17 @@ public class TaskOrderTrade {
                         StatusModel statusModel = PublicMethod.assembleUpdateStatusModel(data.getId(), ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
                         ComponentUtil.taskOrderTradeService.taskActoinByBuy(orderViolateModel, orderModel, consumerModel, statusModel);
                     }else{
-                        // #发送提醒信息：提醒买家及时支付
-
+                        // 判断卖家卖给买家的订单流水时间是否与系统时间相差超过10分钟
+                        if (differMinute >= TEN_MIN){
+                            // 看缓存中是否有10分钟以内的提醒纪录
+                            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.BUY_ORDER_SEND_MSG, data.getId());
+                            String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+                            if (StringUtils.isBlank(strCache)) {
+                                // #发送提醒信息：提醒买家及时支付
+                                // 缓存纪录一下发送
+                                ComponentUtil.redisService.set(strKeyCache, ServerConstant.PUBLIC_CONSTANT.STR_VALUE_ONE, TEN_MIN, TimeUnit.MINUTES);
+                            }
+                        }
                     }
                 }else if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.PAY.getType()){
                     // 卖家需要确认收款
@@ -98,8 +115,17 @@ public class TaskOrderTrade {
                         StatusModel statusModel = PublicMethod.assembleUpdateStatusModel(data.getId(), ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
                         ComponentUtil.taskOrderTradeService.taskActoinBySell(orderViolateModel, tradeModel, statusModel);
                     }else{
-                        // #发送提醒信息：提醒卖家及时确认收款
-
+                        // 判断买家确认支付后的时间是否与系统时间相差超过10分钟
+                        if (differMinute >= TEN_MIN){
+                            // 看缓存中是否有10分钟以内的提醒纪录
+                            String strKeyCache = CachedKeyUtils.getPfCacheKey(PfCacheKey.SELL_ORDER_SEND_MSG, data.getId());
+                            String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+                            if (StringUtils.isBlank(strCache)) {
+                                // #发送提醒信息：提醒卖家及时确认收款
+                                // 缓存纪录一下发送
+                                ComponentUtil.redisService.set(strKeyCache, ServerConstant.PUBLIC_CONSTANT.STR_VALUE_ONE, TEN_MIN, TimeUnit.MINUTES);
+                            }
+                        }
                     }
                 }
 

@@ -55,7 +55,7 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
 
     @Override
     public void taskActoinBySell(OrderViolateModel orderViolateModel, TradeModel tradeModel, StatusModel statusModel) throws Exception {
-
+        handleTaskActoinBySell(orderViolateModel, tradeModel, statusModel);
     }
 
     /**
@@ -88,8 +88,7 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
     @Transactional
     public void handleTaskActoinBySell(OrderViolateModel orderViolateModel, TradeModel tradeModel, StatusModel statusModel){
         orderViolateMapper.add(orderViolateModel);
-//        tradeMapper.updateOrderOverTime(orderModel);
-//        段峰
+        tradeMapper.updateTradeStatus(tradeModel);
         taskOrderTradeMapper.update(statusModel);
     }
 

@@ -2035,6 +2035,7 @@ public class PublicMethod {
     /**
      * @Description: 组装用户违约的数据
      * @param taskOrderTradeModel - 订单交易流水任务信息
+     * @param memberId - 用户ID
      * @param violateType - 违约类型：1买家未付款（未在规定时间内），2卖家未确认收款（未在规定时间内），3被人投诉成功，4投诉失败
      * @param punishType - 违约处罚类型:1不做处罚（也就统计纪录一下违约的数据），2扣减钻石，3账号封号
      * @param masonryNum - 要扣减的钻石个数
@@ -2043,10 +2044,10 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/12/9 22:21
      */
-    public static OrderViolateModel assembleOrderViolateData(TaskOrderTradeModel taskOrderTradeModel, int violateType, int punishType, String  masonryNum, int dataFrom){
+    public static OrderViolateModel assembleOrderViolateData(TaskOrderTradeModel taskOrderTradeModel, long memberId, int violateType, int punishType, String  masonryNum, int dataFrom){
         OrderViolateModel resBean = new OrderViolateModel();
         resBean.setOrderId(taskOrderTradeModel.getOrderId());
-        resBean.setMemberId(taskOrderTradeModel.getBuyMemberId());
+        resBean.setMemberId(memberId);
         resBean.setViolateType(violateType);
         resBean.setPunishType(punishType);
         if (!StringUtils.isBlank(masonryNum)){
@@ -2102,6 +2103,20 @@ public class PublicMethod {
         StatusModel resBean = new StatusModel();
         resBean.setId(id);
         resBean.setRunStatus(runStatus);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装订单交易流水超时的数据
+     * @param taskOrderTradeModel - 订单交易流水数据
+     * @return TradeModel
+     * @author yoko
+     * @date 2019/12/10 11:54
+    */
+    public static TradeModel assemblerTradeDataByUpdateOverTime(TaskOrderTradeModel taskOrderTradeModel){
+        TradeModel resBean = new TradeModel();
+        resBean.setId(taskOrderTradeModel.getId());
+        resBean.setTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
         return resBean;
     }
 

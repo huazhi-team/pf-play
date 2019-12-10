@@ -2,13 +2,11 @@ package com.pf.play.rule.core.service.impl;
 
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
-import com.pf.play.rule.core.mapper.ConsumerFixedMapper;
-import com.pf.play.rule.core.mapper.OrderMapper;
-import com.pf.play.rule.core.mapper.OrderViolateMapper;
-import com.pf.play.rule.core.mapper.TaskOrderTradeMapper;
+import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.task.base.StatusModel;
+import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.core.model.violate.OrderViolateModel;
 import com.pf.play.rule.core.service.TaskOrderTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,9 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
     @Autowired
     private ConsumerFixedMapper consumerFixedMapper;
 
+    @Autowired
+    private TradeMapper tradeMapper;
+
 
     public BaseDao<T> getDao() {
         return taskOrderTradeMapper;
@@ -50,6 +51,11 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
     @Override
     public void taskActoinByBuy(OrderViolateModel orderViolateModel, OrderModel orderModel, ConsumerModel consumerModel, StatusModel statusModel) throws Exception {
         handleTaskActoinByBuy(orderViolateModel, orderModel, consumerModel, statusModel);
+    }
+
+    @Override
+    public void taskActoinBySell(OrderViolateModel orderViolateModel, TradeModel tradeModel, StatusModel statusModel) throws Exception {
+
     }
 
     /**
@@ -69,4 +75,22 @@ public class TaskOrderTradeServiceImpl<T> extends BaseServiceImpl<T> implements 
         consumerFixedMapper.updateConsumerMasonryByThaw(consumerModel);
         taskOrderTradeMapper.update(statusModel);
     }
+
+    /**
+     * @Description: 卖家超时执行的数据
+     * @param orderViolateModel - 违约数据
+     * @param tradeModel - 订单交易流水数据
+     * @param statusModel - 运行数据更新状态
+     * @return void
+     * @author yoko
+     * @date 2019/12/10 10:45
+     */
+    @Transactional
+    public void handleTaskActoinBySell(OrderViolateModel orderViolateModel, TradeModel tradeModel, StatusModel statusModel){
+        orderViolateMapper.add(orderViolateModel);
+//        tradeMapper.updateOrderOverTime(orderModel);
+//        段峰
+        taskOrderTradeMapper.update(statusModel);
+    }
+
 }

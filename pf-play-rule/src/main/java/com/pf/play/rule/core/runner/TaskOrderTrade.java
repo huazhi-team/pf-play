@@ -10,6 +10,7 @@ import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
 import com.pf.play.rule.core.model.task.TaskOrderTradeModel;
 import com.pf.play.rule.core.model.task.base.StatusModel;
+import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.core.model.violate.OrderViolateModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
@@ -67,10 +68,10 @@ public class TaskOrderTrade {
                     // 判断买家需要确认支付是否超时
                     int differMinute = DateUtil.dateSubtractBySystemTime(data.getCreateTime());
                     if (differMinute >= Integer.parseInt(buyOverTime.getStgValue())){
-                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻 D.订单交易流水的runStatus状态更新成完成
+                        // 买家超时：A.纪录买家超时违约。 B.修改订单超时状态。 C.卖家钻石解冻。 D.订单交易流水的runStatus状态更新成完成。
 
                         // 组装违约纪录数据
-                        OrderViolateModel orderViolateModel = PublicMethod.assembleOrderViolateData(data, ServerConstant.ViolateTypeEnum.BUYER_UNPAID.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, null, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+                        OrderViolateModel orderViolateModel = PublicMethod.assembleOrderViolateData(data, data.getBuyMemberId(), ServerConstant.ViolateTypeEnum.BUYER_UNPAID.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, null, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
                         // 组装订单超时的数据
                         OrderModel orderModel = PublicMethod.assembleOrderOverTimeData(data);
                         // 组装卖家解冻数据
@@ -84,6 +85,22 @@ public class TaskOrderTrade {
                     }
                 }else if (data.getTradeStatus() == ServerConstant.TradeStatusEnum.PAY.getType()){
                     // 卖家需要确认收款
+                    // 判断卖家需要确认收款是否超时
+                    int differMinute = DateUtil.dateSubtractBySystemTime(data.getPayTime());
+                    if (differMinute >= Integer.parseInt(sellOverTime.getStgValue())){
+                        // 卖家超时：A.纪录卖家超时违约。 B.修改订单交易流水超时状态。 C.订单交易流水的runStatus状态更新成完成。 D.对于卖家的钻石目前还没有合适的处理方式（目前会进行人工处理：因为买家可以造假）
+
+                        // 组装违约纪录数据
+                        OrderViolateModel orderViolateModel = PublicMethod.assembleOrderViolateData(data, data.getSellMemberId(), ServerConstant.ViolateTypeEnum.SELL_RECEIVABLE.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, null, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+                        // 组装订单交易流水超时的数据
+                        TradeModel tradeModel = PublicMethod.assemblerTradeDataByUpdateOverTime(data);
+                        // 组装更改运行状态的数据
+                        StatusModel statusModel = PublicMethod.assembleUpdateStatusModel(data.getId(), ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
+                        ComponentUtil.taskOrderTradeService.taskActoinBySell(orderViolateModel, tradeModel, statusModel);
+                    }else{
+                        // #发送提醒信息：提醒卖家及时确认收款
+
+                    }
                 }
 
                 // 解锁

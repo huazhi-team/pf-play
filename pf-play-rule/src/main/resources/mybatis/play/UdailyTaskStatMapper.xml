@@ -197,4 +197,38 @@
       is_valid = #{isValid,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <update id="updateByMemberId" parameterType="com.pf.play.rule.core.model.UdailyTaskStat" >
+    update u_daily_task_stat
+    <set >
+      <if test="lookCommodityNum != null" >
+        look_commodity_num = look_commodity_num+1,
+      </if>
+      <if test="acceptNumber != null" >
+        accept_number = accept_number+1,
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
+
+
+  <select id="selectByMemberIdDay" resultType="com.pf.play.rule.core.model.UdailyTaskStat" >
+    select
+    <include refid="Base_Column_List" />
+    from u_daily_task_stat
+    where 1=1
+
+    <if test="memberId != null" >
+      and  member_id = #{memberId}
+    </if>
+
+    <if test="curday != null" >
+      and  curday = #{curday}
+    </if>
+
+  </select>
 </mapper>

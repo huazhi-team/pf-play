@@ -41,6 +41,9 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
 
     VcMember  selectIsLevel(VcMember vcMember) ;
 
+    List<VcMember> selectByisSynchro(VcMember vcMember);
 
+
+    void updateMemberIdList(VcMember vcMember);
 
 }

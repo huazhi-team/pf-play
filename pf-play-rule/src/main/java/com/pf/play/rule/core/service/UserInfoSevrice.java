@@ -50,4 +50,8 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
 
     Boolean    userSynchronousQhr(Integer memberId,String token);
 
+    void       superiorSynchronousQhr(List<VcMember> list);
+
+    void       executeSuperior();
+
 }

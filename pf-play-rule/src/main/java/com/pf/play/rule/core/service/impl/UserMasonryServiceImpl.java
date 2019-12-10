@@ -103,7 +103,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     @Override
     public List<UMasonryListLog> toKenQueryMasonryInfo(LoginReq loginReq)throws  Exception {
         Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(loginReq.getToken(),
-                                                                        loginReq.getWxOpenid());
+                                                                        loginReq.getWxOpenId());
         if(memberId==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteCode(),
                                             ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteDesc());

@@ -46,7 +46,10 @@ public class Constant {
     public  static  int  TASK_TYPE_HISTORY    =  1 ;
     public  static  int  TASK_TYPE_EXISTING   =  2 ;
 
+    /***********同步用户详细信息**********/
     public  static  String    USER_SYNCHRONOUS_URL="http://192.168.1.25:9093/qhr/api/syncUserInfo";
+    /***********同步上下级信息详细信息**********/
+    public  static  String    PRARENT_SYNCHRONOUS_URL="http://192.168.1.25:9093/qhr/api/syncPrarentId";
 
 
 }

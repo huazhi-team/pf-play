@@ -63,7 +63,7 @@ public class UserController {
         try{
             log.info("----------:masonryInfo!");
             LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenid(userCommonReq.getWxOpenId());
+            loginReq1.setWxOpenId(userCommonReq.getWxOpenId());
             loginReq1.setToken(userCommonReq.getToken());
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
             if(null==list||list.size()==0){
@@ -176,6 +176,7 @@ public class UserController {
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
+
             VcMemberResource  vcMemberResource =null;
             if(memberId!=0){
                 vcMemberResource =ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);
@@ -283,7 +284,7 @@ public class UserController {
         JsonResult<Object>     result  = null;
         try{
             LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenid("slllsdjdjsa");
+            loginReq1.setWxOpenId("slllsdjdjsa");
             loginReq1.setToken("0423837aee5d4d96a2cf868d5fc2d47d");
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
             if(null==list||list.size()==0){

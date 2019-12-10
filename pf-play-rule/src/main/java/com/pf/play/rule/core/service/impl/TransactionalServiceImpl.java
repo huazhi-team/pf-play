@@ -48,6 +48,16 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     @Autowired
     private UMasonrySummaryMapper  uMasonrySummaryMapper ;
 
+    @Autowired
+    private UdailyTaskStatMapper  udailyTaskStatMapper ;
+
+    @Autowired
+    private UNumberTypeLogMapper  uNumberTypeLogMapper ;
+
+
+
+
+
 
     @Override
     public BaseDao<T> getDao() {
@@ -117,5 +127,17 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         vcMemberResourceMapper.updateTeamActive(resource);
         vcMemberResourceMapper.updateHeroActive(vcMember);
         vcMemberResourceMapper.updateAllianceActive(vcMember);
+    }
+
+    @Override
+    public void insertDailyTaskStat(UdailyTaskStat udailyTaskStat, UNumberTypeLog uNumberTypeLog) {
+        udailyTaskStatMapper.insertSelective(udailyTaskStat);
+        uNumberTypeLogMapper.insertSelective(uNumberTypeLog);
+    }
+
+    @Override
+    public void updateDailyTaskStat(UdailyTaskStat udailyTaskStat, UNumberTypeLog uNumberTypeLog) {
+        udailyTaskStatMapper.updateByMemberId(udailyTaskStat);
+        uNumberTypeLogMapper.insertSelective(uNumberTypeLog);
     }
 }

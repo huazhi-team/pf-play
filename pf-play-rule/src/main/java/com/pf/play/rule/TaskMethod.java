@@ -11,7 +11,6 @@ import com.pf.play.model.protocol.response.task.GiveTaskResp;
 import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
 import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
 import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
-import com.pf.play.rule.core.mapper.VcMemberResourceMapper;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
@@ -604,7 +603,7 @@ public class TaskMethod {
         boolean    flag = true ;
         if(StringUtils.isBlank(taskReq.getToken())){
             flag = false;
-        }else if(StringUtils.isBlank(taskReq.getWxOpenid())){
+        }else if(StringUtils.isBlank(taskReq.getWxOpenId())){
             flag = false;
         }else if(taskReq.getTaskId()==0){
             flag = false;
@@ -653,15 +652,12 @@ public class TaskMethod {
      * @date 2019/12/1 17:11
      */
     public static  List<ReceiveTaskResp>   changReceiveTaskResp( List<DisTaskType>  list){
-
-
         List<ReceiveTaskResp>  list1 = new ArrayList<>();
         for(DisTaskType disTaskType:list){
             ReceiveTaskResp  receiveTaskResp = new ReceiveTaskResp();
             BeanUtils.copy(disTaskType,receiveTaskResp);
             list1.add(receiveTaskResp);
         }
-
         return   list1;
     }
 

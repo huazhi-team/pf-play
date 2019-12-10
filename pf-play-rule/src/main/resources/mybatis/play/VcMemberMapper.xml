@@ -349,4 +349,24 @@
 
 
 
+  <select id="selectByisSynchro" resultType="com.pf.play.rule.core.model.VcMember"  parameterType="Object" >
+    select member_id,superior_id  from  vc_member  a
+    where  is_synchro = 1
+    limit 2
+  </select>
+
+  <update id="updateMemberIdList" parameterType="Object" >
+    update vc_member
+    set  is_synchro=2
+    where
+    <if test="idList != null and idList.size()>0">
+      member_id  in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+
+
 </mapper>

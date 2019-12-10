@@ -29,8 +29,8 @@ public class LoginMethod {
     public  static LoginReq changLoginReq(LoginReq loginReq){
         LoginReq   loginReq1   = new LoginReq();
         if(loginReq.getLoginType()==1){
-            if(!StringUtils.isBlank(loginReq.getWxOpenid())){
-                loginReq1.setWxOpenid(loginReq.getWxOpenid());
+            if(!StringUtils.isBlank(loginReq.getWxOpenId())){
+                loginReq1.setWxOpenId(loginReq.getWxOpenId());
             }
         }
         return   loginReq1;
@@ -101,7 +101,7 @@ public class LoginMethod {
      */
     public static boolean  checkRemoveSignOutToken(LoginReq loginReq){
         boolean   flag = true ;
-        if(StringUtils.isBlank(loginReq.getWxOpenid())){
+        if(StringUtils.isBlank(loginReq.getWxOpenId())){
             return  false ;
         }
         flag   = ComponentUtil.userInfoSevrice.isToken(loginReq.getToken());

@@ -2,11 +2,14 @@ package com.pf.play.rule.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.HttpGetUtil;
+import com.pf.play.common.utils.JsonResult;
+import com.pf.play.model.protocol.request.appeal.RequestAppeal;
 import com.pf.play.model.protocol.request.uesr.SynchronousReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.rule.MyMethod;
+import com.pf.play.rule.SynchroMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
@@ -268,5 +271,41 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             e.printStackTrace();
         }
         return flag;
+    }
+
+    @Override
+    public void superiorSynchronousQhr(List<VcMember> list) {
+        List<Integer> idList    =  new ArrayList<>();
+        for(VcMember vcMember:list){
+            String   param   =  SynchroMethod.toSyncPrarentId(vcMember);
+            String   codeInfo =  HttpGetUtil.send(Constant.PRARENT_SYNCHRONOUS_URL,param);
+            PrarentResult prarentResult  = JSON.parseObject(codeInfo, PrarentResult.class);
+            if(!StringUtils.isBlank(prarentResult.getErrcode())&&prarentResult.getErrcode().equals("0")){
+                idList.add(vcMember.getMemberId());
+            }
+        }
+        VcMember vcMember = new VcMember();
+        vcMember.setIdList(idList);
+        if(idList.size()!=0){
+            vcMemberMapper.updateMemberIdList(vcMember);
+        }
+    }
+
+
+    @Override
+    public void executeSuperior() {
+        try{
+            while (true){
+                List<VcMember>   list =vcMemberMapper.selectByisSynchro(null);
+                if(list.size()==0){
+                    Thread.sleep(3000);
+                }else{
+                    ComponentUtil.userInfoSevrice.superiorSynchronousQhr(list);
+                }
+            }
+        }catch (Exception re){
+            re.printStackTrace();
+        }
+
     }
 }

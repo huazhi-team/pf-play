@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.UNumberTypeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.pf.play.rule.core.model.UNumberTypeLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="BIT" />
+    <result column="curday" property="curday" jdbcType="INTEGER" />
+    <result column="curhour" property="curhour" jdbcType="BIT" />
+    <result column="curminute" property="curminute" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_valid" property="isValid" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, type, curday, curhour, curminute, create_time, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_number_type_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_number_type_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.UNumberTypeLog" >
+    insert into u_number_type_log (id, member_id, type, 
+      curday, curhour, curminute, 
+      create_time, update_time, is_valid
+      )
+    values (#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER}, #{type,jdbcType=BIT}, 
+      #{curday,jdbcType=INTEGER}, #{curhour,jdbcType=BIT}, #{curminute,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.UNumberTypeLog" >
+    insert into u_number_type_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=BIT},
+      </if>
+      <if test="curday != null" >
+        #{curday,jdbcType=INTEGER},
+      </if>
+      <if test="curhour != null" >
+        #{curhour,jdbcType=BIT},
+      </if>
+      <if test="curminute != null" >
+        #{curminute,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.UNumberTypeLog" >
+    update u_number_type_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIT},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday,jdbcType=INTEGER},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour,jdbcType=BIT},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.UNumberTypeLog" >
+    update u_number_type_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      type = #{type,jdbcType=BIT},
+      curday = #{curday,jdbcType=INTEGER},
+      curhour = #{curhour,jdbcType=BIT},
+      curminute = #{curminute,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

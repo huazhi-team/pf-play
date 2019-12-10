@@ -153,7 +153,7 @@ public class TaskController {
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenid());
+            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
             boolean  checkFlag  =   ComponentUtil.taskService.checkUserCondition(memberId,taskReq.getTaskId());
             if(!checkFlag){
@@ -220,14 +220,11 @@ public class TaskController {
         try{
             List<DisWisemanInfo>  list  = new ArrayList<>();
             log.info("----------:exeGiveTask!");
-//            String    token  ="d9680065409547b69746912de48ee8d4";
-//            String    wxOpenId  = "slllsdjdjsa";
-//            Integer   taskId    = 1;
             boolean   cheakFlag  = TaskMethod.checkUserTaskIsEffective(taskReq);
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenid());
+            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
             boolean       flag   =   ComponentUtil.taskService.checkExeTaskIdReward(memberId, taskReq.getTaskId());
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteDesc());

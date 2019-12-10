@@ -30,6 +30,8 @@ public class ComponentUtil {
     public static TaskOrderTradeService taskOrderTradeService;
     public static OrderViolateService orderViolateService;
 
+    public static SynchroService synchroService;
+
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;
 

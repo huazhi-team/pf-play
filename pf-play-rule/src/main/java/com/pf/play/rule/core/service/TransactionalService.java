@@ -25,4 +25,8 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  updataActiveValue(VcMemberResource  resource, VcMember vcMember);
 
+    void  insertDailyTaskStat(UdailyTaskStat  udailyTaskStat,UNumberTypeLog uNumberTypeLog);
+
+    void  updateDailyTaskStat(UdailyTaskStat  udailyTaskStat,UNumberTypeLog uNumberTypeLog);
+
 }

@@ -14,7 +14,7 @@ public class TaskReq {
     /**
      * 访问微信id
      */
-    private  String   wxOpenid;
+    private  String   wxOpenId;
     /***
      * taskId
      */
@@ -29,12 +29,12 @@ public class TaskReq {
     }
 
 
-    public String getWxOpenid() {
-        return wxOpenid;
+    public String getWxOpenId() {
+        return wxOpenId;
     }
 
-    public void setWxOpenid(String wxOpenid) {
-        this.wxOpenid = wxOpenid;
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
     }
 
     public Integer getTaskId() {

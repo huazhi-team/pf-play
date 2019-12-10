@@ -17,4 +17,8 @@ public interface UdailyTaskStatMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(UdailyTaskStat record);
 
     int updateByPrimaryKey(UdailyTaskStat record);
+
+    int updateByMemberId(UdailyTaskStat record);
+
+    UdailyTaskStat selectByMemberIdDay(UdailyTaskStat record);
 }

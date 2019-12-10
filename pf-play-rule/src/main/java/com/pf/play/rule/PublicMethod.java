@@ -28,7 +28,10 @@ import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.model.task.TaskOrderTradeModel;
+import com.pf.play.rule.core.model.task.base.StatusModel;
 import com.pf.play.rule.core.model.trade.TradeModel;
+import com.pf.play.rule.core.model.violate.OrderViolateModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -1996,10 +1999,110 @@ public class PublicMethod {
         return resBean;
     }
 
+    /**
+     * @Description: 校验申诉信息
+     * @param appealModel - 申诉信息
+     * @return void
+     * @author yoko
+     * @date 2019/12/9 22:16
+    */
     public static void checkAppealData(AppealModel appealModel) throws Exception{
         if (appealModel != null ){
             throw new ServiceException(PfErrorCode.ENUM_ERROR.A00017.geteCode(), PfErrorCode.ENUM_ERROR.A00017.geteDesc());
         }
+    }
+
+    /**
+     * @Description: 组装查询订单交易流水的task任务的查询条件
+     * @param limitNum
+     * @return StatusModel
+     * @author yoko
+     * @date 2019/12/6 22:48
+     */
+    public static StatusModel assembleTaskOrderTradeStatusQuery(int limitNum){
+        StatusModel resBean = new StatusModel();
+        resBean.setRunNum(ServerConstant.PUBLIC_CONSTANT.RUN_NUM_FIVE);
+        resBean.setRunStatus(ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
+        // 交易状态：1超时，2正常进行中，3问题申诉，4确认已付款（买家等待），5确认已收款（卖家确认）
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(ServerConstant.TradeStatusEnum.ACTION.getType());
+        statusList.add(ServerConstant.TradeStatusEnum.PAY.getType());
+        resBean.setStatusList(statusList);
+        resBean.setLimitNum(limitNum);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装用户违约的数据
+     * @param taskOrderTradeModel - 订单交易流水任务信息
+     * @param violateType - 违约类型：1买家未付款（未在规定时间内），2卖家未确认收款（未在规定时间内），3被人投诉成功，4投诉失败
+     * @param punishType - 违约处罚类型:1不做处罚（也就统计纪录一下违约的数据），2扣减钻石，3账号封号
+     * @param masonryNum - 要扣减的钻石个数
+     * @param dataFrom - 数据来源：1系统运算录入，2人工录入
+     * @return com.pf.play.rule.core.model.violate.OrderViolateModel
+     * @author yoko
+     * @date 2019/12/9 22:21
+     */
+    public static OrderViolateModel assembleOrderViolateData(TaskOrderTradeModel taskOrderTradeModel, int violateType, int punishType, String  masonryNum, int dataFrom){
+        OrderViolateModel resBean = new OrderViolateModel();
+        resBean.setOrderId(taskOrderTradeModel.getOrderId());
+        resBean.setMemberId(taskOrderTradeModel.getBuyMemberId());
+        resBean.setViolateType(violateType);
+        resBean.setPunishType(punishType);
+        if (!StringUtils.isBlank(masonryNum)){
+            resBean.setMasonryNum(masonryNum);
+        }
+        resBean.setDataFrom(dataFrom);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装修改订单超时的数据
+     * <p>
+     *     isOvertime
+     *     订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时
+     * </p>
+     * @param taskOrderTradeModel - 订单交易流水信息
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/10 10:12
+    */
+    public static OrderModel assembleOrderOverTimeData(TaskOrderTradeModel taskOrderTradeModel){
+        OrderModel resBean = new OrderModel();
+        resBean.setId(taskOrderTradeModel.getOrderId());
+        resBean.setIsOvertime(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装卖家要解冻的数据
+     * @param taskOrderTradeModel - 订单交易流水数据
+     * @return ConsumerModel
+     * @author yoko
+     * @date 2019/12/10 10:19
+    */
+    public static ConsumerModel assembleConsumerThawDiamonds(TaskOrderTradeModel taskOrderTradeModel){
+        ConsumerModel resBean = new ConsumerModel();
+        String addReduceNum = StringUtil.getBigDecimalAdd(taskOrderTradeModel.getTradeNum(), taskOrderTradeModel.getServiceCharge());
+        resBean.setAddReduceNum(addReduceNum);
+        resBean.setMemberId(taskOrderTradeModel.getSellMemberId());
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装更改运行状态的数据
+     * @param id - 主键ID
+     * @param runStatus - 运行计算状态：：0初始化，1锁定，2计算失败，3计算成功
+     * @return StatusModel
+     * @author yoko
+     * @date 2019/12/10 10:42
+    */
+    public static StatusModel assembleUpdateStatusModel(long id, int runStatus){
+        StatusModel resBean = new StatusModel();
+        resBean.setId(id);
+        resBean.setRunStatus(runStatus);
+        return resBean;
     }
 
 

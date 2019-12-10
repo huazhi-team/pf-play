@@ -78,4 +78,9 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
     public int updateConsumerMasonry(ConsumerModel model) throws Exception {
         return consumerFixedMapper.updateConsumerMasonry(model);
     }
+
+    @Override
+    public int updateConsumerMasonryByThaw(ConsumerModel model) throws Exception {
+        return consumerFixedMapper.updateConsumerMasonryByThaw(model);
+    }
 }

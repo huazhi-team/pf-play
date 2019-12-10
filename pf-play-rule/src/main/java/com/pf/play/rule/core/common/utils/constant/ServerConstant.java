@@ -165,6 +165,42 @@ public class ServerConstant {
         }
     }
 
+    /**
+     * @Description: 违约类型：1买家未付款（未在规定时间内），2卖家未确认收款（未在规定时间内），3被人投诉成功，4投诉失败
+     * @author yoko
+     * @date 2019/12/10 9:54
+    */
+    public enum ViolateTypeEnum{
+        BUYER_UNPAID(1, "买家未付款（未在规定时间内）"),
+        SELL_RECEIVABLE(2, "卖家未确认收款（未在规定时间内）"),
+        SUCCESS_APPEAL(3, "被人投诉成功"),
+        FAIL_APPEAL(4, "投诉失败"),
+        ;
+        private int type;
+        private String desc;
+
+        private ViolateTypeEnum(int type, String desc){
+            this.type = type;
+            this.desc = desc;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+    }
+
 
 
 

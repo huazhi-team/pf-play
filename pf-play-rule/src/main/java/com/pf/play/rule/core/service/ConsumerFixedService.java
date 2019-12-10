@@ -50,4 +50,14 @@ public interface ConsumerFixedService<T> extends BaseService<T> {
      * @date 2019/12/2 11:29
     */
     public int updateConsumerMasonry(ConsumerModel model) throws Exception;
+
+
+    /**
+     * @Description: 修改用户的钻石-解冻
+     * @param model - 用户解冻数据
+     * @return int
+     * @author yoko
+     * @date 2019/12/10 10:52
+    */
+    public int updateConsumerMasonryByThaw(ConsumerModel model) throws Exception;
 }

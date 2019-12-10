@@ -84,4 +84,9 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
     public int updateOrderAppealStatus(OrderModel model) {
         return orderMapper.updateOrderAppealStatus(model);
     }
+
+    @Override
+    public int updateOrderOverTime(OrderModel model) {
+        return orderMapper.updateOrderOverTime(model);
+    }
 }

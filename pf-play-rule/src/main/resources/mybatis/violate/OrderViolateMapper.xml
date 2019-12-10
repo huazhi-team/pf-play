@@ -142,7 +142,7 @@
                 <![CDATA[  #{memberId}, ]]>
             </if>
             <if test="violateType != null and violateType != '' " >
-                <![CDATA[  #{remark}, ]]>
+                <![CDATA[  #{violateType}, ]]>
             </if>
             <if test="punishType != null and punishType != '' " >
                 <![CDATA[  #{punishType}, ]]>

@@ -624,5 +624,20 @@
     </update>
 
 
+    <!-- 更新订单是否超时：订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时 -->
+    <update id="updateOrderOverTime" parameterType="Object">
+        update tb_pf_order a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="isOvertime != null and isOvertime != '' " >
+                a.is_overtime = #{isOvertime},
+            </if>
+            a.update_time = NOW()
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+
 
 </mapper>

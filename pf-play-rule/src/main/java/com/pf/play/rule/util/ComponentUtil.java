@@ -28,6 +28,7 @@ public class ComponentUtil {
     public static TradeService tradeService;
     public static AppealService appealService;
     public static TaskOrderTradeService taskOrderTradeService;
+    public static OrderViolateService orderViolateService;
 
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;

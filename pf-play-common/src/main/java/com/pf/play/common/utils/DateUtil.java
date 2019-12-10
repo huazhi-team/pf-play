@@ -2874,6 +2874,36 @@ public class DateUtil {
 		return num;
 	}
 
+
+	/**
+	 * @Description: TODO(系统当前时间减特定的时间相差多少分钟)
+	 * @author df
+	 * @param date
+	 * @create 22:13 2018/12/6
+	 **/
+	public static int dateSubtractBySystemTime(String date){
+		int num = 0;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try{
+			Date d1 = format.parse(format.format(new Date()));
+			Date d2 = format.parse(date);
+			long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
+			long days = diff / (1000 * 60 * 60 * 24);
+			long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
+			long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
+			if (days > 0 ){
+				minutes += days*24*60;
+			}
+			if (hours > 0){
+				minutes += hours*60;
+			}
+			num = (int) minutes;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return num;
+	}
+
 	/**
 	 * 某时间是否在某段时间的范围内
 	 * @param startDate   开始时间

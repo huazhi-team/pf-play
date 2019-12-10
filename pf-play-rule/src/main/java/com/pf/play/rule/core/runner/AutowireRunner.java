@@ -85,6 +85,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskOrderTradeService taskOrderTradeService;
 
+    @Autowired
+    private OrderViolateService orderViolateService;
+
 
 
     Thread runThread = null;
@@ -120,6 +123,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.tradeService = tradeService;
         ComponentUtil.appealService = appealService;
         ComponentUtil.taskOrderTradeService = taskOrderTradeService;
+        ComponentUtil.orderViolateService = orderViolateService;
 
 
         runThread = new RunThread();

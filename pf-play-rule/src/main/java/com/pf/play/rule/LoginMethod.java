@@ -83,6 +83,7 @@ public class LoginMethod {
     public  static LoginResp changLoginResp(UserInfoResp userInfoResp){
         LoginResp  loginResp = new LoginResp();
         loginResp.setToken(userInfoResp.getToken());
+        loginResp.setMemberAdd(userInfoResp.getMemberAdd());
         loginResp.setBirthday(userInfoResp.getBirthday());
         loginResp.setSex(userInfoResp.getSex());
         loginResp.setNickname(userInfoResp.getNickname());

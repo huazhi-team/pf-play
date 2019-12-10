@@ -102,6 +102,48 @@ public class PublicMethod {
         return memberId;
     }
 
+
+    public static long checkGetCdData(RequestConsumer requestConsumer)throws Exception{
+        long memberId;
+        // 1.校验所有数据
+        if (requestConsumer == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00018.geteCode(), PfErrorCode.ENUM_ERROR.C00018.geteDesc());
+        }
+
+        // 2.校验token值
+        if (StringUtils.isBlank(requestConsumer.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 3.校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 判断用户是否频繁发送验证码
+     * @param redisKey - redis的key
+     * @return
+     * @author yoko
+     * @date 2019/12/10 17:56
+    */
+    public static void checkOftenSendCode(String redisKey) throws Exception{
+        String strKeyCache = redisKey;
+        String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+        if (!StringUtils.isBlank(strCache)){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00019.geteCode(), PfErrorCode.ENUM_ERROR.C00019.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 判断验证码是否正确
+     * @param redisKey - redis的key
+     * @param verifCode - 验证码
+     * @return
+     * @author yoko
+     * @date 2019/12/10 17:54
+    */
     public static void checkVerifCode(String redisKey, int verifCode) throws Exception{
         String strKeyCache = redisKey;
         String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
@@ -129,6 +171,49 @@ public class PublicMethod {
         resBean.setMemberId((int) memberId);
         resBean.setPayPassword(payPassword);
         return resBean;
+    }
+
+    /**
+     * @Description: 组装查询用户数据的查询条件
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/21 16:56
+     */
+    public static ConsumerModel assembleConsumerModel(long memberId){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(memberId);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 校验用户信息
+     * @param consumerModel - 用户信息
+     * @return void
+     * @author yoko
+     * @date 2019/12/10 18:57
+    */
+    public static void checkConsumer(ConsumerModel consumerModel) throws Exception{
+        if (consumerModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00020.geteCode(), PfErrorCode.ENUM_ERROR.C00020.geteDesc());
+        }
+        if (StringUtils.isBlank(consumerModel.getPhoneNum())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00021.geteCode(), PfErrorCode.ENUM_ERROR.C00021.geteDesc());
+        }
+    }
+
+    /**
+     * @Description: 校验发送验证码是否成功
+     * @param code - 验证码：验证码值为空，则代表发送失败，反之则发送成功
+     * @return void
+     * @author yoko
+     * @date 2019/12/10 19:11
+    */
+    public static void checkSendCode(String code) throws Exception{
+        if (StringUtils.isBlank(code)){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00022.geteCode(), PfErrorCode.ENUM_ERROR.C00022.geteDesc());
+        }
     }
 
     /**

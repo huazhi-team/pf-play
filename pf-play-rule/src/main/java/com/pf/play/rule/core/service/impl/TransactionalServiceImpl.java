@@ -4,7 +4,6 @@ import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
-import com.pf.play.rule.core.service.AipRequestInfoService;
 import com.pf.play.rule.core.service.TransactionalService;
 import com.pf.play.rule.util.ComponentUtil;
 import org.springframework.beans.factory.annotation.Autowired;

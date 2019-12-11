@@ -80,19 +80,20 @@ public class SynchroServiceImpl<T> extends BaseServiceImpl<T> implements Synchro
 
 
     @Override
-    public boolean checkSendInfo(Integer sendMemberId, Integer receiptMemberId, String passWord) {
-        boolean   flag = true ;
+    public int checkSendInfo(Integer sendMemberId, Integer receiptMemberId, String passWord) {
+        int  flag =0  ;
         VcMember  vcMember  = SynchroMethod.changToVcMember(sendMemberId,passWord);
         //先看 sendMemberId 和  password  正确
         VcMember  rs   = vcMemberMapper.selectByPrimaryKey(vcMember);
         if(rs==null){
-            return false;
+            flag = -1;
+            return flag;
         }
 
         VcMember  vcMember1  = TaskMethod.changvcMember(receiptMemberId);
         rs   =  vcMemberMapper.selectByMemberId(vcMember1);
         if(rs==null){
-            return false;
+            flag = -2;
         }
         return flag;
     }

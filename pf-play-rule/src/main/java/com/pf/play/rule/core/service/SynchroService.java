@@ -16,7 +16,7 @@ public interface SynchroService<T> extends BaseService<T> {
     void  addGoods(Integer memberId);
     VcMemberResource queryVcMemberResource(VcMemberResource vcMemberResource);
 
-    boolean   checkSendInfo(Integer sendMemberId,Integer receiptMemberId,String passWord);
+    int   checkSendInfo(Integer sendMemberId,Integer receiptMemberId,String passWord);
 
     boolean   chechMemberResource(Integer sendMemberId,Double  masonry);
 

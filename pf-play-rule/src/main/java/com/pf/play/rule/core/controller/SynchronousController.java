@@ -93,15 +93,21 @@ public class SynchronousController {
     public JsonResult<Object> sendGifts(HttpServletRequest request, HttpServletResponse response, SendGiftResp sendGiftResp){
         try{
             log.info("----------:sendGifts!");
-            Boolean   flag =  ComponentUtil.synchroService.checkSendInfo(sendGiftResp.getSendMemberId(),
+
+
+            int   flag1 =  ComponentUtil.synchroService.checkSendInfo(sendGiftResp.getSendMemberId(),
                                                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getPayPw());
-            if(!flag){
-                return JsonResult.failedResult("验证不通过",00001+"");
+            if(flag1==-1){
+                return JsonResult.failedResult("密码错误",00001+"");
             }
 
-            flag = ComponentUtil.synchroService.chechMemberResource(sendGiftResp.getSendMemberId(),sendGiftResp.getMasonryCount());
+            if(flag1!=0){
+                return JsonResult.failedResult("验证信息不通过",00002+"");
+            }
+
+            Boolean flag = ComponentUtil.synchroService.chechMemberResource(sendGiftResp.getSendMemberId(),sendGiftResp.getMasonryCount());
             if(!flag){
-                return JsonResult.failedResult("验证金额不通过",00002+"");
+                return JsonResult.failedResult("验证金额不通过",00003+"");
             }
 
             int  count = ComponentUtil.synchroService.addMemberResource(sendGiftResp.getSendMemberId(),

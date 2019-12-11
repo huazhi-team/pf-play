@@ -14,7 +14,7 @@ public class JsonResult<T> implements Serializable {
 
 	private static final long serialVersionUID = -110632011249276581L;
 	// 返回状态码:0代表正常，非零代表错误，-1表示数据为空
-	private String errcode;
+	private Integer errcode;
 	private String message;
 //	private String content;
 	private T content;
@@ -30,7 +30,7 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> successResult(T data) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setErrcode("0");
+		jsonResult.setErrcode(0);
 		jsonResult.setMessage("success");
 		jsonResult.setContent(data);
 		return jsonResult;
@@ -44,7 +44,7 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> successResult(T data, String cgid, String sgid) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setErrcode("0");
+		jsonResult.setErrcode(0);
 		jsonResult.setMessage("success");
 		jsonResult.setContent(data);
 		jsonResult.setCgid(cgid);
@@ -63,7 +63,7 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(String msg, String code) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setErrcode(code);
+		jsonResult.setErrcode(Integer.parseInt(code));
 		jsonResult.setMessage(msg);
 //		jsonResult.setContent(msg);
 		jsonResult.setContent(null);
@@ -80,7 +80,7 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(String msg, String code, String cgid, String sgid) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setErrcode(code);
+		jsonResult.setErrcode(Integer.parseInt(code));
 		jsonResult.setMessage(msg);
 		jsonResult.setContent(null);
 //		jsonResult.setData(null);
@@ -98,7 +98,7 @@ public class JsonResult<T> implements Serializable {
 	 */
 	public static <T> JsonResult<T> failedResult(T data, String msg, String resultCode) {
 		JsonResult<T> jsonResult = new JsonResult<T>();
-		jsonResult.setErrcode(resultCode);
+		jsonResult.setErrcode(Integer.parseInt(resultCode));
 		jsonResult.setMessage(msg);
 		jsonResult.setContent(null);
 //		jsonResult.setData(data);
@@ -106,14 +106,13 @@ public class JsonResult<T> implements Serializable {
 	}
 
 
-	public String getErrcode() {
+	public Integer getErrcode() {
 		return errcode;
 	}
 
-	public void setErrcode(String errcode) {
+	public void setErrcode(Integer errcode) {
 		this.errcode = errcode;
 	}
-
 
 	public T getContent() {
 		return content;

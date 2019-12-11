@@ -38,6 +38,7 @@ public class RegisterSingleton {
     public List<SysTypeDictionary> empiricalType ;
     public List<SysTypeDictionary> vitalityType ;
     public List<SysTypeDictionary> taskType ;
+    public List<SysTypeDictionary> procedType ;
 
     public VcMemberGive getVcMemberGive() {
         return vcMemberGive;
@@ -85,5 +86,13 @@ public class RegisterSingleton {
 
     public void setTaskType(List<SysTypeDictionary> taskType) {
         this.taskType = taskType;
+    }
+
+    public List<SysTypeDictionary> getProcedType() {
+        return procedType;
+    }
+
+    public void setProcedType(List<SysTypeDictionary> procedType) {
+        this.procedType = procedType;
     }
 }

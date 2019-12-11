@@ -23,35 +23,35 @@ public class VcMemberResource {
      *
      * @mbggenerated
      */
-    private Float produceMasonryCount;
+    private Double produceMasonryCount;
 
     /**
      * 推广砖石总数
      *
      * @mbggenerated
      */
-    private Float extensionMasonryCount;
+    private Double extensionMasonryCount;
 
     /**
      * 当前总砖石
      *
      * @mbggenerated
      */
-    private Float dayMasonry;
+    private Double dayMasonry;
 
     /**
      * 当天推广砖石
      *
      * @mbggenerated
      */
-    private Float dayExtMasonry;
+    private Double dayExtMasonry;
 
     /**
      * 砖石冻结数量
      *
      * @mbggenerated
      */
-    private Float frozenMasonry;
+    private Double frozenMasonry;
 
     /**
      * 经验值
@@ -117,13 +117,13 @@ public class VcMemberResource {
      *
      * @mbggenerated
      */
-    private Float heroActive;
+    private Double heroActive;
     /**
      *联盟活力值
      *
      * @mbggenerated
      */
-    private Float allianceActive;
+    private Double allianceActive;
     /**
      * 是否重新计算活力值： 1、否  2 、是
      *
@@ -188,43 +188,43 @@ public class VcMemberResource {
         this.memberId = memberId;
     }
 
-    public Float getProduceMasonryCount() {
+    public Double getProduceMasonryCount() {
         return produceMasonryCount;
     }
 
-    public void setProduceMasonryCount(Float produceMasonryCount) {
+    public void setProduceMasonryCount(Double produceMasonryCount) {
         this.produceMasonryCount = produceMasonryCount;
     }
 
-    public Float getExtensionMasonryCount() {
+    public Double getExtensionMasonryCount() {
         return extensionMasonryCount;
     }
 
-    public void setExtensionMasonryCount(Float extensionMasonryCount) {
+    public void setExtensionMasonryCount(Double extensionMasonryCount) {
         this.extensionMasonryCount = extensionMasonryCount;
     }
 
-    public Float getDayMasonry() {
+    public Double getDayMasonry() {
         return dayMasonry;
     }
 
-    public void setDayMasonry(Float dayMasonry) {
+    public void setDayMasonry(Double dayMasonry) {
         this.dayMasonry = dayMasonry;
     }
 
-    public Float getDayExtMasonry() {
+    public Double getDayExtMasonry() {
         return dayExtMasonry;
     }
 
-    public void setDayExtMasonry(Float dayExtMasonry) {
+    public void setDayExtMasonry(Double dayExtMasonry) {
         this.dayExtMasonry = dayExtMasonry;
     }
 
-    public Float getFrozenMasonry() {
+    public Double getFrozenMasonry() {
         return frozenMasonry;
     }
 
-    public void setFrozenMasonry(Float frozenMasonry) {
+    public void setFrozenMasonry(Double frozenMasonry) {
         this.frozenMasonry = frozenMasonry;
     }
 
@@ -268,14 +268,6 @@ public class VcMemberResource {
         this.updateTime = updateTime;
     }
 
-    public Integer getIsValid() {
-        return isValid;
-    }
-
-    public void setIsValid(Integer isValid) {
-        this.isValid = isValid;
-    }
-
     public Integer getEmpiricalLevel() {
         return empiricalLevel;
     }
@@ -290,14 +282,6 @@ public class VcMemberResource {
 
     public void setDarenLevel(Integer darenLevel) {
         this.darenLevel = darenLevel;
-    }
-
-    public Integer getIsVitalityValue() {
-        return isVitalityValue;
-    }
-
-    public void setIsVitalityValue(Integer isVitalityValue) {
-        this.isVitalityValue = isVitalityValue;
     }
 
     public Integer getTeamPeople() {
@@ -316,20 +300,36 @@ public class VcMemberResource {
         this.teamActive = teamActive;
     }
 
-    public Float getHeroActive() {
+    public Double getHeroActive() {
         return heroActive;
     }
 
-    public void setHeroActive(Float heroActive) {
+    public void setHeroActive(Double heroActive) {
         this.heroActive = heroActive;
     }
 
-    public Float getAllianceActive() {
+    public Double getAllianceActive() {
         return allianceActive;
     }
 
-    public void setAllianceActive(Float allianceActive) {
+    public void setAllianceActive(Double allianceActive) {
         this.allianceActive = allianceActive;
+    }
+
+    public Integer getIsVitalityValue() {
+        return isVitalityValue;
+    }
+
+    public void setIsVitalityValue(Integer isVitalityValue) {
+        this.isVitalityValue = isVitalityValue;
+    }
+
+    public Integer getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Integer isValid) {
+        this.isValid = isValid;
     }
 
     public String getUqdateTimeStr() {
@@ -346,14 +346,6 @@ public class VcMemberResource {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
-    }
-
-    public Integer getIsCertification() {
-        return isCertification;
-    }
-
-    public void setIsCertification(Integer isCertification) {
-        this.isCertification = isCertification;
     }
 
     public String getNickName() {
@@ -378,5 +370,13 @@ public class VcMemberResource {
 
     public void setIdList(List<Integer> idList) {
         this.idList = idList;
+    }
+
+    public Integer getIsCertification() {
+        return isCertification;
+    }
+
+    public void setIsCertification(Integer isCertification) {
+        this.isCertification = isCertification;
     }
 }

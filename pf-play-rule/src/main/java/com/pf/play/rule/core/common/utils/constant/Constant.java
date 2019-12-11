@@ -22,6 +22,7 @@ public class Constant {
     public static  int   TASK_TYPE7 = 7;//交易所转入
     public static  int   TASK_TYPE8 = 8;//转出砖石
     public static  int   TASK_TYPE9 = 9;//购买任务消耗
+    public static  int   TASK_TYPE10 = 10;//购买任务消耗
 
     /*****************符号类型********************/
     public static  int   TASK_SYMBOL_TYPE1 = 1;//加

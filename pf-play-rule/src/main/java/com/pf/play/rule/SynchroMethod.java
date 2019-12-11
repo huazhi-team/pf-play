@@ -3,8 +3,11 @@ package com.pf.play.rule;
 import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
+import com.pf.play.model.protocol.request.give.SendGiftResp;
 import com.pf.play.model.protocol.response.synchr.MemberResp;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
+import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
@@ -144,7 +147,83 @@ public class SynchroMethod {
         BeanUtils.copy(vcMemberResource,memberResp);
         return  memberResp;
     }
+    /**
+     * @Description: SendGiftResp  参数验证是否能行
+     * @param sendGiftResp
+     * @return boolean
+     * @author long
+     * @date 2019/12/10 18:40
+     */
+    public  static boolean chechParameter(SendGiftResp sendGiftResp){
+        boolean   flag = false ;
+        if(!StringUtils.isBlank(sendGiftResp.getPayPw())||
+                sendGiftResp.getReceiptMemberId()>0||
+                    sendGiftResp.getSendMemberId()>0||
+                        sendGiftResp.getMasonryCount()>0){
+            flag = true ;
+        }
+        return  flag;
+    }
+
+    /**
+     * @Description: 会员id+ password 查询信息 转换VcMember
+     * @param memberId
+    * @param passWord
+     * @return com.pf.play.rule.core.model.VcMember
+     * @author long
+     * @date 2019/12/10 18:58
+     */
+    public static  VcMember    changToVcMember(Integer memberId,String passWord){
+        VcMember  vcMember  = new VcMember();
+        vcMember.setMemberId(memberId);
+        vcMember.setPayPassword(passWord);
+        return vcMember;
+    }
 
 
+    /**
+     * @Description: 用户砖石明细需要信息
+     * @param memberId  用户id
+    * @param taskId    任务id
+    * @param type      明细类型
+    * @param SymbolType 1 是加  2 是减
+    * @param needResource 砖石数
+     * @return com.pf.play.rule.core.model.UMasonryListLog
+     * @author long
+     * @date 2019/11/21 17:35
+     */
+    public   static  UMasonryListLog   changeUMasonryListLog(Integer memberId,Integer type,Integer SymbolType, Double needResource){
+        UMasonryListLog   uMasonryListLog  =  new UMasonryListLog();
+        DateModel dateModel= TaskMethod.getDate();
+        BeanUtils.copy(dateModel,uMasonryListLog);
+        uMasonryListLog.setMemberId(memberId);
+        uMasonryListLog.setType(type);
+        uMasonryListLog.setSymbolType(SymbolType);
+        uMasonryListLog.setMasonryNum(needResource);
+        return uMasonryListLog;
+    }
+
+    /**
+     * @Description: 根据MemberId 冻结 砖石信息
+     * @param memberId
+    * @param masonry
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/10 22:22
+     */
+    public   static  VcMemberResource  changUpdateResource(Integer memberId,Double masonry){
+        VcMemberResource  vcMemberResource = new  VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setDayMasonry(masonry);
+        vcMemberResource.setFrozenMasonry(masonry);
+        return   vcMemberResource;
+    }
+
+    public   static  VcMemberResource  changUpdateResourceMasonry(Integer memberId,Double masonry){
+        VcMemberResource  vcMemberResource = new  VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setDayMasonry(masonry);
+        return   vcMemberResource;
+    }
 
 }

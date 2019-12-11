@@ -365,7 +365,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         record.setMemberId(memberId);
         VcMemberResource  resourceRs = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
         VcMember record1 = vcMemberMapper.selectByPrimaryKey(record);
-        Float  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource();
+        Double  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource();
         Float  myActiveValue=Float.parseFloat(disTaskAttribute.getKey1());
         Float  upActiveValue=Float.parseFloat(disTaskAttribute.getKey2());
         if(masonry<0){
@@ -373,7 +373,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }
 
         //用户砖石明细表添加一条记录
-        UMasonryListLog   uMasonryListLog = TaskMethod.changeUMasonryListLog(memberId,taskId, Constant.TASK_TYPE9,Constant.TASK_SYMBOL_TYPE2,taskType.getNeedResource());
+        UMasonryListLog   uMasonryListLog = TaskMethod.changeUMasonryListLog(memberId,taskId, Constant.TASK_TYPE9,Constant.TASK_SYMBOL_TYPE2,Double.valueOf(taskType.getNeedResource()));
         UvitalityValueList myUvitalityValueList = TaskMethod.pottingVitalityValue(memberId,Constant.REWARD_TYPE2,Constant.TASK_SYMBOL_TYPE1,myActiveValue);
         UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(record1.getSuperiorId(),Constant.REWARD_TYPE1,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
         VcMemberResource insertResource = TaskMethod.changeUpdateResource(memberId,masonry);

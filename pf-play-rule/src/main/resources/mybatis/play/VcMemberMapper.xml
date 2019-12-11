@@ -13,6 +13,7 @@
     a.member_id, a.owner_member_id, a.member_add, a.nickname, a.password, a.member_code, a.member_type
 
   </sql>
+
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMember" >
     select 
     <include refid="Base_Column_List" />
@@ -30,7 +31,12 @@
     <if test="memberId != null and memberId != '' " >
       and member_id = #{memberId}
     </if>
+    <if test="payPassword != null and payPassword != '' " >
+      and pay_password = #{payPassword}
+    </if>
   </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from vc_member
     where member_id = #{memberId,jdbcType=INTEGER}

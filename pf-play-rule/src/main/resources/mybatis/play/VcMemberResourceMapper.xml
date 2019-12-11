@@ -143,9 +143,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
     update vc_member_resource
     <set >
-      <if test="memberId != null" >
-        member_id = #{memberId},
-      </if>
       <if test="produceMasonryCount != null" >
         produce_masonry_count = #{produceMasonryCount},
       </if>
@@ -340,5 +337,18 @@
                 c.member_id = #{memberId}
     </update>
 
+  <!--减少自身砖石 -->
+  <update id="updateCutMasonry" parameterType="com.pf.play.rule.core.model.VcMember" >
+        update vc_member_resource   set
+        day_masonry = day_masonry-#{dayMasonry}
+                where  member_id = #{memberId}
+  </update>
+
+  <!--减少自身砖石 -->
+  <update id="updateAddMasonry" parameterType="com.pf.play.rule.core.model.VcMember" >
+        update vc_member_resource   set
+        day_masonry = day_masonry+#{dayMasonry}
+                where  member_id = #{memberId}
+  </update>
 
 </mapper>

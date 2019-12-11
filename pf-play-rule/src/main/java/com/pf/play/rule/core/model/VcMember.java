@@ -191,6 +191,12 @@ public class VcMember {
 
 
     /***
+     * 支付密码
+     */
+    private String payPassword;
+
+
+    /***
      * 直推总人数
      */
     private Integer pushPeople;
@@ -453,5 +459,13 @@ public class VcMember {
 
     public void setPushPeople(Integer pushPeople) {
         this.pushPeople = pushPeople;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }

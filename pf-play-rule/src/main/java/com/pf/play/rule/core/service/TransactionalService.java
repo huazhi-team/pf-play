@@ -29,4 +29,10 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  updateDailyTaskStat(UdailyTaskStat  udailyTaskStat,UNumberTypeLog uNumberTypeLog);
 
+    void  addMasonryListLog(UMasonryListLog   sendUMasonryListLog ,
+                                UMasonryListLog   receiptUMasonryListLog,
+                                    UMasonryListLog   procedUMasonryListLog,
+                                        VcMemberResource vcMemberResourceCut,
+                                            VcMemberResource  vcMemberResourceAdd);
+
 }

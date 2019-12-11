@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.controller;
 
 import com.pf.play.common.utils.JsonResult;
+import com.pf.play.model.protocol.request.give.SendGiftResp;
 import com.pf.play.model.protocol.request.uesr.QhrReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.synchr.MemberResp;
@@ -87,5 +88,37 @@ public class SynchronousController {
             return JsonResult.failedResult("wrong for data!",1+"");
         }
     }
+
+    @PostMapping("/sendGifts")
+    public JsonResult<Object> sendGifts(HttpServletRequest request, HttpServletResponse response, SendGiftResp sendGiftResp){
+        try{
+            log.info("----------:sendGifts!");
+            Boolean   flag =  ComponentUtil.synchroService.checkSendInfo(sendGiftResp.getSendMemberId(),
+                                                    sendGiftResp.getReceiptMemberId(),sendGiftResp.getPayPw());
+            if(!flag){
+                return JsonResult.failedResult("验证不通过",00001+"");
+            }
+
+            flag = ComponentUtil.synchroService.chechMemberResource(sendGiftResp.getSendMemberId(),sendGiftResp.getMasonryCount());
+            if(!flag){
+                return JsonResult.failedResult("验证金额不通过",00002+"");
+            }
+
+            int  count = ComponentUtil.synchroService.addMemberResource(sendGiftResp.getSendMemberId(),
+                    sendGiftResp.getReceiptMemberId(),sendGiftResp.getMasonryCount());
+
+            if(count==0){
+                return JsonResult.failedResult("交易手续费未部署",00003+"");
+            }
+            return JsonResult.successResult(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResult.failedResult("wrong for data!",1+"");
+        }
+    }
+
+
+
+
 
 }

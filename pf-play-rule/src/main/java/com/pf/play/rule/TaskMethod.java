@@ -169,7 +169,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 17:35
      */
-    public   static  UMasonryListLog   changeUMasonryListLog(Integer memberId,Integer taskId,Integer type,Integer SymbolType,Float needResource){
+    public   static  UMasonryListLog   changeUMasonryListLog(Integer memberId,Integer taskId,Integer type,Integer SymbolType,Double needResource){
         UMasonryListLog   uMasonryListLog  =  new UMasonryListLog();
         DateModel dateModel= TaskMethod.getDate();
         BeanUtils.copy(dateModel,uMasonryListLog);
@@ -189,7 +189,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 18:01
      */
-    public   static VcMemberResource  changeUpdateResource(Integer memberId,Float masonry){
+    public   static VcMemberResource  changeUpdateResource(Integer memberId,Double masonry){
         VcMemberResource vcMemberResource = new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
         vcMemberResource.setUpdateTime(new Date());
@@ -511,7 +511,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/25 16:07
      */
-    public  static  UMasonrySummary  updateUMasonrySummary(Integer memberId,Integer type,Float masonry ){
+    public  static  UMasonrySummary  updateUMasonrySummary(Integer memberId,Integer type,Double masonry ){
         UMasonrySummary  uMasonrySummary = new UMasonrySummary();
         uMasonrySummary.setMemberId(memberId);
         if(type==1){
@@ -805,7 +805,7 @@ public class TaskMethod {
     public static  VcMemberResource   testChangUvitalityValueList(Integer  memberId){
         VcMemberResource  vcMemberResource  =new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
-        vcMemberResource.setFrozenMasonry(11.2F);
+        vcMemberResource.setFrozenMasonry(11.2D);
         return   vcMemberResource;
     }
 

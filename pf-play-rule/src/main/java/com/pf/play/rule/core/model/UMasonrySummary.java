@@ -22,14 +22,14 @@ public class UMasonrySummary {
      *
      * @mbggenerated
      */
-    private Float inMasonry;
+    private Double inMasonry;
 
     /**
      * 支出砖石
      *
      * @mbggenerated
      */
-    private Float outMasonry;
+    private Double outMasonry;
 
     /**
      * 创建时间
@@ -68,19 +68,19 @@ public class UMasonrySummary {
         this.memberId = memberId;
     }
 
-    public Float getInMasonry() {
+    public Double getInMasonry() {
         return inMasonry;
     }
 
-    public void setInMasonry(Float inMasonry) {
+    public void setInMasonry(Double inMasonry) {
         this.inMasonry = inMasonry;
     }
 
-    public Float getOutMasonry() {
+    public Double getOutMasonry() {
         return outMasonry;
     }
 
-    public void setOutMasonry(Float outMasonry) {
+    public void setOutMasonry(Double outMasonry) {
         this.outMasonry = outMasonry;
     }
 

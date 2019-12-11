@@ -36,7 +36,7 @@ import java.util.Map;
 @RequestMapping("/play/task")
 public class TaskController {
 
-    private static Logger log = LoggerFactory.getLogger(SpCodeController.class);
+    private static Logger log = LoggerFactory.getLogger(TaskController.class);
 
 
 

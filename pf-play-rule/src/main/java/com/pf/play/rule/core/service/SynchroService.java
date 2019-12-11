@@ -15,4 +15,12 @@ public interface SynchroService<T> extends BaseService<T> {
     void  addGive(Integer memberId);
     void  addGoods(Integer memberId);
     VcMemberResource queryVcMemberResource(VcMemberResource vcMemberResource);
+
+    boolean   checkSendInfo(Integer sendMemberId,Integer receiptMemberId,String passWord);
+
+    boolean   chechMemberResource(Integer sendMemberId,Double  masonry);
+
+    int       addMemberResource(Integer sendMemberId,Integer receiptMemberId,Double  masonry);
+
+
 }

@@ -139,4 +139,15 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         udailyTaskStatMapper.updateByMemberId(udailyTaskStat);
         uNumberTypeLogMapper.insertSelective(uNumberTypeLog);
     }
+
+    @Override
+    public void addMasonryListLog(UMasonryListLog sendUMasonryListLog, UMasonryListLog receiptUMasonryListLog,
+                                        UMasonryListLog procedUMasonryListLog,VcMemberResource vcMemberResourceCut,
+                                                            VcMemberResource  vcMemberResourceAdd) {
+        vcMemberResourceMapper.updateCutMasonry(vcMemberResourceCut);
+        vcMemberResourceMapper.updateAddMasonry(vcMemberResourceAdd);
+        uMasonryListLogMapper.insertSelective(sendUMasonryListLog);
+        uMasonryListLogMapper.insertSelective(receiptUMasonryListLog);
+        uMasonryListLogMapper.insertSelective(procedUMasonryListLog);
+    }
 }

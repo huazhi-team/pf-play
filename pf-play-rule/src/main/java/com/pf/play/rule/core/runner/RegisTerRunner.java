@@ -33,8 +33,8 @@ public class RegisTerRunner implements ApplicationRunner {
         log.debug("任务类型初始化！");
         ComponentUtil.initService.initTask();
 
-
-        ComponentUtil.userInfoSevrice.executeSuperior();
+        log.debug("执行等级同步给qhr！");
+//        ComponentUtil.userInfoSevrice.executeSuperior();
 
 //        log.debug("经验值初始化！");
 //        ComponentUtil.initService.initVitalityInfo();

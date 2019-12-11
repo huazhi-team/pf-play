@@ -14,7 +14,7 @@ public class JsonResult<T> implements Serializable {
 
 	private static final long serialVersionUID = -110632011249276581L;
 	// 返回状态码:0代表正常，非零代表错误，-1表示数据为空
-	private Integer errcode;
+	private int errcode;
 	private String message;
 //	private String content;
 	private T content;
@@ -106,11 +106,11 @@ public class JsonResult<T> implements Serializable {
 	}
 
 
-	public Integer getErrcode() {
+	public int getErrcode() {
 		return errcode;
 	}
 
-	public void setErrcode(Integer errcode) {
+	public void setErrcode(int errcode) {
 		this.errcode = errcode;
 	}
 

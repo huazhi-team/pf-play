@@ -119,6 +119,12 @@ public class DisTaskType {
      * @mbggenerated
      */
     private String  where2;
+    /**
+     * 奖励活跃值
+     *
+     * @mbggenerated
+     */
+    private String  activeValue;
 
 
     public Long getId() {
@@ -255,5 +261,13 @@ public class DisTaskType {
 
     public void setHavaCount(Integer havaCount) {
         this.havaCount = havaCount;
+    }
+
+    public String getActiveValue() {
+        return activeValue;
+    }
+
+    public void setActiveValue(String activeValue) {
+        this.activeValue = activeValue;
     }
 }

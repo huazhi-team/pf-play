@@ -1,6 +1,5 @@
 package com.pf.play.rule.core.service.impl;
 
-import com.pf.play.common.utils.DateUtil;
 import com.pf.play.rule.SynchroMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
@@ -16,7 +15,6 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -129,7 +127,6 @@ public class SynchroServiceImpl<T> extends BaseServiceImpl<T> implements Synchro
         UMasonryListLog   sendUMasonryListLog      =   SynchroMethod.changeUMasonryListLog(sendMemberId,Constant.TASK_TYPE3 ,Constant.TASK_SYMBOL_TYPE2,masonry);
         UMasonryListLog   receiptUMasonryListLog   =   SynchroMethod.changeUMasonryListLog(receiptMemberId, Constant.TASK_TYPE4,Constant.TASK_SYMBOL_TYPE1,masonry*(1-proced));
         UMasonryListLog   procedUMasonryListLog    =   SynchroMethod.changeUMasonryListLog(0, Constant.TASK_TYPE10,Constant.TASK_SYMBOL_TYPE1,masonry*proced);
-
 
         String lockKey_send = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_CONSUMER, sendMemberId);
         boolean send = ComponentUtil.redisIdService.lock(lockKey_send);

@@ -65,4 +65,18 @@ public interface TaskService  <T> extends BaseService<T> {
 
     Integer  CheckCondition(Integer level,Integer currentLevel,Integer memberId);
 
+    boolean  checkLevel1(Integer memberId);
+
+    boolean  checkLevel2(Integer memberId);
+
+    boolean  checkLevel3(Integer memberId);
+
+    boolean  checkLevel4(Integer memberId);
+
+    boolean  checkLevel5(Integer memberId);
+
+
+
+
+
 }

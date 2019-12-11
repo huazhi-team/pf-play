@@ -46,4 +46,16 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
 
     void updateMemberIdList(VcMember vcMember);
 
+    VcMember selectLevel1(VcMember vcMember);
+
+    List<VcMember> selectLevel2(VcMember vcMember);
+
+    List<VcMember> selectLevel2Above(VcMember vcMember);
+
+
+    List<VcMember> selectAlliance(VcMember vcMember);
+
+
+
+
 }

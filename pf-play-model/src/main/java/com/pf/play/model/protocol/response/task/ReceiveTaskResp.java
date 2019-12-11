@@ -94,6 +94,15 @@ public class ReceiveTaskResp {
      */
     private String  where2;
 
+    /**
+     * 奖励活跃值
+     *
+     * @mbggenerated
+     */
+    private String  activeValue;
+
+
+
 
     public Integer getTaskId() {
         return taskId;
@@ -191,4 +200,11 @@ public class ReceiveTaskResp {
         this.where2 = where2;
     }
 
+    public String getActiveValue() {
+        return activeValue;
+    }
+
+    public void setActiveValue(String activeValue) {
+        this.activeValue = activeValue;
+    }
 }

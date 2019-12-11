@@ -899,6 +899,14 @@ public class TaskMethod {
     }
 
 
+    /**
+     * @Description: 根据用户信息查看该用户的属于的等级情况
+     * @param vcMember
+    * @param queryVcMember
+     * @return java.lang.Integer
+     * @author long
+     * @date 2019/12/11 17:18
+     */
     public static   Integer   getLevel(VcMember  vcMember,VcMemberResource  queryVcMember){
         Integer   level  =  0  ;
         List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
@@ -906,7 +914,6 @@ public class TaskMethod {
             if(queryVcMember.getDarenLevel()==0){
                 continue;
             }
-
             if(disVitalityValue.getPushNumber()>vcMember.getPushPeople()||
                     disVitalityValue.getTeamVitalitNum()>queryVcMember.getTeamActive()||
                         disVitalityValue.getAllianceVitalitNum()>queryVcMember.getAllianceActive()){
@@ -917,6 +924,90 @@ public class TaskMethod {
         return level;
     }
 
+    /**
+     * @Description: 组装成VcMember Level2 的查询信息
+     * @param memeberId
+     * @return com.pf.play.rule.core.model.VcMember
+     * @author long
+     * @date 2019/12/11 11:57
+     */
+    public  static   VcMember    getVcMemberLevel2(Integer  memeberId){
+        VcMember  vcMember =  new VcMember();
+        vcMember.setSuperiorId(memeberId);
+        vcMember.setDarenLevel(1);
+        return   vcMember;
+    }
+
+
+    /**
+     * @Description: 组装成VcMember Level2 的查询信息
+     * @param list
+     * @return com.pf.play.rule.core.model.VcMember
+     * @author long
+     * @date 2019/12/11 11:57
+     */
+    public  static   VcMember    getVcMemberLevel2(List<Integer> list,Integer darenLevel){
+        VcMember  vcMember =  new VcMember();
+//        vcMember.setSuperiorId(memeberId);
+        vcMember.setIdList(list);
+        vcMember.setDarenLevel(darenLevel);
+        return   vcMember;
+    }
+
+
+
+    /**
+     * @Description: 修改资源达人等级信息
+     * @param memeberId
+    * @param darenLevel
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/11 17:40
+     */
+    public  static   VcMemberResource    updateResourceLevel(Integer memeberId,Integer darenLevel){
+        VcMemberResource  vcMemberResource =  new VcMemberResource();
+        vcMemberResource.setMemberId(memeberId);
+        vcMemberResource.setDarenLevel(darenLevel);
+        return   vcMemberResource;
+    }
+
+
+
+    /**
+     * @Description: 等级是否有效
+     * @param vcRewardReceive
+    * @param darenLevel
+     * @return boolean
+     * @author long
+     * @date 2019/12/11 17:59
+     */
+    public static    boolean     checkLevelIsReceive(VcRewardReceive vcRewardReceive,Integer  darenLevel){
+
+
+        boolean flag  =  false  ;
+        if(darenLevel==1){
+            if( vcRewardReceive.getIsLevel1().equals("1")){
+                return true;
+            }
+        }else if(darenLevel==2){
+            if( vcRewardReceive.getIsLevel2().equals("1")){
+                return true;
+            }
+        }else if(darenLevel==3){
+            if( vcRewardReceive.getIsLevel3().equals("1")){
+                return true;
+            }
+        }else if(darenLevel==4){
+            if( vcRewardReceive.getIsLevel4().equals("1")){
+                return true;
+            }
+        }else if(darenLevel==5){
+            if( vcRewardReceive.getIsLevel5().equals("1")){
+                return true;
+            }
+        }
+        return  flag;
+    }
 
 
 

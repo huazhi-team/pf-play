@@ -467,9 +467,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     public void openUpdateTask() {
         UvitalityValueList uVitalityValueList = new UvitalityValueList();
         uVitalityValueList.setMemberId(2);
-//        ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
+
         while (true){
-            log.debug("=======================");
             try{
                 ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
             }catch (Exception e){
@@ -549,12 +548,11 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         if(uqdateCount!=0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
         }
-        //团队活力值的
+        //团队活力值的  需要修改的总体的一个list
         List<Integer>    updateList =   TaskMethod.getSuperiorIdList(vcMember1);
 
-        for(Integer memberId :updateList){  //挨个变扭更新 英雄活力 和联盟活力值
+        for(Integer memberId :updateList){  //挨个遍历更新 英雄活力 和联盟活力值
             VcMemberResource  updateMyResource1 = TaskMethod.getUqdateTeamActive(memberId,uVitalityValueList.getActiveValue());
-
             VcMember     updateVcMember   =  TaskMethod.getMember(memberId);
             VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
             VcMemberResource   rsVcMemberResource      =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource); //查询等级信息
@@ -585,7 +583,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMemberResource   vcMemberResource  = new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
 
-        VcMember  vcMember   = new VcMember();
+        //查询实名制的用户信息
+        VcMember  vcMember   = TaskMethod.changvcMemberTOsuperiorId(memberId);
         VcMember  rsVcMember = vcMemberMapper.selectByIsCertificationNum(vcMember); //直推人数
 
         VcMemberResource  queryVcMember=vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource); //资源情况

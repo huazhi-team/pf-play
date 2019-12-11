@@ -4,6 +4,9 @@ import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,17 +19,15 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@EnableScheduling
-public class SynchroRunner {
+@Order(900)
+public class SynchroRunner implements ApplicationRunner {
     private final static Logger log = LoggerFactory.getLogger(SynchroRunner.class);
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        /****************  初始化信息 ************/
 
-    @Value("${task.limit.num}")
-    private int limitNum;
-
-//    @Scheduled(cron = "1 * * * * ?")
-//    public void synchroPostMemberIdOrSuperiorId() throws Exception{
-//        log.info("==============orderTradeCheckTimeOver=====================start");
-//        ComponentUtil.userInfoSevrice.superiorSynchronousQhr();
-//    }
+        log.debug("更新用户活力值明细表！");
+//        ComponentUtil.taskService.openUpdateTask();
+    }
 }

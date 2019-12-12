@@ -132,7 +132,7 @@ public class MyMethod {
      * @author long
      * @date 2019/11/27 21:45
      */
-    public static MyEmpiricalResp toMyEmpiricalResp(Float EmpiricalValue,List<Empirical>  empiricalList){
+    public static MyEmpiricalResp toMyEmpiricalResp(Double EmpiricalValue,List<Empirical>  empiricalList){
         MyEmpiricalResp  myEmpiricalResp  =   new MyEmpiricalResp();
         myEmpiricalResp.setEmpiricalValue(EmpiricalValue);
         myEmpiricalResp.setList(empiricalList);
@@ -146,7 +146,7 @@ public class MyMethod {
      * @author long
      * @date 2019/11/27 21:45
      */
-    public static MyVitalityResp toMyVitalityListResp(Float VitalityValue,List<Vitality>  vitalityList){
+    public static MyVitalityResp toMyVitalityListResp(Double VitalityValue,List<Vitality>  vitalityList){
         MyVitalityResp myVitalityResp  =   new MyVitalityResp();
         myVitalityResp.setVitalityValue(VitalityValue);
         myVitalityResp.setList(vitalityList);
@@ -215,7 +215,7 @@ public class MyMethod {
      * @author long
      * @date 2019/11/28 16:36
      */
-    public static MyUserInfoResp toMyUserInfoResp(VcMember vcMember){
+    public static MyUserInfoResp toMyUserInfoResp(VcMember vcMember,VcMemberResource vcMemberResource){
         MyUserInfoResp  myUserInfoResp  = new MyUserInfoResp();
         myUserInfoResp.setNickname(vcMember.getNickname());
         myUserInfoResp.setMemberAdd(vcMember.getMemberAdd());
@@ -223,6 +223,8 @@ public class MyMethod {
         myUserInfoResp.setProvince(vcMember.getProvince());
         myUserInfoResp.setCity(vcMember.getCity());
         myUserInfoResp.setSex(vcMember.getSex());
+        myUserInfoResp.setDarenLevel(vcMemberResource.getDarenLevel());
+        myUserInfoResp.setEmpiricalLevel(vcMemberResource.getEmpiricalLevel());
         return myUserInfoResp;
     }
 

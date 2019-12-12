@@ -15,14 +15,14 @@ public class MyVitalityResp {
     /**
      * 活跃值
      */
-    private  Float  vitalityValue;
+    private  Double  vitalityValue;
     private List<Vitality> list;
 
-    public Float getVitalityValue() {
+    public Double getVitalityValue() {
         return vitalityValue;
     }
 
-    public void setVitalityValue(Float vitalityValue) {
+    public void setVitalityValue(Double vitalityValue) {
         this.vitalityValue = vitalityValue;
     }
 

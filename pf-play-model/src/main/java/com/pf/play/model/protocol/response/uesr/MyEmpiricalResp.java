@@ -11,14 +11,14 @@ import java.util.List;
  * @Version 1.0
  */
 public class MyEmpiricalResp {
-    private  Float  empiricalValue;
+    private  Double  empiricalValue;
     private List<Empirical>   list;
 
-    public Float getEmpiricalValue() {
+    public Double getEmpiricalValue() {
         return empiricalValue;
     }
 
-    public void setEmpiricalValue(Float empiricalValue) {
+    public void setEmpiricalValue(Double empiricalValue) {
         this.empiricalValue = empiricalValue;
     }
 

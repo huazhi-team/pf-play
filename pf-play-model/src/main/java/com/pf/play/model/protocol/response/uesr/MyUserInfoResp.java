@@ -9,6 +9,8 @@ package com.pf.play.model.protocol.response.uesr;
 public class MyUserInfoResp {
     private String nickname;
     private String memberAdd;
+    private Integer darenLevel;
+    private Integer empiricalLevel;
     private Integer sex;
     private String birthday;
     private String province;
@@ -60,5 +62,21 @@ public class MyUserInfoResp {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Integer getDarenLevel() {
+        return darenLevel;
+    }
+
+    public void setDarenLevel(Integer darenLevel) {
+        this.darenLevel = darenLevel;
+    }
+
+    public Integer getEmpiricalLevel() {
+        return empiricalLevel;
+    }
+
+    public void setEmpiricalLevel(Integer empiricalLevel) {
+        this.empiricalLevel = empiricalLevel;
     }
 }

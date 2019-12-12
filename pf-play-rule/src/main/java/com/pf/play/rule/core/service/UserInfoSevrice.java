@@ -54,4 +54,6 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
 
     void       executeSuperior();
 
+    VcMemberResource getMyResourceInfo(Integer memberId);
+
 }

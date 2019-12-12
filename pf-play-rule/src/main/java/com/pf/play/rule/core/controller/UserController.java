@@ -143,7 +143,7 @@ public class UserController {
             List<Empirical>  empiricalList  =  ComponentUtil.userInfoSevrice.getMyEmpirical(memberId);
             MyEmpiricalResp  myEmpiricalResp   =null;
             if(vcMemberResource==null){
-                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(0F,empiricalList);
+                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(0D,empiricalList);
             }else{
                   myEmpiricalResp = MyMethod.toMyEmpiricalResp(vcMemberResource.getEmpiricalValue(),empiricalList);
             }
@@ -185,7 +185,7 @@ public class UserController {
             List<Vitality>  vitalityList  =  ComponentUtil.userInfoSevrice.getMyDisVitalityValue(memberId);
             MyVitalityResp myVitalityResp   =null;
             if(vcMemberResource==null){
-                myVitalityResp = MyMethod.toMyVitalityListResp(0F,vitalityList);
+                myVitalityResp = MyMethod.toMyVitalityListResp(0D,vitalityList);
             }else{
                 myVitalityResp = MyMethod.toMyVitalityListResp(vcMemberResource.getEmpiricalValue(),vitalityList);
             }
@@ -222,10 +222,12 @@ public class UserController {
             }
 
             VcMember   vcMember=ComponentUtil.userInfoSevrice.getMemeber(memberId);
+
+            VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
             if(vcMember==null){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-            return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember));
+            return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember,vcMemberResource));
         }catch (Exception e){
             e.printStackTrace();
             return JsonResult.failedResult("wrong for data!",1+"");

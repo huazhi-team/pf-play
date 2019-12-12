@@ -11,6 +11,7 @@ import com.pf.play.model.protocol.response.task.GiveTaskResp;
 import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
 import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
 import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
@@ -37,7 +38,7 @@ public class TaskMethod {
      * @date 2019/11/20 20:33
      */
     public static UvitalityValueList pottingVitalityValue(Integer memberId, Integer type,
-                                                          Integer symbo, Float activeValue){
+                                                          Integer symbo, Double activeValue){
         UvitalityValueList  uvitalityValueList = new  UvitalityValueList();
         DateModel  dateModel  = TaskMethod.getDate();
         BeanUtils.copy(dateModel,uvitalityValueList);
@@ -246,7 +247,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 19:49
      */
-    public static   VcMemberResource   changUpdateResourceTOActiveValue(Integer memberId,Float activeValue ){
+    public static   VcMemberResource   changUpdateResourceTOActiveValue(Integer memberId,Double activeValue ){
         VcMemberResource vcMemberResource1  =  new VcMemberResource();
         vcMemberResource1.setMemberId(memberId);
         vcMemberResource1.setUpdateTime(new Date());
@@ -876,10 +877,14 @@ public class TaskMethod {
      * @author long
      * @date 2019/12/5 22:27
      */
-    public static  VcMemberResource   getUqdateMyActiveValue(Integer memberId,Float activeValue){
+    public static  VcMemberResource   getUqdateMyActiveValue(Integer memberId,Double activeValue,Integer  type ){
         VcMemberResource  vcMemberResource= new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
-        vcMemberResource.setActiveValue(activeValue);
+        if(type== Constant.TASK_SYMBOL_TYPE1){
+            vcMemberResource.setActiveValueAdd(activeValue);
+        }else if(type== Constant.TASK_SYMBOL_TYPE2){
+            vcMemberResource.setActiveValueCut(activeValue);
+        }
         return   vcMemberResource ;
     }
 
@@ -891,7 +896,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/12/6 9:49
      */
-    public static  VcMemberResource   getUqdateTeamActive(Integer memberId,Float activeValue){
+    public static  VcMemberResource   getUqdateTeamActive(Integer memberId,Double activeValue){
         VcMemberResource  vcMemberResource  = new  VcMemberResource();
         vcMemberResource.setMemberId(memberId);
         vcMemberResource.setTeamActive(activeValue);
@@ -920,6 +925,46 @@ public class TaskMethod {
                 break;
             }
             level++;
+        }
+
+        int  count = level;
+        boolean  flag = false ;
+        for(int  i =0;i<level;i++ ){
+            if(level==1){
+                flag = ComponentUtil.taskService.checkLevel1(vcMember.getMemberId());
+                if(flag){
+                    break;
+                }
+            }
+
+            if(level==2){
+                flag = ComponentUtil.taskService.checkLevel2(vcMember.getMemberId());
+                if(flag){
+                    break;
+                }
+            }
+
+            if(level==3){
+                flag = ComponentUtil.taskService.checkLevel3(vcMember.getMemberId());
+                if(flag){
+                    break;
+                }
+            }
+
+            if(level==4){
+                flag = ComponentUtil.taskService.checkLevel4(vcMember.getMemberId());
+                if(flag){
+                    break;
+                }
+            }
+
+            if(level==5){
+                flag = ComponentUtil.taskService.checkLevel5(vcMember.getMemberId());
+                if(flag){
+                    break;
+                }
+            }
+            level--;
         }
         return level;
     }
@@ -982,8 +1027,6 @@ public class TaskMethod {
      * @date 2019/12/11 17:59
      */
     public static    boolean     checkLevelIsReceive(VcRewardReceive vcRewardReceive,Integer  darenLevel){
-
-
         boolean flag  =  false  ;
         if(darenLevel==1){
             if( vcRewardReceive.getIsLevel1().equals("1")){
@@ -1008,6 +1051,45 @@ public class TaskMethod {
         }
         return  flag;
     }
+
+
+    /**
+     * @Description: 修改处理活跃值状态
+     * @param uvitalityValueList
+     * @return com.pf.play.rule.core.model.UvitalityValueList
+     * @author long
+     * @date 2019/12/11 20:37
+     */
+    public static  UvitalityValueList   updateUvitalityValueList(UvitalityValueList  uvitalityValueList){
+        UvitalityValueList  uvitalityValueList1 =  new UvitalityValueList();
+        uvitalityValueList1.setId(uvitalityValueList.getId());
+        uvitalityValueList1.setIsCount(2);
+        return  uvitalityValueList1;
+    }
+
+    /**
+     * @Description: 修改团队活跃值的
+     * @param memberId
+    * @param list
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/12 14:23
+     */
+    public static VcMemberResource   updateHeroActive(Integer memberId,List<VcMemberResource> list){
+        VcMemberResource  vcMemberResource =  new VcMemberResource();
+        double    teamActive   =  0D;
+        for(VcMemberResource  vcMemberResource1 : list){
+            teamActive = teamActive + vcMemberResource1.getActiveValue();
+        }
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setTeamActive(teamActive);
+        return  vcMemberResource;
+    }
+
+
+
+
+
 
 
 

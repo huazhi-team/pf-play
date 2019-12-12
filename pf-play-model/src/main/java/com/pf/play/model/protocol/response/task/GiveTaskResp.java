@@ -7,6 +7,15 @@ package com.pf.play.model.protocol.response.task;
  * @Version 1.0
  */
 public class GiveTaskResp {
+
+    /**
+     * 等级
+     *
+     * @mbggenerated
+     */
+    private Integer level;
+
+
     /**
      * 任务id
      *

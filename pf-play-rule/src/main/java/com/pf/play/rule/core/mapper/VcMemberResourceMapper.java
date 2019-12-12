@@ -36,4 +36,11 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
     int updateAddMasonry(VcMemberResource record);
 
     int updateCutMasonry(VcMemberResource record);
+
+    int updateByActiveValue(VcMemberResource record);
+
+    List<VcMemberResource>  selectByTeamActive(VcMemberResource record);
+
+
+
 }

@@ -150,4 +150,11 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         uMasonryListLogMapper.insertSelective(receiptUMasonryListLog);
         uMasonryListLogMapper.insertSelective(procedUMasonryListLog);
     }
+
+    @Override
+    public void updateMyActiveValue(VcMemberResource resource,VcMember vcMember) {
+        vcMemberResourceMapper.updateByActiveValue(resource);
+        vcMemberResourceMapper.updateHeroActive(vcMember);
+        vcMemberResourceMapper.updateAllianceActive(vcMember);
+    }
 }

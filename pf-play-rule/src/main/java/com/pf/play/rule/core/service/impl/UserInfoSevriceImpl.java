@@ -308,4 +308,10 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         }
 
     }
+
+    @Override
+    public VcMemberResource getMyResourceInfo(Integer memberId) {
+        VcMemberResource  vcMemberResource = TaskMethod.changvcMemberResource(memberId);
+        return vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
+    }
 }

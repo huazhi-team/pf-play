@@ -374,8 +374,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMemberResource  resourceRs = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
         VcMember record1 = vcMemberMapper.selectByPrimaryKey(record);
         Double  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource();
-        Float  myActiveValue=Float.parseFloat(disTaskAttribute.getKey1());
-        Float  upActiveValue=Float.parseFloat(disTaskAttribute.getKey2());
+        Double  myActiveValue=Double.valueOf(disTaskAttribute.getKey1());
+        Double  upActiveValue=Double.valueOf(disTaskAttribute.getKey2());
         if(masonry<0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteDesc());
         }
@@ -450,7 +450,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         if(vcMemberResource==null||uvitalityValueList==null){
             return  0;
         }
-        Float  updateValue=null;
+        Double  updateValue=null;
         if(uvitalityValueList.getSymbolType()==1){
             updateValue=vcMemberResource.getActiveValue()+uvitalityValueList.getActiveValue();
         }else{
@@ -473,12 +473,19 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
      */
     @Override
     public void openUpdateTask() {
-        UvitalityValueList uVitalityValueList = new UvitalityValueList();
-        uVitalityValueList.setMemberId(2);
-
         while (true){
+
             try{
-                ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
+                UvitalityValueList uVitalityValueList = new UvitalityValueList();
+                List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
+                if(list.size()>0){
+                    uVitalityValueList = list.get(0);
+                    UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList);
+                    uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
+                    ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
+                }else{
+                    Thread.sleep(20000);
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -549,11 +556,17 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMember       vcMember   =  TaskMethod.getMember(uVitalityValueList.getMemberId());
         VcMember       vcMember1  =   vcMemberMapper.selectByMemberId(vcMember);
         //查询用户需要修改的
-        VcMemberResource  updateMyResource =   TaskMethod.getUqdateMyActiveValue(uVitalityValueList.getMemberId(),uVitalityValueList.getActiveValue());
+        VcMemberResource  updateMyResource =   TaskMethod.getUqdateMyActiveValue(uVitalityValueList.getMemberId(),uVitalityValueList.getActiveValue(),uVitalityValueList.getSymbolType());
 
-        int   uqdateCount  =  vcMemberResourceMapper.updateByPrimaryKeySelective(updateMyResource);
+        List<VcMemberResource>     list    =   vcMemberResourceMapper.selectByTeamActive(updateMyResource);//查询英雄值
+        VcMemberResource   vcMemberResource =  TaskMethod.updateHeroActive(uVitalityValueList.getMemberId(),list);
 
-        if(uqdateCount!=0){
+
+        ComponentUtil.transactionalService.updateMyActiveValue(updateMyResource,vcMember);
+
+        int   uqdateCount  =  vcMemberResourceMapper.updateByActiveValue(updateMyResource);
+
+        if(uqdateCount==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
         }
         //团队活力值的  需要修改的总体的一个list
@@ -607,9 +620,13 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }else if(darenLevel>rsVcMember.getDarenLevel()){
             //等级大于当前等级的时候，需要更新字段，查看奖励是否有送过
             VcRewardReceive  vcRewardReceive = vcRewardReceiveMapper.selectByPrimaryKey(memberId);
+            TaskMethod.checkLevelIsReceive(vcRewardReceive,darenLevel);
+            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource1);
         }else if(darenLevel<rsVcMember.getDarenLevel()){
             //等级大于当前等级的时候，需要更新字段
+            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource1);
         }
+
 
     }
 
@@ -651,7 +668,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
                     break;
                 }
             }else if(level==4){
-                boolean  flag = ComponentUtil.taskService.checkLevel4(memberId);if(flag){
+                boolean  flag = ComponentUtil.taskService.checkLevel4(memberId);
+                if(flag){
                     break;
                 }
             }else if(level==5){
@@ -662,7 +680,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             }
             level--;
         }
-        return null;
+        return level;
     }
 
     @Override

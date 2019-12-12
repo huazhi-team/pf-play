@@ -168,7 +168,7 @@ public class RegisterMethod {
      * @date 2019/11/25 10:27
      */
     public  static VcMemberResource  insertVcMemberResource(Integer memberId){
-        Float  activeValue = Float.parseFloat("1");
+        Double  activeValue = Double.valueOf("1");
         Date     createdate =  DateUtil.currentTimestamp();
         VcMemberResource   vcMemberResourceModel  =  new  VcMemberResource();
         VcMemberGive   vcMemberGive  =  RegisterSingleton.getInstance().getVcMemberGive();
@@ -180,7 +180,7 @@ public class RegisterMethod {
         if(vcMemberGive==null||vcMemberGive.getActiveValue()<=0){//没有获取到值
             vcMemberResourceModel.setActiveValue(activeValue);
         }else{
-            vcMemberResourceModel.setActiveValue(vcMemberGive.getActiveValue());
+            vcMemberResourceModel.setActiveValue(Double.valueOf(vcMemberGive.getActiveValue()));
         }
         return   vcMemberResourceModel;
     }

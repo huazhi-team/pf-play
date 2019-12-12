@@ -55,7 +55,7 @@ public class RegisTerRunner implements ApplicationRunner {
 
 //
 //        log.debug("更新用户活力值明细表！");
-//        ComponentUtil.taskService.openUpdateTask();
+        ComponentUtil.taskService.openUpdateTask();
 
     }
 

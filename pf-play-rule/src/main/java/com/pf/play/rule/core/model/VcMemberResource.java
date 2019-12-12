@@ -58,14 +58,14 @@ public class VcMemberResource {
      *
      * @mbggenerated
      */
-    private Float empiricalValue;
+    private Double empiricalValue;
 
     /**
      * 活跃值
      *
      * @mbggenerated
      */
-    private Float activeValue;
+    private Double activeValue;
 
     /**
      * 直推总人数
@@ -111,7 +111,7 @@ public class VcMemberResource {
      *
      * @mbggenerated
      */
-    private Float teamActive;
+    private Double teamActive;
     /**
      * 英雄活力值
      *
@@ -164,6 +164,19 @@ public class VcMemberResource {
 
 
     private List<Integer> idList;
+    /**
+     * 减活跃值
+     *
+     * @mbggenerated
+     */
+    private Double activeValueCut;
+
+    /**
+     * 加活跃值
+     *
+     * @mbggenerated
+     */
+    private Double activeValueAdd;
 
     /**
      * 是否实名制
@@ -228,21 +241,7 @@ public class VcMemberResource {
         this.frozenMasonry = frozenMasonry;
     }
 
-    public Float getEmpiricalValue() {
-        return empiricalValue;
-    }
 
-    public void setEmpiricalValue(Float empiricalValue) {
-        this.empiricalValue = empiricalValue;
-    }
-
-    public Float getActiveValue() {
-        return activeValue;
-    }
-
-    public void setActiveValue(Float activeValue) {
-        this.activeValue = activeValue;
-    }
 
     public Integer getPushPeople() {
         return pushPeople;
@@ -292,13 +291,7 @@ public class VcMemberResource {
         this.teamPeople = teamPeople;
     }
 
-    public Float getTeamActive() {
-        return teamActive;
-    }
 
-    public void setTeamActive(Float teamActive) {
-        this.teamActive = teamActive;
-    }
 
     public Double getHeroActive() {
         return heroActive;
@@ -378,5 +371,45 @@ public class VcMemberResource {
 
     public void setIsCertification(Integer isCertification) {
         this.isCertification = isCertification;
+    }
+
+    public Double getActiveValueCut() {
+        return activeValueCut;
+    }
+
+    public void setActiveValueCut(Double activeValueCut) {
+        this.activeValueCut = activeValueCut;
+    }
+
+    public Double getActiveValueAdd() {
+        return activeValueAdd;
+    }
+
+    public void setActiveValueAdd(Double activeValueAdd) {
+        this.activeValueAdd = activeValueAdd;
+    }
+
+    public Double getEmpiricalValue() {
+        return empiricalValue;
+    }
+
+    public void setEmpiricalValue(Double empiricalValue) {
+        this.empiricalValue = empiricalValue;
+    }
+
+    public Double getActiveValue() {
+        return activeValue;
+    }
+
+    public void setActiveValue(Double activeValue) {
+        this.activeValue = activeValue;
+    }
+
+    public Double getTeamActive() {
+        return teamActive;
+    }
+
+    public void setTeamActive(Double teamActive) {
+        this.teamActive = teamActive;
     }
 }

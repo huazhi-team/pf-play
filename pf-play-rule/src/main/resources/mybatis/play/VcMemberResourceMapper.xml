@@ -140,6 +140,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
     update vc_member_resource
     <set >
@@ -200,6 +201,7 @@
     </set>
     where member_id = #{memberId}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
     update vc_member_resource
     set member_id = #{memberId,jdbcType=INTEGER},
@@ -313,6 +315,17 @@
     </update>
 
 
+  <!-- 修改英雄活力值 -->
+  <update id="updateTeamActive" parameterType="com.pf.play.rule.core.model.VcMember" >
+        update vc_member_resource v,( select   IFNULL(sum(b.active_value),0) as  active_value
+                from  vc_member a  inner JOIN   vc_member_resource b
+                on    a.member_id=  b.member_id
+                where  a.superior_id=#{memberId}
+                order  by   b.active_value desc
+                limit  2) d   set    v.hero_active = d.active_value
+                where  v.member_id = #{memberId}
+    </update>
+
     <!--修改联盟活力值 -->
     <update id="updateAllianceActive" parameterType="com.pf.play.rule.core.model.VcMember" >
         update vc_member_resource   set    alliance_active = team_active-hero_active
@@ -321,21 +334,7 @@
 
 
     <!--修改团队活力值 -->
-    <update id="updateTeamActive" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
-        UPDATE vc_member_resource c,
-            (
-            SELECT
-                IFNULL( sum( b.active_value ), 0 ) AS active_value
-            FROM
-                vc_member a
-                INNER JOIN vc_member_resource b ON a.member_id = b.member_id
-            WHERE
-                a.superior_id = #{memberId}
-                ) d
-                SET c.team_people = d.active_value
-            WHERE
-                c.member_id = #{memberId}
-    </update>
+
 
   <!--减少自身砖石 -->
   <update id="updateCutMasonry" parameterType="com.pf.play.rule.core.model.VcMember" >
@@ -350,5 +349,34 @@
         day_masonry = day_masonry+#{dayMasonry}
                 where  member_id = #{memberId}
   </update>
+
+
+  <update id="updateByActiveValue" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="activeValueCut != null" >
+        active_value = active_value-#{activeValueCut},
+      </if>
+
+      <if test="activeValueAdd != null" >
+        active_value =active_value + #{activeValueAdd},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
+
+
+
+  <select id="selectByTeamActive" resultType="com.pf.play.rule.core.model.VcMemberResource"  >
+           select   b.active_value  as  active_value
+                from  vc_member a  inner JOIN   vc_member_resource b
+                on    a.member_id=  b.member_id
+                where a.superior_id=#{superiorId}
+                order  by   b.active_value desc
+                limit  2
+  </select>
+
+
+
 
 </mapper>

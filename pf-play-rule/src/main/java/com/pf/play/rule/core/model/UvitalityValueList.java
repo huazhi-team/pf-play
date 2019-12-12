@@ -37,7 +37,7 @@ public class UvitalityValueList {
      *
      * @mbggenerated
      */
-    private Float activeValue;
+    private Double activeValue;
 
     /**
      * 创建日期：存的日期格式20160530
@@ -122,11 +122,11 @@ public class UvitalityValueList {
         this.symbolType = symbolType;
     }
 
-    public Float getActiveValue() {
+    public Double getActiveValue() {
         return activeValue;
     }
 
-    public void setActiveValue(Float activeValue) {
+    public void setActiveValue(Double activeValue) {
         this.activeValue = activeValue;
     }
 

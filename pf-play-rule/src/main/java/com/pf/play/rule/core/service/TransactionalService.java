@@ -35,4 +35,6 @@ public interface TransactionalService<T> extends BaseService<T> {
                                         VcMemberResource vcMemberResourceCut,
                                             VcMemberResource  vcMemberResourceAdd);
 
+    void  updateMyActiveValue(VcMemberResource resource,VcMember vcMember);
+
 }

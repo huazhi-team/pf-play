@@ -547,9 +547,11 @@ public class TaskMethod {
             flag = false;
         }else  if(StringUtils.isBlank(registerReq.getMemberAdd())){
             flag = false;
-        }else if(StringUtils.isBlank(registerReq.getWxRefresh())){
-            flag = false;
-        }else  if(StringUtils.isBlank(registerReq.getInviteCode())){
+        }
+//        else if(StringUtils.isBlank(registerReq.getWxRefresh())){
+//            flag = false;
+//        }
+        else  if(StringUtils.isBlank(registerReq.getInviteCode())){
             flag = false;
         }else  if(StringUtils.isBlank(registerReq.getTimeStamp())){
             flag = false;
@@ -1086,6 +1088,75 @@ public class TaskMethod {
         return  vcMemberResource;
     }
 
+    /**
+     * @Description: 用户每天任务
+     * @param memberId
+    * @param list
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/12 14:23
+     */
+    public static UdailyTaskStat   changUdailyTaskStat(Integer memberId){
+        UdailyTaskStat  vcMemberResource =  new UdailyTaskStat();
+        vcMemberResource.setMemberId(memberId);
+        return  vcMemberResource;
+    }
+
+
+
+    /**
+     * @Description: 查询拥有的task有效信息
+     * @param memberId
+    * @param day
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/12 17:34
+     */
+    public static UTaskHave   changUTaskHave(Integer memberId){
+        UTaskHave  uTaskHave =  new UTaskHave();
+        uTaskHave.setMemberId(memberId);
+        uTaskHave.setCurday(DateUtil.getDayNumber(new Date()));
+        uTaskHave.setCurrentState(1);
+        return  uTaskHave;
+    }
+
+
+
+
+    /**
+     * @Description: 初始化信息
+     * @param memberId
+    * @param list
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/12 14:23
+     */
+    public static UdailyTaskStat   initUdailyTaskStat(Integer memberId){
+        UdailyTaskStat  udailyTaskStat =  new UdailyTaskStat();
+        udailyTaskStat.setMemberId(memberId);
+        udailyTaskStat.setAcceptNumber(0);
+        udailyTaskStat.setLookCommodityNum(0);
+        return  udailyTaskStat;
+    }
+
+
+
+    /**
+     * @Description: 筛选出来最大的要求
+     * @param list
+    * @param day
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/12 17:34
+     */
+    public static UTaskHave   changUTaskHaveMax(List<UTaskHave>  list){
+        UTaskHave  uTaskHave =  new UTaskHave();
+        for(UTaskHave uTaskHave1 :list){
+            uTaskHave=uTaskHave1;
+            break;
+        }
+        return  uTaskHave;
+    }
 
 
 

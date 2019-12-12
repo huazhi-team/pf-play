@@ -35,7 +35,7 @@ public class MyMasonryResp {
      *
      * @mbggenerated
      */
-    private Float masonryNum;
+    private Double masonryNum;
 
     /**
      * 创建时间
@@ -68,11 +68,11 @@ public class MyMasonryResp {
         this.symbolType = symbolType;
     }
 
-    public Float getMasonryNum() {
+    public Double getMasonryNum() {
         return masonryNum;
     }
 
-    public void setMasonryNum(Float masonryNum) {
+    public void setMasonryNum(Double masonryNum) {
         this.masonryNum = masonryNum;
     }
 

@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class MyEmpiricalResp {
     private  Double  empiricalValue;
+    private  Double  needVitalityValue;
+    private  Integer level;
     private List<Empirical>   list;
 
     public Double getEmpiricalValue() {
@@ -28,5 +30,21 @@ public class MyEmpiricalResp {
 
     public void setList(List<Empirical> list) {
         this.list = list;
+    }
+
+    public Double getNeedVitalityValue() {
+        return needVitalityValue;
+    }
+
+    public void setNeedVitalityValue(Double needVitalityValue) {
+        this.needVitalityValue = needVitalityValue;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

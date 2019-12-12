@@ -14,6 +14,7 @@ import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
 import com.pf.play.model.protocol.response.uesr.MyVitalityResp;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
+import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.UMasonryListLog;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 用户信息
@@ -65,7 +67,20 @@ public class UserController {
             LoginReq loginReq1 = new LoginReq();
             loginReq1.setWxOpenId(userCommonReq.getWxOpenId());
             loginReq1.setToken(userCommonReq.getToken());
-            List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
+
+            Integer  memberId = 0 ;
+            boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+
+            if(memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
+            }
+
+            VcMemberResource   vcMemberResource1 = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
+
+            List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(memberId);
             if(null==list||list.size()==0){
                 list =new  ArrayList();
             }
@@ -109,8 +124,8 @@ public class UserController {
             MyFriendsResp myFriendsResp   =  ComponentUtil.userInfoSevrice.toMyFriensResp(memberId,superiorId);
             return JsonResult.successResult(myFriendsResp);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -132,7 +147,7 @@ public class UserController {
             List<MyFriendsResp>   list  = null;
             Integer   memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
             VcMemberResource  vcMemberResource =null;
@@ -141,16 +156,17 @@ public class UserController {
             }
 
             List<Empirical>  empiricalList  =  ComponentUtil.userInfoSevrice.getMyEmpirical(memberId);
+            VcMemberResource   vcMemberResource1 = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
             MyEmpiricalResp  myEmpiricalResp   =null;
             if(vcMemberResource==null){
-                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(0D,empiricalList);
+                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(0D,empiricalList,null);
             }else{
-                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(vcMemberResource.getEmpiricalValue(),empiricalList);
+                  myEmpiricalResp = MyMethod.toMyEmpiricalResp(vcMemberResource.getEmpiricalValue(),empiricalList,vcMemberResource1);
             }
             return JsonResult.successResult(myEmpiricalResp);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -183,6 +199,7 @@ public class UserController {
             }
 
             List<Vitality>  vitalityList  =  ComponentUtil.userInfoSevrice.getMyDisVitalityValue(memberId);
+
             MyVitalityResp myVitalityResp   =null;
             if(vcMemberResource==null){
                 myVitalityResp = MyMethod.toMyVitalityListResp(0D,vitalityList);
@@ -288,14 +305,14 @@ public class UserController {
             LoginReq loginReq1 = new LoginReq();
             loginReq1.setWxOpenId("slllsdjdjsa");
             loginReq1.setToken("0423837aee5d4d96a2cf868d5fc2d47d");
-            List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
-            if(null==list||list.size()==0){
-                list =new  ArrayList();
-            }
-            return JsonResult.successResult(list);
+//            List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(loginReq1);
+//            if(null==list||list.size()==0){
+//                list =new  ArrayList();
+//            }
+            return JsonResult.successResult(null);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 

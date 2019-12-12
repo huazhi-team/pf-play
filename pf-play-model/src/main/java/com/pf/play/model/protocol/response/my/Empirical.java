@@ -24,6 +24,15 @@ public class Empirical {
      */
     private String transactionFee;
 
+    /**
+     * 需要数量
+     */
+    private  Integer  upgradeNum;
+    /**
+     * 等级
+     */
+    private  Integer  level;
+
     public String getEmpiricalName() {
         return empiricalName;
     }
@@ -54,5 +63,21 @@ public class Empirical {
 
     public void setTransactionFee(String transactionFee) {
         this.transactionFee = transactionFee;
+    }
+
+    public Integer getUpgradeNum() {
+        return upgradeNum;
+    }
+
+    public void setUpgradeNum(Integer upgradeNum) {
+        this.upgradeNum = upgradeNum;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

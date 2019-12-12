@@ -140,6 +140,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         RegisterResp  registerResp = new  RegisterResp();
         //验证码的组合方式   电话号 + 时间戳；
         String  verKey  = registerReq.getPhone() + registerReq.getTimeStamp();
+        System.out.println("==================="+verKey);
         String  smsVerification = (String) ComponentUtil.redisService.get(verKey);
         if(!smsVerification.equals(registerReq.getSmsVerification())){ //验证码错误！
             return false;

@@ -46,6 +46,13 @@ public class DisVitalityValue {
     private Integer allianceVitalitNum;
 
     /**
+     * 升级需要数量
+     *
+     * @mbggenerated
+     */
+    private Integer upgradeNum  ;
+
+    /**
      * 分红
      *
      * @mbggenerated
@@ -167,5 +174,13 @@ public class DisVitalityValue {
 
     public void setIsValid(Integer isValid) {
         this.isValid = isValid;
+    }
+
+    public Integer getUpgradeNum() {
+        return upgradeNum;
+    }
+
+    public void setUpgradeNum(Integer upgradeNum) {
+        this.upgradeNum = upgradeNum;
     }
 }

@@ -25,6 +25,13 @@ public class DisEmpiricalValueLevel {
     private String empiricalName;
 
     /**
+     * 经验值等级
+     *
+     * @mbggenerated
+     */
+    private Integer empiricalLevel;
+
+    /**
      * 可交易数
      *
      * @mbggenerated
@@ -66,6 +73,10 @@ public class DisEmpiricalValueLevel {
      * @mbggenerated
      */
     private String remarks;
+    /**
+     * 需要经验值
+     */
+    private Integer upgradeNum;
 
 
     public Long getId() {
@@ -138,5 +149,21 @@ public class DisEmpiricalValueLevel {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public Integer getEmpiricalLevel() {
+        return empiricalLevel;
+    }
+
+    public void setEmpiricalLevel(Integer empiricalLevel) {
+        this.empiricalLevel = empiricalLevel;
+    }
+
+    public Integer getUpgradeNum() {
+        return upgradeNum;
+    }
+
+    public void setUpgradeNum(Integer upgradeNum) {
+        this.upgradeNum = upgradeNum;
     }
 }

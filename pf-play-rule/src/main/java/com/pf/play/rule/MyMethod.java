@@ -81,6 +81,8 @@ public class MyMethod {
              }else{
                  empirical.setTransactionValue(disEmpiricalValueLevel.getTransactionNumber()+"");
              }
+             empirical.setLevel(disEmpiricalValueLevel.getEmpiricalLevel());
+             empirical.setUpgradeNum(disEmpiricalValueLevel.getUpgradeNum());
              empirical.setTransactionFee(disEmpiricalValueLevel.getTransactionFee()+"%");
              empiricals.add(empirical);
          }
@@ -132,9 +134,22 @@ public class MyMethod {
      * @author long
      * @date 2019/11/27 21:45
      */
-    public static MyEmpiricalResp toMyEmpiricalResp(Double EmpiricalValue,List<Empirical>  empiricalList){
+    public static MyEmpiricalResp toMyEmpiricalResp(Double EmpiricalValue,List<Empirical>  empiricalList,VcMemberResource vcMemberResource1){
         MyEmpiricalResp  myEmpiricalResp  =   new MyEmpiricalResp();
-        myEmpiricalResp.setEmpiricalValue(EmpiricalValue);
+        if(vcMemberResource1==null){
+            myEmpiricalResp.setLevel(0);
+            myEmpiricalResp.setNeedVitalityValue(0D);
+            myEmpiricalResp.setEmpiricalValue(0D);
+        }else{
+            for(Empirical empirical:empiricalList){
+                if(empirical.getLevel()==vcMemberResource1.getEmpiricalLevel()){
+                    myEmpiricalResp.setNeedVitalityValue(Double.valueOf(empirical.getUpgradeNum()));
+                    break;
+                }
+            }
+            myEmpiricalResp.setLevel(vcMemberResource1.getEmpiricalLevel());
+            myEmpiricalResp.setEmpiricalValue(vcMemberResource1.getEmpiricalValue());
+        }
         myEmpiricalResp.setList(empiricalList);
         return myEmpiricalResp;
     }
@@ -241,6 +256,7 @@ public class MyMethod {
             MyMasonryResp   myMasonryResp = new MyMasonryResp();
             BeanUtils.copy(uMasonryListLog,myMasonryResp);
             myMasonryResp.setCreateTime(uMasonryListLog.getCreateTimeStr());
+            myMasonryResp.setMasonryNum(uMasonryListLog.getMasonryNum());
             list.add(myMasonryResp);
         }
         return list;

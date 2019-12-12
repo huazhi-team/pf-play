@@ -101,9 +101,8 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
      * @date 2019/11/14 13:52
      */
     @Override
-    public List<UMasonryListLog> toKenQueryMasonryInfo(LoginReq loginReq)throws  Exception {
-        Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(loginReq.getToken(),
-                                                                        loginReq.getWxOpenId());
+    public List<UMasonryListLog> toKenQueryMasonryInfo(Integer memberId)throws  Exception {
+
         if(memberId==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteCode(),
                                             ErrorCode.ENUM_ERROR.USERMASONRY_ERRPR0.geteDesc());

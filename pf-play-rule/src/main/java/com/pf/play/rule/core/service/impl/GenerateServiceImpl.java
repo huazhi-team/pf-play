@@ -30,6 +30,9 @@ public class GenerateServiceImpl<T> extends BaseServiceImpl<T> implements Genera
     @Autowired
     private VcMemberGenerateMapper vcThirdPartyMapper;
 
+    @Autowired
+    private VcMemberGenerateMapper vcMemberGenerateMapper;
+
 
     @Override
     public BaseDao<T> getDao() {
@@ -78,7 +81,8 @@ public class GenerateServiceImpl<T> extends BaseServiceImpl<T> implements Genera
             Integer  timestamp =Integer.parseInt(DateUtil.timeStamp());
             vcMemberGenerateModel.setCreateTime(timestamp);
             vcMemberGenerateModel.setUpdateTime(timestamp);
-             vcThirdPartyMapper.insertSelective(vcMemberGenerateModel);
+//             vcThirdPartyMapper.insertSelective(vcMemberGenerateModel);
+            vcMemberGenerateMapper.insertSelective(vcMemberGenerateModel);
             memberid= vcMemberGenerateModel.getId() ;
         }catch (Exception e){
             e.printStackTrace();

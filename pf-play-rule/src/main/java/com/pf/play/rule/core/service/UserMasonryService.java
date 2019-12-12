@@ -22,7 +22,7 @@ public interface UserMasonryService <T> extends BaseService<T> {
     List<UMasonryListLog> queryMasonryListLog(Integer memberId);
     int     AddqueryMasonryListLog(UMasonryListLog uMasonryListLog);
 
-    List<UMasonryListLog> toKenQueryMasonryInfo(LoginReq loginReq)throws Exception;
+    List<UMasonryListLog> toKenQueryMasonryInfo(Integer memberId)throws Exception;
     Integer  queryTokenMemberId(String  token,String wxOpenId);
     List<SysTypeDictionary>  getMasonryType();
     public UserInfoModel queryTokenSuperiorId(String token, String wxOpenId);

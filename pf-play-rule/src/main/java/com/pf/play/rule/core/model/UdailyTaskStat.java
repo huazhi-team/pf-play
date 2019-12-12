@@ -5,7 +5,6 @@ import java.util.Date;
 public class UdailyTaskStat {
     /**
      * 
-     *
      * @mbggenerated
      */
     private Long id;
@@ -29,14 +28,14 @@ public class UdailyTaskStat {
      *
      * @mbggenerated
      */
-    private Float readArticleMinute;
+    private Double readArticleMinute;
 
     /**
      * 玩游戏
      *
      * @mbggenerated
      */
-    private Float playGameMinute;
+    private Double playGameMinute;
 
     /**
      * 查看广告次数
@@ -57,7 +56,7 @@ public class UdailyTaskStat {
      *
      * @mbggenerated
      */
-    private Boolean isComplete;
+    private Integer isComplete;
 
     /**
      * 创建日期：存的日期格式20160530
@@ -71,14 +70,14 @@ public class UdailyTaskStat {
      *
      * @mbggenerated
      */
-    private Boolean curhour;
+    private Integer curhour;
 
     /**
      * 创建所属分钟：60分钟制
      *
      * @mbggenerated
      */
-    private Boolean curminute;
+    private Integer curminute;
 
     /**
      * 创建时间
@@ -99,7 +98,7 @@ public class UdailyTaskStat {
      *
      * @mbggenerated
      */
-    private Boolean isValid;
+    private Integer isValid;
 
     public Long getId() {
         return id;
@@ -125,19 +124,19 @@ public class UdailyTaskStat {
         this.acceptNumber = acceptNumber;
     }
 
-    public Float getReadArticleMinute() {
+    public Double getReadArticleMinute() {
         return readArticleMinute;
     }
 
-    public void setReadArticleMinute(Float readArticleMinute) {
+    public void setReadArticleMinute(Double readArticleMinute) {
         this.readArticleMinute = readArticleMinute;
     }
 
-    public Float getPlayGameMinute() {
+    public Double getPlayGameMinute() {
         return playGameMinute;
     }
 
-    public void setPlayGameMinute(Float playGameMinute) {
+    public void setPlayGameMinute(Double playGameMinute) {
         this.playGameMinute = playGameMinute;
     }
 
@@ -157,11 +156,11 @@ public class UdailyTaskStat {
         this.lookCommodityNum = lookCommodityNum;
     }
 
-    public Boolean getIsComplete() {
+    public Integer getIsComplete() {
         return isComplete;
     }
 
-    public void setIsComplete(Boolean isComplete) {
+    public void setIsComplete(Integer isComplete) {
         this.isComplete = isComplete;
     }
 
@@ -173,19 +172,19 @@ public class UdailyTaskStat {
         this.curday = curday;
     }
 
-    public Boolean getCurhour() {
+    public Integer getCurhour() {
         return curhour;
     }
 
-    public void setCurhour(Boolean curhour) {
+    public void setCurhour(Integer curhour) {
         this.curhour = curhour;
     }
 
-    public Boolean getCurminute() {
+    public Integer getCurminute() {
         return curminute;
     }
 
-    public void setCurminute(Boolean curminute) {
+    public void setCurminute(Integer curminute) {
         this.curminute = curminute;
     }
 
@@ -205,11 +204,11 @@ public class UdailyTaskStat {
         this.updateTime = updateTime;
     }
 
-    public Boolean getIsValid() {
+    public Integer getIsValid() {
         return isValid;
     }
 
-    public void setIsValid(Boolean isValid) {
+    public void setIsValid(Integer isValid) {
         this.isValid = isValid;
     }
 }

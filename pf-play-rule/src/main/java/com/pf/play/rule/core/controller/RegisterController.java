@@ -40,7 +40,7 @@ public class RegisterController {
     public JsonResult<Object> register(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq ){
         try{
             log.info("----------:进来啦!");
-            JsonResult.successResult(null);
+//            JsonResult.successResult(null);
 
             RegisterReq registerReq1  = new RegisterReq();
             boolean  flag  = TaskMethod.checkRegisterParameter(registerReq);
@@ -61,12 +61,13 @@ public class RegisterController {
 //            registerReq1.setWxOpenid("slllsdjdjsa2");
 //            registerReq1.setInviteCode("Sjadgsade");
 //            registerReq1.setTimeStamp("1574651926");
-            UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq1);
+            UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq);
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             return JsonResult.successResult(loginResp);
 
 
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map=ExceptionMethod.getException(e);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

@@ -13,6 +13,8 @@ public class Vitality {
     private  String teamVitalitNum;
     private  String allianceVitalitNum;
     private  String  rewardNum;
+    private  Integer  upgradeNum;
+    private  Integer  level;
     private  String  remarks;
 
     public String getVitalityName() {
@@ -61,5 +63,21 @@ public class Vitality {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public Integer getUpgradeNum() {
+        return upgradeNum;
+    }
+
+    public void setUpgradeNum(Integer upgradeNum) {
+        this.upgradeNum = upgradeNum;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

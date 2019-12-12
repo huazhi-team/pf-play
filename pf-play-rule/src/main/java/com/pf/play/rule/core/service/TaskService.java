@@ -75,5 +75,10 @@ public interface TaskService  <T> extends BaseService<T> {
 
     boolean  checkLevel5(Integer memberId);
 
+    UdailyTaskStat  getMemberUDailyTaskStat(Integer memberId);
+
+    UTaskHave       getMaxUTaskHave(Integer memberId);
+
+    UMasonryListLog  getUMasonryListLog(Integer memberId);
 
 }

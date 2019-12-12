@@ -16,6 +16,8 @@ public class MyVitalityResp {
      * 活跃值
      */
     private  Double  vitalityValue;
+    private  Double  needVitalityValue;
+    private  Integer level;
     private List<Vitality> list;
 
     public Double getVitalityValue() {
@@ -32,5 +34,21 @@ public class MyVitalityResp {
 
     public void setList(List<Vitality> list) {
         this.list = list;
+    }
+
+    public Double getNeedVitalityValue() {
+        return needVitalityValue;
+    }
+
+    public void setNeedVitalityValue(Double needVitalityValue) {
+        this.needVitalityValue = needVitalityValue;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

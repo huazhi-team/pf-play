@@ -11,7 +11,6 @@
     <include refid="Base_Column_List" />
     from u_task_have
     where 1=1
-
     <if test="memberId != null and memberId != '' " >
       and member_id = #{memberId}
     </if>
@@ -272,6 +271,10 @@
     </if>
     order by task_level desc
   </select>
+
+
+
+
 
 
 </mapper>

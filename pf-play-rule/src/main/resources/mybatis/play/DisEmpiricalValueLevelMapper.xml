@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pf.play.rule.core.mapper.DisEmpiricalValueLevelMapper">
   <sql id="Base_Column_List">
-    id, empirical_id, empirical_name, transaction_number, transaction_fee, create_time, 
-    update_time, is_valid,remarks
+    id, empirical_id,empirical_level ,empirical_name, transaction_number, transaction_fee, create_time,
+    update_time, is_valid,remarks,upgrade_num
   </sql>
   <select id="selectByPrimaryKey"  resultType="com.pf.play.rule.core.model.DisEmpiricalValueLevel">
     select 

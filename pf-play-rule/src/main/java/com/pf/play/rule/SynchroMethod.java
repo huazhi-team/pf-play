@@ -226,4 +226,22 @@ public class SynchroMethod {
         return   vcMemberResource;
     }
 
+    /**
+     * @Description: 如果有数据的情况下修改表下表信息进行
+     * @param memberId
+    * @param type
+     * @return com.pf.play.rule.core.model.UdailyTaskStat
+     * @author long
+     * @date 2019/12/9 19:46
+     */
+    public  static  UdailyTaskStat getUqdateUdailyTaskStat(Integer memberId){
+        UdailyTaskStat record  =  new UdailyTaskStat();
+        record.setCurday(DateUtil.getDayNumber(new Date()));
+        record.setMemberId(memberId);
+        record.setUpdateTime(new Date());
+        record.setAcceptNumber(0);
+        record.setLookCommodityNum(0);
+        return   record;
+    }
+
 }

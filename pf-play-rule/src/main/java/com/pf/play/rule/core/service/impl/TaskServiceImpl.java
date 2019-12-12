@@ -2,6 +2,7 @@ package com.pf.play.rule.core.service.impl;
 
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
+import com.pf.play.rule.SynchroMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
@@ -805,5 +806,30 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             return true;
         }
         return false;
+    }
+
+    @Override
+    public UdailyTaskStat getMemberUDailyTaskStat(Integer memberId) {
+        UdailyTaskStat  udailyTaskStat  = TaskMethod.changUdailyTaskStat(memberId);
+        UdailyTaskStat  udailyTaskStat1 = udailyTaskStatMapper.selectByPrimaryKey(udailyTaskStat);
+        if(udailyTaskStat1==null){
+            UdailyTaskStat udailyTaskStat2   = SynchroMethod.getUqdateUdailyTaskStat(memberId);
+            udailyTaskStatMapper.insertSelective(udailyTaskStat2);
+            udailyTaskStat1   =  TaskMethod.initUdailyTaskStat(memberId);
+        }
+        return udailyTaskStat1;
+    }
+
+    @Override
+    public UTaskHave getMaxUTaskHave(Integer memberId) {
+        UTaskHave   uTaskHave  =  TaskMethod.changUTaskHave(memberId);
+        List<UTaskHave>  list  =  uTaskHaveMapper.selectByPrimaryKey(uTaskHave);
+        uTaskHave  =  TaskMethod.changUTaskHaveMax(list);
+        return uTaskHave;
+    }
+
+    @Override
+    public UMasonryListLog getUMasonryListLog(Integer memberId) {
+        return null;
     }
 }

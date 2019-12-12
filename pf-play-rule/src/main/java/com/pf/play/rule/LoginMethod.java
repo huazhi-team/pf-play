@@ -123,4 +123,17 @@ public class LoginMethod {
         return vcThirdParty;
     }
 
+    /**
+     * @Description: 根据openId 查询
+     * @param wxOpenid
+     * @return com.pf.play.rule.core.model.VcThirdParty
+     * @author long
+     * @date 2019/12/12 17:02
+     */
+    public  static VcThirdParty   changvxOpenId(String  wxOpenid){
+        VcThirdParty  vcThirdParty  = new VcThirdParty();
+        vcThirdParty.setWxOpenid(wxOpenid);
+        return   vcThirdParty;
+    }
+
 }

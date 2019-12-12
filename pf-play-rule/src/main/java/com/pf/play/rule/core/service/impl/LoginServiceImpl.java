@@ -48,8 +48,15 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
         if(!flag){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.U000001.geteCode(),ErrorCode.ENUM_ERROR.U000001.geteDesc());
         }
+        VcThirdParty  vcThirdParty1  =  LoginMethod.changvxOpenId(loginReq.getWxOpenId());
+        vcThirdParty1 = vcThirdPartyMapper.selectByPrimaryKey(vcThirdParty1);//该用户是否注册
 
+        if(vcThirdParty1==null){
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.U000000.geteCode(),ErrorCode.ENUM_ERROR.U000000.geteDesc());
+        }
         VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenId(),LoginMethod.getToken());
+
+
         vcThirdPartyMapper.updateByWxOpenId(vcThirdParty);
 
         /**************是否有用户信息**************/

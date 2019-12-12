@@ -10,6 +10,7 @@ import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.LoginMethod;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
+import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @Description TODO
@@ -41,7 +43,6 @@ public class LoginController {
     public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
         try{
             log.info("----------:进来啦!");
-
             UserInfoResp userInfoResp= ComponentUtil.loginService.login(loginReq);
             if(userInfoResp==null){
                 return JsonResult.failedResult("wrong for data!",1+"");
@@ -50,8 +51,8 @@ public class LoginController {
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             return JsonResult.successResult(loginResp);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 

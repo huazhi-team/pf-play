@@ -76,7 +76,4 @@ public interface TaskService  <T> extends BaseService<T> {
     boolean  checkLevel5(Integer memberId);
 
 
-
-
-
 }

@@ -243,4 +243,19 @@ public class TaskController {
         }
     }
 
+
+
+    @PostMapping("/todayTaskInfo")
+    public JsonResult<Object> todayTaskInfo(HttpServletRequest request, HttpServletResponse response,UserCommonReq  userCommonReq){
+        try{
+            List<DisWisemanInfo>  list  = new ArrayList<>();
+            log.info("----------:todayTaskInfo!");
+
+            return JsonResult.successResult(null);
+        }catch (Exception e){
+            Map<String,String> map= ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
+
 }

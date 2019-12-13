@@ -246,6 +246,10 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         registerResp.setTimeStamp(time);
         String  amsVerification = RandomUtil.getRandom(6);
         ComponentUtil.redisService.set((phone+time),amsVerification,Constant.EFFECTIVE_IDENT_CODE_TIME, TimeUnit.MINUTES);
+        boolean  flag = SendSms.aliSendSms(phone,amsVerification);
+        if(!flag){
+            registerResp=null;
+        }
         return registerResp;
     }
 

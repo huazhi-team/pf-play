@@ -86,6 +86,11 @@ public class RegisterController {
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
             RegisterResp registerResp = ComponentUtil.registerService.getSmsVerification(req.getPhone());
+
+            if(registerResp==null){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000004.geteCode(),ErrorCode.ENUM_ERROR.R000004.geteDesc());
+            }
+
             return JsonResult.successResult(registerResp);
         }catch (Exception e){
             e.printStackTrace();

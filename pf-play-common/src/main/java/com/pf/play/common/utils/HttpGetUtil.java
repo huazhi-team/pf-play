@@ -134,6 +134,7 @@ public class HttpGetUtil {
             // 发送POST请求,必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
+            conn.setConnectTimeout(3000);
             // 获取URLConnection对象对应的输出流
             out = new PrintWriter(conn.getOutputStream());
             // 发送请求参数

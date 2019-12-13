@@ -161,9 +161,9 @@ public class MyMethod {
      * @author long
      * @date 2019/11/27 21:45
      */
-    public static MyVitalityResp toMyVitalityListResp(Double VitalityValue,List<Vitality>  vitalityList){
+    public static MyVitalityResp toMyVitalityListResp(Double VitalityValue,List<Vitality>  vitalityList,VcMemberResource vcMemberResource){
         MyVitalityResp myVitalityResp  =   new MyVitalityResp();
-        myVitalityResp.setVitalityValue(VitalityValue);
+        myVitalityResp.setLevel(vcMemberResource.getDarenLevel());
         myVitalityResp.setList(vitalityList);
         return myVitalityResp;
     }

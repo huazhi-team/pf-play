@@ -196,12 +196,13 @@ public class UserController {
             }
 
             List<Vitality>  vitalityList  =  ComponentUtil.userInfoSevrice.getMyDisVitalityValue(memberId);
+            VcMemberResource   vcMemberResource1 = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
 
             MyVitalityResp myVitalityResp   =null;
             if(vcMemberResource==null){
-                myVitalityResp = MyMethod.toMyVitalityListResp(0D,vitalityList);
+                myVitalityResp = MyMethod.toMyVitalityListResp(0D,vitalityList, vcMemberResource1 );
             }else{
-                myVitalityResp = MyMethod.toMyVitalityListResp(vcMemberResource.getEmpiricalValue(),vitalityList);
+                myVitalityResp = MyMethod.toMyVitalityListResp(vcMemberResource.getEmpiricalValue(),vitalityList,  vcMemberResource1 );
             }
             return JsonResult.successResult(myVitalityResp);
         }catch (Exception e){

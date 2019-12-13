@@ -37,7 +37,7 @@ public class Constant {
 
 
     /***********注册验证码有效时间(单位分钟)*********/
-    public  static  int  EFFECTIVE_IDENT_CODE_TIME =1;
+    public  static  int  EFFECTIVE_IDENT_CODE_TIME =80000;
 
     /***********token 过期时间(单位 天 )*********/
     public  static  int  TOKEN_EXPIRE    =  15 ;

@@ -1,5 +1,6 @@
 package com.pf.play.rule;
 
+import com.pf.play.common.utils.HttpGetUtil;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.uesr.LoginResp;
@@ -134,6 +135,19 @@ public class LoginMethod {
         VcThirdParty  vcThirdParty  = new VcThirdParty();
         vcThirdParty.setWxOpenid(wxOpenid);
         return   vcThirdParty;
+    }
+
+    public  static  void  asyncLogin (String  url,String param){
+        new Thread() {
+            public void run() {
+                try{
+                    HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
+                }catch (Exception e ){
+                    e.printStackTrace();
+                }
+
+            }
+        }.start();
     }
 
 }

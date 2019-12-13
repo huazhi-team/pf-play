@@ -8,6 +8,7 @@ import com.pf.play.model.protocol.request.uesr.SynchronousReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
+import com.pf.play.rule.LoginMethod;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.SynchroMethod;
 import com.pf.play.rule.TaskMethod;
@@ -260,13 +261,18 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             VcMember  vcMember   =TaskMethod.getMember(memberId);
             VcMember  vcMember1  = vcMemberMapper.selectByPrimaryKey(vcMember);
             String   param = MyMethod.toSynchronousResp(vcMember1,token);
-            String   rs = HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
-            SynchronousReq req =JSON.parseObject(rs, SynchronousReq.class);
-            if(req !=null){
-                if(req.getErrcode()==0){
-                    flag=true;
-                }
-            }
+
+
+            /*************/
+            LoginMethod.asyncLogin(Constant.USER_SYNCHRONOUS_URL, param);
+            flag=true;
+//            String   rs = HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
+//            SynchronousReq req =JSON.parseObject(rs, SynchronousReq.class);
+//            if(req !=null){
+//                if(req.getErrcode()==0){
+//                    flag=true;
+//                }
+//            }
         }catch (Exception  e){
             e.printStackTrace();
         }

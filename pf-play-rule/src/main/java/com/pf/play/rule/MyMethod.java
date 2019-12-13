@@ -240,6 +240,10 @@ public class MyMethod {
         myUserInfoResp.setSex(vcMember.getSex());
         myUserInfoResp.setDarenLevel(vcMemberResource.getDarenLevel());
         myUserInfoResp.setEmpiricalLevel(vcMemberResource.getEmpiricalLevel());
+        myUserInfoResp.setMasonry(vcMemberResource.getDayMasonry());
+        myUserInfoResp.setActiveValue(vcMemberResource.getActiveValue());
+        myUserInfoResp.setEmpiricalValue(vcMemberResource.getEmpiricalValue());
+        myUserInfoResp.setIsCertif(vcMember.getIsCertification());
         return myUserInfoResp;
     }
 

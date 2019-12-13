@@ -200,4 +200,17 @@
     </if>
     order by  create_time
   </select>
+
+
+
+  <select id="selectByInfoMax" resultType="com.pf.play.rule.core.model.UMasonryListLog"  >
+    select
+    <include refid="Base_Column_List" />
+    from u_masonry_list_log
+    where 1=1
+    <if test="memberId != null" >
+      and  member_id = #{memberId}
+    </if>
+    order by  create_time
+  </select>
 </mapper>

@@ -15,6 +15,10 @@ public class MyUserInfoResp {
     private String birthday;
     private String province;
     private String city;
+    private Double empiricalValue;
+    private Double activeValue;
+    private Double masonry;
+    private Integer isCertif;
 
     public String getNickname() {
         return nickname;
@@ -78,5 +82,37 @@ public class MyUserInfoResp {
 
     public void setEmpiricalLevel(Integer empiricalLevel) {
         this.empiricalLevel = empiricalLevel;
+    }
+
+    public Double getEmpiricalValue() {
+        return empiricalValue;
+    }
+
+    public void setEmpiricalValue(Double empiricalValue) {
+        this.empiricalValue = empiricalValue;
+    }
+
+    public Double getActiveValue() {
+        return activeValue;
+    }
+
+    public void setActiveValue(Double activeValue) {
+        this.activeValue = activeValue;
+    }
+
+    public Double getMasonry() {
+        return masonry;
+    }
+
+    public void setMasonry(Double masonry) {
+        this.masonry = masonry;
+    }
+
+    public Integer getIsCertif() {
+        return isCertif;
+    }
+
+    public void setIsCertif(Integer isCertif) {
+        this.isCertif = isCertif;
     }
 }

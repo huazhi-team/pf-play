@@ -69,6 +69,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Autowired
     private DisWisemanInfoMapper disWisemanInfoMapper;
 
+    @Autowired
+    private UMasonryListLogMapper uMasonryListLogMapper;
+
 
 
 
@@ -830,6 +833,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public UMasonryListLog getUMasonryListLog(Integer memberId) {
+        UMasonryListLog   uMasonryListLog = new UMasonryListLog();
+//        uMasonryListLogMapper.selectByPrimaryKey()
         return null;
     }
 }

@@ -81,4 +81,9 @@ public interface TaskService  <T> extends BaseService<T> {
 
     UMasonryListLog  getUMasonryListLog(Integer memberId);
 
+    UTaskHave   getUTaskHave(Integer memberId);
+
+
+    Double   grantReward(VcMemberResource  vcMemberResource,List<UTaskHave>  list);
+
 }

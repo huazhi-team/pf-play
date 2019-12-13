@@ -22,15 +22,15 @@ public class MyFriendsResp {
     /**
      * 团队总活力值
      */
-    private Float  teamActive;
+    private Double  teamActive;
     /**
      * 英雄活力值
      */
-    private Float  heroActive;
+    private Double  heroActive;
     /**
      * 联盟活力值
      */
-    private Float  allianceActive;
+    private Double  allianceActive;
     /**
      * 我的直推人数
      */
@@ -61,27 +61,27 @@ public class MyFriendsResp {
         this.teamPeople = teamPeople;
     }
 
-    public Float getTeamActive() {
+    public Double getTeamActive() {
         return teamActive;
     }
 
-    public void setTeamActive(Float teamActive) {
+    public void setTeamActive(Double teamActive) {
         this.teamActive = teamActive;
     }
 
-    public Float getHeroActive() {
+    public Double getHeroActive() {
         return heroActive;
     }
 
-    public void setHeroActive(Float heroActive) {
+    public void setHeroActive(Double heroActive) {
         this.heroActive = heroActive;
     }
 
-    public Float getAllianceActive() {
+    public Double getAllianceActive() {
         return allianceActive;
     }
 
-    public void setAllianceActive(Float allianceActive) {
+    public void setAllianceActive(Double allianceActive) {
         this.allianceActive = allianceActive;
     }
 

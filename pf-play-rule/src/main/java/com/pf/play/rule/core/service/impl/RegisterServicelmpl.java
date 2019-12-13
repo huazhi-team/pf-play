@@ -162,12 +162,12 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
             return false;
         }
         /*********   DeviceId  是否被注册 ********/
-        VcMember vcMember = new VcMember();
-        vcMember.setDeviceId(registerReq.getDeviceId());
-        VcMember  rsMember = vcMemberMapper.selectByPrimaryKey(vcMember);
-        if(null!=rsMember){
-            return false;
-        }
+//        VcMember vcMember = new VcMember();
+//        vcMember.setDeviceId(registerReq.getDeviceId());
+//        VcMember  rsMember = vcMemberMapper.selectByPrimaryKey(vcMember);
+//        if(null!=rsMember){
+//            return false;
+//        }
         return  flag;
     }
 

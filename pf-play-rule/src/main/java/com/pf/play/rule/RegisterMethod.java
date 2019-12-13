@@ -168,7 +168,7 @@ public class RegisterMethod {
      * @date 2019/11/25 10:27
      */
     public  static VcMemberResource  insertVcMemberResource(Integer memberId){
-        Double  activeValue = Double.valueOf("1");
+        Double  activeValue = Double.valueOf("0");
         Date     createdate =  DateUtil.currentTimestamp();
         VcMemberResource   vcMemberResourceModel  =  new  VcMemberResource();
         VcMemberGive   vcMemberGive  =  RegisterSingleton.getInstance().getVcMemberGive();

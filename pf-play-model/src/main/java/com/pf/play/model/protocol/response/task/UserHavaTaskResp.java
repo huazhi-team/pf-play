@@ -39,21 +39,21 @@ public class UserHavaTaskResp {
      *
      * @mbggenerated
      */
-    private  Float everyNum;
+    private  Double everyNum;
 
     /**
      * 总产量
      *
      * @mbggenerated
      */
-    private  Float totalNum;
+    private  Double totalNum;
 
     /**
      * 已经获取砖石
      *
      * @mbggenerated
      */
-    private  Float alreadyNum;
+    private  Double alreadyNum;
 
     /**
      * 点赞
@@ -74,7 +74,7 @@ public class UserHavaTaskResp {
      *
      * @mbggenerated
      */
-    private Float surplusNum;
+    private Double surplusNum;
 
     /**
      * 活跃值
@@ -116,20 +116,28 @@ public class UserHavaTaskResp {
         this.endTimeStr = endTimeStr;
     }
 
-    public Float getEveryNum() {
+    public Double getEveryNum() {
         return everyNum;
     }
 
-    public void setEveryNum(Float everyNum) {
+    public void setEveryNum(Double everyNum) {
         this.everyNum = everyNum;
     }
 
-    public Float getTotalNum() {
+    public Double getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(Float totalNum) {
+    public void setTotalNum(Double totalNum) {
         this.totalNum = totalNum;
+    }
+
+    public Double getAlreadyNum() {
+        return alreadyNum;
+    }
+
+    public void setAlreadyNum(Double alreadyNum) {
+        this.alreadyNum = alreadyNum;
     }
 
     public String getWhere1() {
@@ -148,20 +156,12 @@ public class UserHavaTaskResp {
         this.where2 = where2;
     }
 
-    public Float getSurplusNum() {
+    public Double getSurplusNum() {
         return surplusNum;
     }
 
-    public void setSurplusNum(Float surplusNum) {
+    public void setSurplusNum(Double surplusNum) {
         this.surplusNum = surplusNum;
-    }
-
-    public Float getAlreadyNum() {
-        return alreadyNum;
-    }
-
-    public void setAlreadyNum(Float alreadyNum) {
-        this.alreadyNum = alreadyNum;
     }
 
     public Float getActiveValue() {

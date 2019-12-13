@@ -7,10 +7,7 @@ import com.pf.play.model.protocol.request.task.TaskReq;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
-import com.pf.play.model.protocol.response.task.GiveTaskResp;
-import com.pf.play.model.protocol.response.task.ReceiveTaskResp;
-import com.pf.play.model.protocol.response.task.UserHavaTaskResp;
-import com.pf.play.model.protocol.response.task.UserHistoryTaskResp;
+import com.pf.play.model.protocol.response.task.*;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
@@ -124,7 +121,7 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 17:19
      */
-    public static UTaskHave   changeAddUTaskHave(Integer memberId,Integer taskId,Integer validityDay,Float totalNum,Integer taskLevel){
+    public static UTaskHave   changeAddUTaskHave(Integer memberId,Integer taskId,Integer validityDay,Double totalNum,Integer taskLevel){
         UTaskHave uTaskHave = new UTaskHave();
         DateModel dateModel= TaskMethod.getDate();
         Date endTime = DateUtil.getDateBetween(dateModel.getCreateTime(),validityDay);
@@ -690,7 +687,7 @@ public class TaskMethod {
                     userHavaTaskResp.setEveryNum(disTaskType.getEveryNum());
                     userHavaTaskResp.setTaskName(disTaskType.getTaskName());
                     if(uTaskHave.getAlreadyNum()==0){
-                        userHavaTaskResp.setSurplusNum(30.F);
+                        userHavaTaskResp.setSurplusNum(30D);
                     }else{
                         userHavaTaskResp.setSurplusNum(disTaskType.getTaskCircleDay()-(uTaskHave.getAlreadyNum()/disTaskType.getEveryNum()));
                     }
@@ -746,7 +743,7 @@ public class TaskMethod {
                     userHistoryTaskResp.setTotalNum(disTaskType.getTotalNum());
                     userHistoryTaskResp.setTaskName(disTaskType.getTaskName());
                     if(uTaskHave.getAlreadyNum()==0){
-                        userHistoryTaskResp.setSurplusNum(30.F);
+                        userHistoryTaskResp.setSurplusNum(30D);
                     }else{
                         userHistoryTaskResp.setSurplusNum(disTaskType.getTaskCircleDay()-(uTaskHave.getAlreadyNum()/disTaskType.getEveryNum()));
                     }
@@ -763,7 +760,7 @@ public class TaskMethod {
             }
             for(DisTaskAttribute disTaskAttribute:rewardAttributeList){
                 if(disTaskAttribute.getTaskId()==uTaskHave.getTaskId()){
-                    userHistoryTaskResp.setActiveValue(Float.parseFloat(disTaskAttribute.getKey1()));
+                    userHistoryTaskResp.setActiveValue(Double.valueOf(disTaskAttribute.getKey1()));
                     break;
                 }
             }
@@ -1159,8 +1156,110 @@ public class TaskMethod {
     }
 
 
+    /**
+     * @Description: TODO
+     * @param uTaskHave  用户最大值信息
+    * @param uMasonryListLog  用户访问次数信息
+    * @param udailyTaskStat   用户剩余信息
+     * @return com.pf.play.model.protocol.response.task.TodayTaskResp
+     * @author long
+     * @date 2019/12/13 17:18
+     */
+    public  static TodayTaskResp changTodayTaskResp(UTaskHave  uTaskHave,UMasonryListLog uMasonryListLog,
+                                                    UdailyTaskStat udailyTaskStat,UTaskHave  uTaskHave1){
 
 
+        TodayTaskResp  todayTaskResp  = new TodayTaskResp();
+
+        todayTaskResp.setAcceptNumber(udailyTaskStat.getAcceptNumber());
+        todayTaskResp.setLookCommodityNum(udailyTaskStat.getLookCommodityNum());
+        todayTaskResp.setIsComplete(1);
+
+        List<DisTaskAttribute>  list = TaskSingleton.getInstance().getAttributeTypeList1();
+        for(DisTaskAttribute  disTaskAttribute  : list){
+            if(uTaskHave.getTaskId()==disTaskAttribute.getTaskId()){
+                todayTaskResp.setLookCommodityNumCount(Integer.parseInt(disTaskAttribute.getKey1()));
+                todayTaskResp.setAcceptNumberCount(Integer.parseInt(disTaskAttribute.getKey2()));
+                if(udailyTaskStat.getAcceptNumber()>Integer.parseInt(disTaskAttribute.getKey1())&&udailyTaskStat.getLookCommodityNum()>=Integer.parseInt(disTaskAttribute.getKey2())){
+                    todayTaskResp.setIsComplete(2);
+                }
+                break;
+            }
+        }
+
+
+        todayTaskResp.setAlreadyNum(uTaskHave1.getAlreadyNumCount());
+        todayTaskResp.setSurplusNum(uTaskHave1.getSurplusNumCount());
+        if(uMasonryListLog==null){
+            todayTaskResp.setUpReward(0D);
+        }else{
+            todayTaskResp.setUpReward(uMasonryListLog.getMasonryNum());
+        }
+        return   todayTaskResp;
+    }
+
+
+    /**
+     * @Description: 组合查询信息
+     * @param memberId
+     * @return com.pf.play.rule.core.model.UMasonryListLog
+     * @author long
+     * @date 2019/12/13 16:24
+     */
+    public   static  UTaskHave  toUTaskHave(Integer memberId){
+        UTaskHave   uTaskHave  =  new UTaskHave();
+        uTaskHave.setMemberId(memberId);
+        return uTaskHave;
+    }
+
+    /**
+     * @Description: 组合查询信息
+     * @param memberId
+     * @return com.pf.play.rule.core.model.UMasonryListLog
+     * @author long
+     * @date 2019/12/13 16:24
+     */
+    public   static  UMasonryListLog  toUMasonryListLog(Integer memberId){
+        UMasonryListLog   uMasonryListLog  =  new UMasonryListLog();
+        uMasonryListLog.setMemberId(memberId);
+        return uMasonryListLog;
+    }
+
+
+    /**
+     * @Description: 用户每天任务
+     * @param memberId
+    * @param list
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/12 14:23
+     */
+    public static UdailyTaskStat   changUdailyTaskStatDay(Integer memberId){
+        UdailyTaskStat  udailyTaskStat =  new UdailyTaskStat();
+        udailyTaskStat.setMemberId(memberId);
+        udailyTaskStat.setCurday(DateUtil.getDayNumber(new Date()));
+        return  udailyTaskStat;
+    }
+
+    /**
+     * @Description: 计算有效的任务信息
+     * @param list
+     * @return java.lang.Double
+     * @author long
+     * @date 2019/12/13 20:00
+     */
+    public static Double statTaskMasonry(List<UTaskHave>  list ){
+        Double  masonry =0D;
+        List<DisTaskType> taskList = TaskSingleton.getInstance().getDisTaskTypeList();
+        for(UTaskHave  uTaskHave: list){
+            for(DisTaskType disTaskType:taskList){
+                if(disTaskType.getTaskId()==uTaskHave.getTaskId()){
+                    masonry=masonry+disTaskType.getEveryNum();
+                }
+            }
+        }
+        return  masonry;
+    }
 
 
 

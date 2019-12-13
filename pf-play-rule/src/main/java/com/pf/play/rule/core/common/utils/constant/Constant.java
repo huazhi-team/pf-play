@@ -52,5 +52,7 @@ public class Constant {
     /***********同步上下级信息详细信息**********/
     public  static  String    PRARENT_SYNCHRONOUS_URL="http://192.168.1.25:9093/qhr/api/syncPrarentId";
 
+    public  static  Double    ACTIVE_VALUE_MASONRY =  0.4 ;
+
 
 }

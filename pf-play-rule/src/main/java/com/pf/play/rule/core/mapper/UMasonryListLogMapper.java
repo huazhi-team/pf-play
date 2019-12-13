@@ -21,4 +21,7 @@ public interface UMasonryListLogMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(UMasonryListLog record);
 
     int updateByPrimaryKey(UMasonryListLog record);
+
+    UMasonryListLog selectByInfoMax(UMasonryListLog record);
+
 }

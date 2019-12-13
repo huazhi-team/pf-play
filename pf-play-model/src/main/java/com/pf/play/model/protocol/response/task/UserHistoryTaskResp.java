@@ -41,14 +41,14 @@ public class UserHistoryTaskResp {
      *
      * @mbggenerated
      */
-    private  Float totalNum;
+    private  Double totalNum;
 
     /**
      * 已经获取砖石
      *
      * @mbggenerated
      */
-    private  Float alreadyNum;
+    private  Double alreadyNum;
 
     /**
      * 点赞
@@ -69,14 +69,14 @@ public class UserHistoryTaskResp {
      *
      * @mbggenerated
      */
-    private Float surplusNum;
+    private Double surplusNum;
 
     /**
      * 活跃值
      *
      * @mbggenerated
      */
-    private Float  activeValue;
+    private Double  activeValue;
 
     public Integer getTaskId() {
         return taskId;
@@ -110,19 +110,19 @@ public class UserHistoryTaskResp {
         this.endTimeStr = endTimeStr;
     }
 
-    public Float getTotalNum() {
+    public Double getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(Float totalNum) {
+    public void setTotalNum(Double totalNum) {
         this.totalNum = totalNum;
     }
 
-    public Float getAlreadyNum() {
+    public Double getAlreadyNum() {
         return alreadyNum;
     }
 
-    public void setAlreadyNum(Float alreadyNum) {
+    public void setAlreadyNum(Double alreadyNum) {
         this.alreadyNum = alreadyNum;
     }
 
@@ -142,19 +142,19 @@ public class UserHistoryTaskResp {
         this.where2 = where2;
     }
 
-    public Float getSurplusNum() {
+    public Double getSurplusNum() {
         return surplusNum;
     }
 
-    public void setSurplusNum(Float surplusNum) {
+    public void setSurplusNum(Double surplusNum) {
         this.surplusNum = surplusNum;
     }
 
-    public Float getActiveValue() {
+    public Double getActiveValue() {
         return activeValue;
     }
 
-    public void setActiveValue(Float activeValue) {
+    public void setActiveValue(Double activeValue) {
         this.activeValue = activeValue;
     }
 }

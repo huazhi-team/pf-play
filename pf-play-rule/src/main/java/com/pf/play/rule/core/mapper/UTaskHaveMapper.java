@@ -22,4 +22,8 @@ public interface UTaskHaveMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(UTaskHave record);
 
     int updateByPrimaryKey(UTaskHave record);
+
+    UTaskHave selectAlreadyNumCount(UTaskHave record);
+
+    UTaskHave selectSurplusNumCount(UTaskHave record);
 }

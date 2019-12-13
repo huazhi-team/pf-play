@@ -27,14 +27,14 @@ public class DisTaskType {
      *
      * @mbggenerated
      */
-    private Float holdNumber;
+    private Double holdNumber;
 
     /**
      * 购买所需虚拟资源  CV单位
      *
      * @mbggenerated
      */
-    private Float needResource;
+    private Double needResource;
 
     /**
      * 任务周期
@@ -62,14 +62,14 @@ public class DisTaskType {
      *
      * @mbggenerated
      */
-    private Float everyNum;
+    private Double everyNum;
 
     /**
      * 总产数
      *
      * @mbggenerated
      */
-    private Float totalNum;
+    private Double totalNum;
 
     /**
      * 创建时间
@@ -151,21 +151,6 @@ public class DisTaskType {
         this.taskName = taskName;
     }
 
-    public Float getHoldNumber() {
-        return holdNumber;
-    }
-
-    public void setHoldNumber(Float holdNumber) {
-        this.holdNumber = holdNumber;
-    }
-
-    public Float getNeedResource() {
-        return needResource;
-    }
-
-    public void setNeedResource(Float needResource) {
-        this.needResource = needResource;
-    }
 
     public Integer getTaskCircleDay() {
         return taskCircleDay;
@@ -191,21 +176,6 @@ public class DisTaskType {
         this.provideType = provideType;
     }
 
-    public Float getEveryNum() {
-        return everyNum;
-    }
-
-    public void setEveryNum(Float everyNum) {
-        this.everyNum = everyNum;
-    }
-
-    public Float getTotalNum() {
-        return totalNum;
-    }
-
-    public void setTotalNum(Float totalNum) {
-        this.totalNum = totalNum;
-    }
 
     public Integer getCreateTime() {
         return createTime;
@@ -269,5 +239,37 @@ public class DisTaskType {
 
     public void setActiveValue(String activeValue) {
         this.activeValue = activeValue;
+    }
+
+    public Double getHoldNumber() {
+        return holdNumber;
+    }
+
+    public void setHoldNumber(Double holdNumber) {
+        this.holdNumber = holdNumber;
+    }
+
+    public Double getNeedResource() {
+        return needResource;
+    }
+
+    public void setNeedResource(Double needResource) {
+        this.needResource = needResource;
+    }
+
+    public Double getEveryNum() {
+        return everyNum;
+    }
+
+    public void setEveryNum(Double everyNum) {
+        this.everyNum = everyNum;
+    }
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
     }
 }

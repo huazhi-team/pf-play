@@ -7,7 +7,9 @@ import com.pf.play.model.protocol.request.uesr.UpdateUserReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
+import com.pf.play.model.protocol.response.task.ExeTodayTaskResp;
 import com.pf.play.model.protocol.response.task.GiveTaskResultResp;
+import com.pf.play.model.protocol.response.task.TodayTaskResp;
 import com.pf.play.model.protocol.response.uesr.MyEmpiricalResp;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
@@ -313,6 +315,94 @@ public class UserController {
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
+
+
+    /**
+     * @Description: 今日任务状态
+     * @param request
+    * @param response
+    * @param userCommonReq
+     * @return com.pf.play.common.utils.JsonResult<java.lang.Object>
+     * @author long
+     * @date 2019/12/13 18:56
+     */
+    @PostMapping("/myTodayTask")
+    public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+
+
+        JsonResult<Object>     result  = null;
+        try{
+            log.info("----------:myTodayTask!");
+            TodayTaskResp   todayTaskResp  = new TodayTaskResp();
+            Integer   memberId = 0;
+            boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+
+            if(memberId==0){
+                return JsonResult.successResult(todayTaskResp);
+            }
+
+            //最大的信息
+            UTaskHave             uTaskHaveMax  = ComponentUtil.taskService.getMaxUTaskHave(memberId);
+
+            UTaskHave             uTaskHave  = ComponentUtil.taskService.getUTaskHave(memberId);
+            //用户的点赞详情
+            UMasonryListLog  uMasonryListLog = ComponentUtil.taskService.getUMasonryListLog(memberId);
+            //用户剩余信息
+//            UTaskHave   uTaskHave  = ComponentUtil.taskService.getMemberUDailyTaskStat(memberId);
+
+            UdailyTaskStat udailyTaskStat =  ComponentUtil.taskService.getMemberUDailyTaskStat(memberId);
+
+            todayTaskResp = TaskMethod.changTodayTaskResp(uTaskHaveMax,uMasonryListLog,udailyTaskStat,uTaskHave);
+
+            return JsonResult.successResult(todayTaskResp);
+        }catch (Exception e){
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
+
+
+
+    /**
+     * @Description: 今日任务领取
+     * @param request
+    * @param response
+    * @param userCommonReq
+     * @return com.pf.play.common.utils.JsonResult<java.lang.Object>
+     * @author long
+     * @date 2019/12/13 18:56
+     */
+    @PostMapping("/exeTodayTask")
+    public JsonResult<Object> exeTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+        JsonResult<Object>     result  = null;
+        try{
+            log.info("----------:exeTodayTask!");
+            TodayTaskResp   todayTaskResp  = new TodayTaskResp();
+            Integer   memberId = 0;
+            boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+            if(memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
+
+            VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
+            List<UTaskHave>  list  = ComponentUtil.taskService.getMyTask(memberId);
+
+            Double  masonry=ComponentUtil.taskService.grantReward(vcMemberResource,list);
+            ExeTodayTaskResp  exeTodayTaskResp =new ExeTodayTaskResp();
+            exeTodayTaskResp.setMasonry(masonry);
+            return JsonResult.successResult(exeTodayTaskResp);
+        }catch (Exception e){
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
+
 
 
 

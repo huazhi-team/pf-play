@@ -76,6 +76,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
 
 
+
     @Override
     public BaseDao<T> getDao() {
         return userInfoMapper;
@@ -811,14 +812,24 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         return false;
     }
 
+//    @Override
+//    public UTaskHave getMemberUDailyTaskStat(Integer memberId) {
+//        UTaskHave  uTaskHave = TaskMethod.toUTaskHave(memberId);
+//        UTaskHave  uTaskHave1  = uTaskHaveMapper.selectAlreadyNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
+//        UTaskHave  uTaskHave2  = uTaskHaveMapper.selectSurplusNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
+//        uTaskHave.setAlreadyNumCount(uTaskHave1.getAlreadyNumCount());
+//        uTaskHave.setSurplusNumCount(uTaskHave2.getSurplusNumCount());
+//        return uTaskHave;
+//    }
+
     @Override
     public UdailyTaskStat getMemberUDailyTaskStat(Integer memberId) {
-        UdailyTaskStat  udailyTaskStat  = TaskMethod.changUdailyTaskStat(memberId);
-        UdailyTaskStat  udailyTaskStat1 = udailyTaskStatMapper.selectByPrimaryKey(udailyTaskStat);
+        UdailyTaskStat udailyTaskStat = TaskMethod.changUdailyTaskStat(memberId);
+        UdailyTaskStat udailyTaskStat1 = udailyTaskStatMapper.selectByPrimaryKey(udailyTaskStat);
         if(udailyTaskStat1==null){
-            UdailyTaskStat udailyTaskStat2   = SynchroMethod.getUqdateUdailyTaskStat(memberId);
+            UdailyTaskStat udailyTaskStat2 = SynchroMethod.getUqdateUdailyTaskStat(memberId);
             udailyTaskStatMapper.insertSelective(udailyTaskStat2);
-            udailyTaskStat1   =  TaskMethod.initUdailyTaskStat(memberId);
+            udailyTaskStat1 = TaskMethod.initUdailyTaskStat(memberId);
         }
         return udailyTaskStat1;
     }
@@ -833,8 +844,34 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public UMasonryListLog getUMasonryListLog(Integer memberId) {
-        UMasonryListLog   uMasonryListLog = new UMasonryListLog();
-//        uMasonryListLogMapper.selectByPrimaryKey()
-        return null;
+        UMasonryListLog  toUMasonryListLog = TaskMethod.toUMasonryListLog(memberId);
+        return uMasonryListLogMapper.selectByInfoMax(toUMasonryListLog);
+    }
+
+    @Override
+    public UTaskHave getUTaskHave(Integer memberId) {
+        UTaskHave  uTaskHave = TaskMethod.toUTaskHave(memberId);
+        UTaskHave  uTaskHave1  = uTaskHaveMapper.selectAlreadyNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
+        UTaskHave  uTaskHave2  = uTaskHaveMapper.selectSurplusNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
+        uTaskHave.setAlreadyNumCount(uTaskHave1.getAlreadyNumCount());
+        uTaskHave.setSurplusNumCount(uTaskHave2.getSurplusNumCount());
+        return uTaskHave;
+    }
+
+    @Override
+    public Double grantReward(VcMemberResource  vcMemberResource,List<UTaskHave>  list) {
+        Double  activeValue=vcMemberResource.getActiveValue()*Constant.ACTIVE_VALUE_MASONRY;
+        Double  taskTask = TaskMethod.statTaskMasonry(list);
+        UMasonryListLog  uMasonryListLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE2,Constant.TASK_SYMBOL_TYPE1,activeValue);
+        UMasonryListLog  taskTaskLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE1,Constant.TASK_SYMBOL_TYPE1,taskTask);
+        if(activeValue!=0){
+            uMasonryListLogMapper.insertSelective(uMasonryListLog);
+        }
+        if(taskTask!=0){
+            uMasonryListLogMapper.insertSelective(taskTaskLog);
+        }
+
+
+        return activeValue+taskTask;
     }
 }

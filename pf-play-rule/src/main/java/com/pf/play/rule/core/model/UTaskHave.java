@@ -60,26 +60,26 @@ public class UTaskHave {
      *
      * @mbggenerated
      */
-    private Float alreadyNum;
+    private Double alreadyNum;
 
     /**
      * 剩余生产量
      *
      * @mbggenerated
      */
-    private Float surplusNum;
+    private Double surplusNum;
     /**
      * 总产数
      *
      * @mbggenerated
      */
-    private Float totalNum;
+    private Double totalNum;
     /**
      * 赠送活跃度
      *
      * @mbggenerated
      */
-    private Float giveActiveNum;
+    private Double giveActiveNum;
 
     /**
      * 创建日期：存的日期格式20160530
@@ -153,6 +153,10 @@ public class UTaskHave {
 
     private DisTaskAttribute  disTaskAttribute;
 
+    private Double alreadyNumCount;
+
+    private Double surplusNumCount;
+
     public Integer getTaskCount() {
         return taskCount;
     }
@@ -225,21 +229,6 @@ public class UTaskHave {
         this.endTime = endTime;
     }
 
-    public Float getAlreadyNum() {
-        return alreadyNum;
-    }
-
-    public void setAlreadyNum(Float alreadyNum) {
-        this.alreadyNum = alreadyNum;
-    }
-
-    public Float getSurplusNum() {
-        return surplusNum;
-    }
-
-    public void setSurplusNum(Float surplusNum) {
-        this.surplusNum = surplusNum;
-    }
 
     public Integer getCurday() {
         return curday;
@@ -313,21 +302,6 @@ public class UTaskHave {
         this.isValid = isValid;
     }
 
-    public Float getTotalNum() {
-        return totalNum;
-    }
-
-    public void setTotalNum(Float totalNum) {
-        this.totalNum = totalNum;
-    }
-
-    public Float getGiveActiveNum() {
-        return giveActiveNum;
-    }
-
-    public void setGiveActiveNum(Float giveActiveNum) {
-        this.giveActiveNum = giveActiveNum;
-    }
 
     public String getStartTimeStr() {
         return startTimeStr;
@@ -343,5 +317,53 @@ public class UTaskHave {
 
     public void setEndTimeStr(String endTimeStr) {
         this.endTimeStr = endTimeStr;
+    }
+
+    public Double getAlreadyNumCount() {
+        return alreadyNumCount;
+    }
+
+    public void setAlreadyNumCount(Double alreadyNumCount) {
+        this.alreadyNumCount = alreadyNumCount;
+    }
+
+    public Double getSurplusNumCount() {
+        return surplusNumCount;
+    }
+
+    public void setSurplusNumCount(Double surplusNumCount) {
+        this.surplusNumCount = surplusNumCount;
+    }
+
+    public Double getAlreadyNum() {
+        return alreadyNum;
+    }
+
+    public void setAlreadyNum(Double alreadyNum) {
+        this.alreadyNum = alreadyNum;
+    }
+
+    public Double getSurplusNum() {
+        return surplusNum;
+    }
+
+    public void setSurplusNum(Double surplusNum) {
+        this.surplusNum = surplusNum;
+    }
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    public Double getGiveActiveNum() {
+        return giveActiveNum;
+    }
+
+    public void setGiveActiveNum(Double giveActiveNum) {
+        this.giveActiveNum = giveActiveNum;
     }
 }

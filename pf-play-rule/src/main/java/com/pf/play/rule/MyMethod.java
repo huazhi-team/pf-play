@@ -42,7 +42,9 @@ public class MyMethod {
          inviteMy.setEmpiricalLevel(vcMember.getEmpiricalLevel());
          inviteMy.setIsCertification(vcMember.getIsCertification());
          inviteMy.setTeamPeople(vcMember.getTeamPeople());
-
+         myFriendsResp.setTeamActive(vcMemberResource.getTeamActive());
+         myFriendsResp.setHeroActive(vcMemberResource.getHeroActive());
+         myFriendsResp.setAllianceActive(vcMemberResource.getAllianceActive());
          myFriendsResp.setInviteMyList(inviteMy);
          myFriendsResp.setMyInvinteCount(list.size());
 

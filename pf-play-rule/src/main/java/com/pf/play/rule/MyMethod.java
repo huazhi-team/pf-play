@@ -250,16 +250,21 @@ public class MyMethod {
      * @author long
      * @date 2019/12/2 21:54
      */
-    public static List<MyMasonryResp> toMyMasonryResp(List<UMasonryListLog> uMasonryList){
-        List<MyMasonryResp>  list  = new ArrayList<>();
+    public static MyMasonryResp toMyMasonryResp(List<UMasonryListLog> uMasonryList,VcMemberResource  vcMemberResource1,UMasonrySummary uMasonrySummary){
+        List<MasonryList>  list  = new ArrayList<>();
+        MyMasonryResp  myMasonryResp  =new  MyMasonryResp();
+        myMasonryResp.setBalance(vcMemberResource1.getDayMasonry());
+        myMasonryResp.setInMasonry(uMasonrySummary.getInMasonry());
+        myMasonryResp.setOutMasonry(uMasonrySummary.getOutMasonry());
         for (UMasonryListLog uMasonryListLog:uMasonryList){
-            MyMasonryResp   myMasonryResp = new MyMasonryResp();
-            BeanUtils.copy(uMasonryListLog,myMasonryResp);
-            myMasonryResp.setCreateTime(uMasonryListLog.getCreateTimeStr());
-            myMasonryResp.setMasonryNum(uMasonryListLog.getMasonryNum());
-            list.add(myMasonryResp);
+            MasonryList   masonryList = new MasonryList();
+            BeanUtils.copy(uMasonryListLog,masonryList);
+            masonryList.setCreateTime(uMasonryListLog.getCreateTimeStr());
+            masonryList.setMasonryNum(uMasonryListLog.getMasonryNum());
+            list.add(masonryList);
         }
-        return list;
+        myMasonryResp.setMasonrylist(list);
+        return myMasonryResp;
     }
 
     /**
@@ -286,5 +291,17 @@ public class MyMethod {
         return JSON.toJSONString(synchronousResp);
     }
 
+    /**
+     * @Description: 查询组装信息
+     * @param memberId
+     * @return com.pf.play.rule.core.model.UMasonrySummary
+     * @author long
+     * @date 2019/12/13 10:06
+     */
+    public  static UMasonrySummary   toUMasonrySummary(Integer memberId){
+        UMasonrySummary  uMasonrySummary  = new UMasonrySummary();
+        uMasonrySummary.setMemberId(memberId);
+        return  uMasonrySummary;
+    }
 
 }

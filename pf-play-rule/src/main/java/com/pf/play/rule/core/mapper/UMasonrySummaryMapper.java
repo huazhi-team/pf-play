@@ -10,7 +10,7 @@ public interface UMasonrySummaryMapper<T> extends BaseDao<T> {
 
     int insertSelective(UMasonrySummary record);
 
-    UMasonrySummary selectByPrimaryKey(Integer memberId);
+    UMasonrySummary selectByPrimaryKey(UMasonrySummary record);
 
     int updateByPrimaryKeySelective(UMasonrySummary record);
 }

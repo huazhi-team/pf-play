@@ -17,10 +17,7 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
-import com.pf.play.rule.core.model.UMasonryListLog;
-import com.pf.play.rule.core.model.UserInfoModel;
-import com.pf.play.rule.core.model.VcMember;
-import com.pf.play.rule.core.model.VcMemberResource;
+import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +61,7 @@ public class UserController {
     public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         try{
             log.info("----------:masonryInfo!");
-            LoginReq loginReq1 = new LoginReq();
-            loginReq1.setWxOpenId(userCommonReq.getWxOpenId());
-            loginReq1.setToken(userCommonReq.getToken());
+
 
             Integer  memberId = 0 ;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
@@ -80,11 +75,13 @@ public class UserController {
 
             VcMemberResource   vcMemberResource1 = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
 
+            UMasonrySummary uMasonrySummary =   ComponentUtil.userMasonryService.queryUMasonrySummary(memberId);
+
             List<UMasonryListLog> list =ComponentUtil.userMasonryService.toKenQueryMasonryInfo(memberId);
             if(null==list||list.size()==0){
                 list =new  ArrayList();
             }
-            List<MyMasonryResp>  myMasonryResp = MyMethod.toMyMasonryResp(list);
+            MyMasonryResp  myMasonryResp = MyMethod.toMyMasonryResp(list,vcMemberResource1,uMasonrySummary);
             return JsonResult.successResult(myMasonryResp);
         }catch (Exception e){
             e.printStackTrace();

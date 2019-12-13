@@ -128,15 +128,15 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         String strWx = (String)ComponentUtil.redisService.get(wxOpenidKeyCache);
         String strPhone = (String)ComponentUtil.redisService.get(phoneKeyCache);
         String strDid = (String)ComponentUtil.redisService.get(deviceidKeyCache);
-        if (strWx != null){
-            return false;
-        }
-        if (strPhone != null){
-            return false;
-        }
-        if (strDid != null){
-            return false;
-        }
+//        if (strWx != null){
+//            return false;
+//        }
+//        if (strPhone != null){
+//            return false;
+//        }
+//        if (strDid != null){
+//            return false;
+//        }
         RegisterResp  registerResp = new  RegisterResp();
         //验证码的组合方式   电话号 + 时间戳；
         String  verKey  = registerReq.getPhone() + registerReq.getTimeStamp();
@@ -264,15 +264,23 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         String token = "" ;
         VcMember vcMember = new VcMember();
         VcMember rsVcMember = new VcMember();
-        token=ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
-        inviteCode= phone ;
-        tradingAddress=ComponentUtil.generateService.getNonexistentInformation(Constant.TRADING_ADDRESS);
-        do{
+        int i=0;
+        while(true){
+            token=ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
+            inviteCode= phone ;
+            tradingAddress=ComponentUtil.generateService.getNonexistentInformation(Constant.TRADING_ADDRESS);
             vcMember.setInviteCode(inviteCode);
             vcMember.setTradingAddress(tradingAddress);
             vcMember.setToken(token);
             rsVcMember = vcMemberMapper.selectByCodeOrAddress(vcMember);
-        }while (null!=rsVcMember);
+            if(null==rsVcMember||i>3){
+                break;
+            }
+            i++;
+        }
+        if(i>3){
+            return "";
+        }
         return inviteCode+","+tradingAddress+","+token;
     }
 

@@ -8,7 +8,7 @@
     select 
     <include refid="Base_Column_List" />
     from u_masonry_summary
-    where memberId = #{memberId}
+    where member_id = #{memberId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from u_masonry_summary

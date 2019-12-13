@@ -3,6 +3,7 @@ package com.pf.play.rule.core.service.impl;
 import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.uesr.BaseReq;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
+import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
@@ -11,13 +12,11 @@ import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.UMasonryListLogMapper;
+import com.pf.play.rule.core.mapper.UMasonrySummaryMapper;
 import com.pf.play.rule.core.mapper.UserInfoMapper;
 import com.pf.play.rule.core.mapper.VcMemberMapper;
+import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.model.Enum.MasonryTypeEnum;
-import com.pf.play.rule.core.model.SysTypeDictionary;
-import com.pf.play.rule.core.model.UMasonryListLog;
-import com.pf.play.rule.core.model.UserInfoModel;
-import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.service.UserMasonryService;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
@@ -45,6 +44,9 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     private UserInfoMapper userInfoMapper;
     @Autowired
     private VcMemberMapper vcMemberMapper;
+
+    @Autowired
+    private UMasonrySummaryMapper uMasonrySummaryMapper;
 
     @Override
     public BaseDao<T> getDao() {
@@ -95,7 +97,7 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
 
     /**
      * @Description: 我的资产信息
-     * @param loginReq
+     * @param memberId
      * @return com.pf.play.rule.core.model.UMasonryListLog
      * @author long
      * @date 2019/11/14 13:52
@@ -187,6 +189,9 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     }
 
 
-
-
+    @Override
+    public UMasonrySummary queryUMasonrySummary(Integer memberId) {
+        UMasonrySummary uMasonrySummary= MyMethod.toUMasonrySummary(memberId);
+        return uMasonrySummaryMapper.selectByPrimaryKey(uMasonrySummary);
+    }
 }

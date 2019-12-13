@@ -1,6 +1,7 @@
 package com.pf.play.model.protocol.response.uesr;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 我的资产
@@ -9,78 +10,53 @@ import java.util.Date;
  * @Version 1.0
  */
 public class MyMasonryResp {
-    /**
-     * 类型: 1、完成任务 2、活力值奖励 3、赠送给Ta  4、Ta人赠送 5、转出手续费 6、转入手续费 7、交易所转入 8、转出砖石 9、购买任务消耗
-     *
-     * @mbggenerated
-     */
-    private Integer type;
-    /**
-     * 类型值: 1、完成任务 2、活力值奖励 3、赠送给Ta  4、Ta人赠送 5、转出手续费 6、转入手续费 7、交易所转入 8、转出砖石 9、购买任务消耗
-     *
-     * @mbggenerated
-     */
-    private String  typeValue;
-
 
     /**
-     * 符号类型:1、加  2 减
-     *
-     * @mbggenerated
+     * 余额
      */
-    private Integer symbolType;
-
+    private Double  balance ;
     /**
-     * 砖石数
-     *
-     * @mbggenerated
+     * 收入
      */
-    private Double masonryNum;
-
+    private Double  inMasonry ;
     /**
-     * 创建时间
-     *
-     * @mbggenerated
+     * 支出
      */
-    private String createTime;
+    private Double  outMasonry ;
 
-    public Integer getType() {
-        return type;
+    private List<MasonryList>  masonrylist;
+
+
+    public Double getBalance() {
+        return balance;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
-    public String getTypeValue() {
-        return typeValue;
+    public Double getInMasonry() {
+        return inMasonry;
     }
 
-    public void setTypeValue(String typeValue) {
-        this.typeValue = typeValue;
+    public void setInMasonry(Double inMasonry) {
+        this.inMasonry = inMasonry;
     }
 
-    public Integer getSymbolType() {
-        return symbolType;
+    public Double getOutMasonry() {
+        return outMasonry;
     }
 
-    public void setSymbolType(Integer symbolType) {
-        this.symbolType = symbolType;
+    public void setOutMasonry(Double outMasonry) {
+        this.outMasonry = outMasonry;
     }
 
-    public Double getMasonryNum() {
-        return masonryNum;
+
+    public List<MasonryList> getMasonrylist() {
+        return masonrylist;
     }
 
-    public void setMasonryNum(Double masonryNum) {
-        this.masonryNum = masonryNum;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setMasonrylist(List<MasonryList> masonrylist) {
+        this.masonrylist = masonrylist;
     }
 }

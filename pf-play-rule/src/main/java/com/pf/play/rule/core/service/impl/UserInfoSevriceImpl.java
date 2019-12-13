@@ -314,4 +314,6 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         VcMemberResource  vcMemberResource = TaskMethod.changvcMemberResource(memberId);
         return vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
     }
+
+
 }

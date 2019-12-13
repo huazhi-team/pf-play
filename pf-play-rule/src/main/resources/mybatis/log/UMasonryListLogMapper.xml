@@ -190,7 +190,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectByInfo" resultType="com.pf.play.rule.core.model.UMasonryListLog" parameterType="java.lang.Long" >
+  <select id="selectByInfo" resultType="com.pf.play.rule.core.model.UMasonryListLog"  >
     select
     <include refid="Base_Column_List" />
     from u_masonry_list_log

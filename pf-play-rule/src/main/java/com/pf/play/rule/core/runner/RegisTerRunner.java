@@ -42,23 +42,23 @@ public class RegisTerRunner implements ApplicationRunner {
         new Thread() {
             public void run() {
                 log.debug("发送上下级关系！");
-//                ComponentUtil.userInfoSevrice.executeSuperior();
+                ComponentUtil.userInfoSevrice.executeSuperior();
             }
         }.start();
 
         new Thread() {
             public void run() {
                 log.debug("更新经验值信息！");
-//                ComponentUtil.taskService.openUpdateTask();
+                ComponentUtil.taskService.openUpdateTask();
             }
         }.start();
 
 //        log.debug("执行等级同步给qhr！");
-//        ComponentUtil.userInfoSevrice.executeSuperior();
+
 
 //
 //        log.debug("更新用户活力值明细表！");
-        ComponentUtil.taskService.openUpdateTask();
+//        ComponentUtil.taskService.openUpdateTask();
 
     }
 

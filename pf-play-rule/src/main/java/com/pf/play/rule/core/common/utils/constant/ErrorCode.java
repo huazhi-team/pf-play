@@ -29,6 +29,12 @@ public class ErrorCode {
          */
         public static final String DEFAULT_SERVICE_EXCEPTION_ERROR_CODE = "256";
 
+        /**
+         * 被捕捉到的异常，但是错误信息为空，则默认异常信息提醒
+         * 默认捕捉的异常信息提醒=错误
+         */
+        public static final String DEFAULT_SERVICE_EXCEPTION_ERROR_MESSAGE = "错误";
+
     }
 
 

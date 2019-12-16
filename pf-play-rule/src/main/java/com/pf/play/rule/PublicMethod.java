@@ -799,7 +799,7 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleBuySellOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int orderStatus, int sortType){
-        OrderModel resBen = new OrderModel();
+        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
         resBen.setMemberId(memberId);
         resBen.setOrderTradeStatus(orderTradeStatus);
         resBen.setOrderStatus(orderStatus);

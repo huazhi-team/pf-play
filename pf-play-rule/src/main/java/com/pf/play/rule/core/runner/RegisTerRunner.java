@@ -42,14 +42,14 @@ public class RegisTerRunner implements ApplicationRunner {
         new Thread() {
             public void run() {
                 log.debug("发送上下级关系！");
-                ComponentUtil.userInfoSevrice.executeSuperior();
+//                ComponentUtil.userInfoSevrice.executeSuperior();
             }
         }.start();
 
         new Thread() {
             public void run() {
                 log.debug("更新经验值信息！");
-                ComponentUtil.taskService.openUpdateTask();
+//                ComponentUtil.taskService.openUpdateTask();
             }
         }.start();
 

@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class Order implements Serializable {
     private static final long   serialVersionUID = 1233023331141L;
 
+    public String nickname;
     public String orderNo;
     public String tradeNum;
     public String tradePrice;
@@ -65,5 +66,13 @@ public class Order implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

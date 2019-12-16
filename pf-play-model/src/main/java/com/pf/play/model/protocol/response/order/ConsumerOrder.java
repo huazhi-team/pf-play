@@ -29,6 +29,8 @@ public class ConsumerOrder implements Serializable {
     public String receiveTime;
     public Integer orderType;
 
+    public String nickname;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -164,5 +166,13 @@ public class ConsumerOrder implements Serializable {
 
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

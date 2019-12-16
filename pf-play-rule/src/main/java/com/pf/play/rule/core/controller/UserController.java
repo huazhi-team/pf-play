@@ -250,8 +250,8 @@ public class UserController {
             }
             return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember,vcMemberResource));
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -273,17 +273,22 @@ public class UserController {
             List<MyFriendsResp>   list  = null;
             Integer   memberId =0;
 
-            boolean  flag =  MyMethod.checkUqdateUser(updateUserReq);
-            if(!flag){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
-            }
+//            boolean  flag =  MyMethod.checkUqdateUser(updateUserReq);
+//            if(!flag){
+//                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+//            }
 
             UserCommonReq userCommonReq =MyMethod.uqdateUserToUserCommon(updateUserReq);
-            flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+            boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }else{
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
+
+
+            if(memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
 
             VcMember vcMember = MyMethod.toUqdateVcMember(memberId,updateUserReq);
@@ -297,8 +302,8 @@ public class UserController {
             ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,updateUserReq.getToken());
             return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 

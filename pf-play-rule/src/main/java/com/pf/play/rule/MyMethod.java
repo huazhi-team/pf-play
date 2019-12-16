@@ -219,12 +219,21 @@ public class MyMethod {
     public static VcMember toUqdateVcMember(Integer memberId,UpdateUserReq updateUserReq){
         VcMember  vcMember1  = new VcMember();
         vcMember1.setMemberId(memberId);
-//        vcMember1.setMemberAdd(updateUserReq.getMemberAdd());
-//        vcMember1.setNickname(updateUserReq.getNickname());
-        vcMember1.setSex(updateUserReq.getSex());
-        vcMember1.setBirthday(updateUserReq.getBirthday());
-        vcMember1.setProvince(updateUserReq.getProvince());
-        vcMember1.setCity(updateUserReq.getCity());
+        if(null != updateUserReq.getSex()){
+            vcMember1.setSex(updateUserReq.getSex());
+        }
+
+        if(null != updateUserReq.getBirthday()){
+            vcMember1.setBirthday(updateUserReq.getBirthday());
+        }
+
+        if(null != updateUserReq.getProvince()){
+            vcMember1.setProvince(updateUserReq.getProvince());
+        }
+
+        if(null != updateUserReq.getCity()){
+            vcMember1.setCity(updateUserReq.getCity());
+        }
         return vcMember1;
     }
 

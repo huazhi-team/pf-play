@@ -51,13 +51,17 @@ public class DisVitalityValue {
      * @mbggenerated
      */
     private Integer upgradeNum  ;
+    /**
+     * 等级
+     */
+    private Integer darenLevel  ;
 
     /**
      * 分红
      *
      * @mbggenerated
      */
-    private Float rewardNum;
+    private Double rewardNum;
 
 
 
@@ -136,13 +140,7 @@ public class DisVitalityValue {
         this.allianceVitalitNum = allianceVitalitNum;
     }
 
-    public Float getRewardNum() {
-        return rewardNum;
-    }
 
-    public void setRewardNum(Float rewardNum) {
-        this.rewardNum = rewardNum;
-    }
 
     public Date getCreateTime() {
         return createTime;
@@ -182,5 +180,21 @@ public class DisVitalityValue {
 
     public void setUpgradeNum(Integer upgradeNum) {
         this.upgradeNum = upgradeNum;
+    }
+
+    public Integer getDarenLevel() {
+        return darenLevel;
+    }
+
+    public void setDarenLevel(Integer darenLevel) {
+        this.darenLevel = darenLevel;
+    }
+
+    public Double getRewardNum() {
+        return rewardNum;
+    }
+
+    public void setRewardNum(Double rewardNum) {
+        this.rewardNum = rewardNum;
     }
 }

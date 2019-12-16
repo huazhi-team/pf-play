@@ -321,5 +321,8 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         return vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
     }
 
-
+    @Override
+    public VcMember getSuperiorIdToPushPeople(VcMember vcMember) {
+        return vcMemberMapper.selectLevel1(vcMember);
+    }
 }

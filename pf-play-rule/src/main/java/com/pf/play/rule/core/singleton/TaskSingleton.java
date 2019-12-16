@@ -1,5 +1,6 @@
 package com.pf.play.rule.core.singleton;
 
+import com.pf.play.rule.core.model.DisEmpiricalVitalityAttribute;
 import com.pf.play.rule.core.model.DisTaskAttribute;
 import com.pf.play.rule.core.model.DisTaskType;
 
@@ -40,6 +41,12 @@ public class TaskSingleton {
 
 
 
+    //活力值属性表 要求
+    public List<DisEmpiricalVitalityAttribute> disVitalityAttribute1;
+    //活力值属性表 奖励
+    public List<DisEmpiricalVitalityAttribute> disVitalityAttribute2;
+
+
     public List<DisTaskType> getDisTaskTypeList() {
         return disTaskTypeList;
     }
@@ -78,5 +85,21 @@ public class TaskSingleton {
 
     public void setAttributeTypeList3(List<DisTaskAttribute> attributeTypeList3) {
         this.attributeTypeList3 = attributeTypeList3;
+    }
+
+    public List<DisEmpiricalVitalityAttribute> getDisVitalityAttribute1() {
+        return disVitalityAttribute1;
+    }
+
+    public void setDisVitalityAttribute1(List<DisEmpiricalVitalityAttribute> disVitalityAttribute1) {
+        this.disVitalityAttribute1 = disVitalityAttribute1;
+    }
+
+    public List<DisEmpiricalVitalityAttribute> getDisVitalityAttribute2() {
+        return disVitalityAttribute2;
+    }
+
+    public void setDisVitalityAttribute2(List<DisEmpiricalVitalityAttribute> disVitalityAttribute2) {
+        this.disVitalityAttribute2 = disVitalityAttribute2;
     }
 }

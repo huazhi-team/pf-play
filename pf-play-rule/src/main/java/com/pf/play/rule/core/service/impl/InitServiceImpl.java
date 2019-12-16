@@ -1,11 +1,10 @@
 package com.pf.play.rule.core.service.impl;
 
+import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
-import com.pf.play.rule.core.mapper.DisTaskAttributeMapper;
-import com.pf.play.rule.core.mapper.DisTaskTypeMapper;
-import com.pf.play.rule.core.mapper.DisVitalityValueMapper;
-import com.pf.play.rule.core.mapper.UTaskHaveMapper;
+import com.pf.play.rule.core.mapper.*;
+import com.pf.play.rule.core.model.DisEmpiricalVitalityAttribute;
 import com.pf.play.rule.core.model.DisTaskAttribute;
 import com.pf.play.rule.core.model.DisTaskType;
 import com.pf.play.rule.core.model.DisVitalityValue;
@@ -36,6 +35,9 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
 
     @Autowired
     private DisTaskAttributeMapper disTaskAttributeMapper;
+
+    @Autowired
+    private DisEmpiricalVitalityAttributeMapper disEmpiricalVitalityAttributeMapper;
 
     @Override
     public BaseDao<T> getDao() {
@@ -86,5 +88,24 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
     @Override
     public void initEmpiricalInfo() {
 
+    }
+
+    @Override
+    public void initEmpiricalVitalityAttribute() {
+        List<DisEmpiricalVitalityAttribute> list = disEmpiricalVitalityAttributeMapper.selectByAll();
+        List<DisEmpiricalVitalityAttribute>  attributeList1 =new ArrayList<>();
+        List<DisEmpiricalVitalityAttribute>  attributeList2 =new ArrayList<>();
+
+        for(DisEmpiricalVitalityAttribute attribute:list){
+            DisEmpiricalVitalityAttribute  disEmpiricalVitalityAttribute = new DisEmpiricalVitalityAttribute();
+            BeanUtils.copy(attribute,disEmpiricalVitalityAttribute);
+            if(attribute.gettId()==2&&attribute.getAttributeType()==1){
+                attributeList1.add(disEmpiricalVitalityAttribute);
+            }else if(attribute.gettId()==2&&attribute.getAttributeType()==2){
+                attributeList2.add(disEmpiricalVitalityAttribute);
+            }
+        }
+        TaskSingleton.getInstance().setDisVitalityAttribute1(attributeList1);
+        TaskSingleton.getInstance().setDisVitalityAttribute2(attributeList2);
     }
 }

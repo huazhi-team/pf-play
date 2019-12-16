@@ -4,7 +4,7 @@
 
   <sql id="Base_Column_List">
     id, vitality_id, vitality_name, push_number, team_vitalit_num, alliance_vitalit_num, 
-    reward_num, create_time, update_time, is_valid,remarks
+    reward_num, create_time, update_time, is_valid,remarks,daren_level
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisVitalityValue">
     select 

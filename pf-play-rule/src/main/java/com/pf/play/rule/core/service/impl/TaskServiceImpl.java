@@ -7,8 +7,10 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
+import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
+import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.TaskService;
@@ -860,18 +862,26 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public Double grantReward(VcMemberResource  vcMemberResource,List<UTaskHave>  list) {
+        Double  rewardMasonry = 0D;
         Double  activeValue=vcMemberResource.getActiveValue()*Constant.ACTIVE_VALUE_MASONRY;
         Double  taskTask = TaskMethod.statTaskMasonry(list);
         UMasonryListLog  uMasonryListLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE2,Constant.TASK_SYMBOL_TYPE1,activeValue);
         UMasonryListLog  taskTaskLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE1,Constant.TASK_SYMBOL_TYPE1,taskTask);
-        if(activeValue!=0){
-            uMasonryListLogMapper.insertSelective(uMasonryListLog);
+        if(activeValue==0&&taskTask==0){
+            return rewardMasonry;
         }
-        if(taskTask!=0){
-            uMasonryListLogMapper.insertSelective(taskTaskLog);
+//        if(taskTask!=0){
+//            uMasonryListLogMapper.insertSelective(taskTaskLog);
+//        }
+        //查看该用户是否在做交易
+        String lockKey_send = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_CONSUMER, vcMemberResource.getMemberId());
+        boolean send = ComponentUtil.redisIdService.lock(lockKey_send);
+        rewardMasonry = activeValue + taskTask;
+        VcMemberResource updateResource = TaskMethod.changeUpdateResource(vcMemberResource.getMemberId(),rewardMasonry);
+        if(send){
+            ComponentUtil.transactionalService.gratitudeupdateMyActiveValue(uMasonryListLog,taskTaskLog,updateResource);
         }
 
-
-        return activeValue+taskTask;
+        return rewardMasonry;
     }
 }

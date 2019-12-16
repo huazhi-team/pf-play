@@ -194,22 +194,26 @@ public class UserController {
 
             VcMemberResource  vcMemberResource =null;
             if(memberId!=0){
-                vcMemberResource =ComponentUtil.userInfoSevrice.getMyTeamResourceInfo(memberId);
+                vcMemberResource = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
+            }else{
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
+
+            VcMember   vcMember1=  TaskMethod.changvcMemberTOsuperiorId(memberId);
+
+            VcMember   vcMember2 =ComponentUtil.userInfoSevrice.getSuperiorIdToPushPeople(vcMember1);
 
             List<Vitality>  vitalityList  =  ComponentUtil.userInfoSevrice.getMyDisVitalityValue(memberId);
-            VcMemberResource   vcMemberResource1 = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
 
             MyVitalityResp myVitalityResp   =null;
-            if(vcMemberResource==null){
-                myVitalityResp = MyMethod.toMyVitalityListResp(0D,vitalityList, vcMemberResource1 );
-            }else{
-                myVitalityResp = MyMethod.toMyVitalityListResp(vcMemberResource.getEmpiricalValue(),vitalityList,  vcMemberResource1 );
-            }
+
+            myVitalityResp = MyMethod.toMyVitalityResp(vcMember2.getPushPeople(),vcMemberResource,  vitalityList );
+
             return JsonResult.successResult(myVitalityResp);
         }catch (Exception e){
             e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -390,10 +394,15 @@ public class UserController {
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
 
+
+            //差一个验证是否领取狗  也差一个砖石更新，更新时记得加锁
             VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
             List<UTaskHave>  list  = ComponentUtil.taskService.getMyTask(memberId);
 
             Double  masonry=ComponentUtil.taskService.grantReward(vcMemberResource,list);
+            if(masonry==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR11.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR11.geteDesc());
+            }
             ExeTodayTaskResp  exeTodayTaskResp =new ExeTodayTaskResp();
             exeTodayTaskResp.setMasonry(masonry);
             return JsonResult.successResult(exeTodayTaskResp);

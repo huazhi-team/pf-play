@@ -11,6 +11,13 @@ public class DisEmpiricalVitalityAttribute {
     private Long id;
 
     /**
+     * 表类型id  1 代表经验值， 2、活力值
+     *
+     * @mbggenerated
+     */
+    private Integer tId;
+
+    /**
      * 任务id
      *
      * @mbggenerated
@@ -22,7 +29,7 @@ public class DisEmpiricalVitalityAttribute {
      *
      * @mbggenerated
      */
-    private Boolean attributeType;
+    private Integer attributeType;
 
     /**
      * 字段值1
@@ -113,7 +120,7 @@ public class DisEmpiricalVitalityAttribute {
      *
      * @mbggenerated
      */
-    private Boolean isValid;
+    private Integer isValid;
 
     public Long getId() {
         return id;
@@ -121,6 +128,14 @@ public class DisEmpiricalVitalityAttribute {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer gettId() {
+        return tId;
+    }
+
+    public void settId(Integer tId) {
+        this.tId = tId;
     }
 
     public Integer getTypeId() {
@@ -131,11 +146,11 @@ public class DisEmpiricalVitalityAttribute {
         this.typeId = typeId;
     }
 
-    public Boolean getAttributeType() {
+    public Integer getAttributeType() {
         return attributeType;
     }
 
-    public void setAttributeType(Boolean attributeType) {
+    public void setAttributeType(Integer attributeType) {
         this.attributeType = attributeType;
     }
 
@@ -235,11 +250,11 @@ public class DisEmpiricalVitalityAttribute {
         this.updateDate = updateDate;
     }
 
-    public Boolean getIsValid() {
+    public Integer getIsValid() {
         return isValid;
     }
 
-    public void setIsValid(Boolean isValid) {
+    public void setIsValid(Integer isValid) {
         this.isValid = isValid;
     }
 }

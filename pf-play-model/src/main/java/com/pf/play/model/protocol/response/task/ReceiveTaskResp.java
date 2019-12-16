@@ -26,14 +26,14 @@ public class ReceiveTaskResp {
      *
      * @mbggenerated
      */
-    private Float holdNumber;
+    private Double holdNumber;
 
     /**
      * 购买所需虚拟资源  CV单位
      *
      * @mbggenerated
      */
-    private Float needResource;
+    private Double needResource;
 
     /**
      * 任务周期
@@ -55,14 +55,14 @@ public class ReceiveTaskResp {
      *
      * @mbggenerated
      */
-    private Float everyNum;
+    private Double everyNum;
 
     /**
      * 总产数
      *
      * @mbggenerated
      */
-    private Float totalNum;
+    private Double totalNum;
 
     /**
      * 玩法等级
@@ -102,8 +102,6 @@ public class ReceiveTaskResp {
     private String  activeValue;
 
 
-
-
     public Integer getTaskId() {
         return taskId;
     }
@@ -120,19 +118,19 @@ public class ReceiveTaskResp {
         this.taskName = taskName;
     }
 
-    public Float getHoldNumber() {
+    public Double getHoldNumber() {
         return holdNumber;
     }
 
-    public void setHoldNumber(Float holdNumber) {
+    public void setHoldNumber(Double holdNumber) {
         this.holdNumber = holdNumber;
     }
 
-    public Float getNeedResource() {
+    public Double getNeedResource() {
         return needResource;
     }
 
-    public void setNeedResource(Float needResource) {
+    public void setNeedResource(Double needResource) {
         this.needResource = needResource;
     }
 
@@ -152,19 +150,19 @@ public class ReceiveTaskResp {
         this.taskValidityDay = taskValidityDay;
     }
 
-    public Float getEveryNum() {
+    public Double getEveryNum() {
         return everyNum;
     }
 
-    public void setEveryNum(Float everyNum) {
+    public void setEveryNum(Double everyNum) {
         this.everyNum = everyNum;
     }
 
-    public Float getTotalNum() {
+    public Double getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(Float totalNum) {
+    public void setTotalNum(Double totalNum) {
         this.totalNum = totalNum;
     }
 

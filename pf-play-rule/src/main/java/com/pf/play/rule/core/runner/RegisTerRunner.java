@@ -36,6 +36,9 @@ public class RegisTerRunner implements ApplicationRunner {
         log.debug("经验值初始化！");
         ComponentUtil.initService.initVitalityInfo();
 
+        log.debug("活力值以及奖励！");
+        ComponentUtil.initService.initEmpiricalVitalityAttribute();
+
         new Thread() {
             public void run() {
                 log.debug("发送上下级关系！");

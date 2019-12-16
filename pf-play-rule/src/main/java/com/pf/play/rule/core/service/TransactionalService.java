@@ -37,4 +37,6 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  updateMyActiveValue(VcMemberResource resource,VcMember vcMember);
 
+    void  gratitudeupdateMyActiveValue(UMasonryListLog  uMasonryListLog,UMasonryListLog  taskTaskLog,VcMemberResource resource);
+
 }

@@ -315,10 +315,10 @@
 		on  a.member_id =b.member_id
 		where   1=1
         <if test="darenLevel != null" >
-          and b.daren_level = #{darenLevel},
+          and b.daren_level = #{darenLevel}
         </if>
         <if test="superiorId != null" >
-          and a.superior_id  = #{superiorId},
+          and a.superior_id  = #{superiorId}
         </if>
   </select>
 
@@ -414,6 +414,9 @@
                 order  by   b.active_value desc
                 limit  2
   </select>
+
+
+
 
 
 

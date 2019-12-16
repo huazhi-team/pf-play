@@ -14,4 +14,6 @@ public interface InitService<T> extends BaseService<T> {
      void initVitalityInfo();
 
      void initEmpiricalInfo();
+
+     void initEmpiricalVitalityAttribute();
 }

@@ -10,6 +10,9 @@ import com.pf.play.model.protocol.response.my.InviteMy;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.*;
 import com.pf.play.rule.core.model.*;
+import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
+import com.pf.play.rule.core.singleton.TaskSingleton;
+import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -309,5 +312,50 @@ public class MyMethod {
         uMasonrySummary.setMemberId(memberId);
         return  uMasonrySummary;
     }
+
+    /**
+     * @Description: 转换成MyVitalityResp
+     * @param pushPeople 直推人数
+    * @param vcMemberResource
+     * @return com.pf.play.model.protocol.response.uesr.MyVitalityResp
+     * @author long
+     * @date 2019/12/16 0:12
+     */
+    public  static  MyVitalityResp   toMyVitalityResp(Integer pushPeople ,VcMemberResource vcMemberResource,List<Vitality>  vitalityList){
+        MyVitalityResp   myVitalityResp = new MyVitalityResp();
+        myVitalityResp.setPushPeople(Double.parseDouble(pushPeople+""));
+        myVitalityResp.setLevel(vcMemberResource.getDarenLevel());
+        myVitalityResp.setAllianceActive(vcMemberResource.getAllianceActive());
+        myVitalityResp.setTeamActive(vcMemberResource.getTeamActive());
+
+        List<DisEmpiricalVitalityAttribute>  list1 = TaskSingleton.getInstance().getDisVitalityAttribute1();
+        boolean  flag = false;
+        Integer  taskId= 1;
+        List<DisVitalityValue>  list =EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
+        for(int  i = 0;i<list.size();i++){
+            if(null!=myVitalityResp.getAllianceActiveNum()){
+                break;
+            }
+            if(flag||i==list.size()-1){
+                for(DisEmpiricalVitalityAttribute dis:list1){
+                   if(taskId==dis.getTypeId()){
+                       myVitalityResp.setAllianceActiveNum(Double.valueOf(dis.getKey3()));
+                       myVitalityResp.setPushPeopleNum(Double.valueOf(dis.getKey1()));
+                       myVitalityResp.setTeamActiveNum(Double.valueOf(dis.getKey2()));
+                       break;
+                   }
+                }
+            }
+            if(list.get(i).getDarenLevel()==vcMemberResource.getDarenLevel()){
+                flag=true;
+            }
+            taskId++;
+
+        }
+        myVitalityResp.setList(vitalityList);
+
+        return   myVitalityResp ;
+    }
+
 
 }

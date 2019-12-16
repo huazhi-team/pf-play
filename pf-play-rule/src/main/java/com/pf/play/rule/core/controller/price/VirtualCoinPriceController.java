@@ -75,7 +75,7 @@ public class VirtualCoinPriceController {
      * @date 2019/11/21 22:58
      * local:http://localhost:8082/play/pe/getData
      * 请求的属性类:RequestConsumer
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:maxPrice+minPrice+stime+token+秘钥=sign
      */

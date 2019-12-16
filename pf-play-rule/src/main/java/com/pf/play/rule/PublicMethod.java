@@ -16,6 +16,7 @@ import com.pf.play.model.protocol.response.order.Order;
 import com.pf.play.model.protocol.response.order.ResponseOrder;
 import com.pf.play.model.protocol.response.price.ResponseDayPrice;
 import com.pf.play.model.protocol.response.trade.ResponseTrade;
+import com.pf.play.model.protocol.response.trade.ResponseTradeRule;
 import com.pf.play.model.protocol.response.trade.ResponseTradeTime;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
@@ -256,6 +257,32 @@ public class PublicMethod {
     }
 
 
+    /**
+     * @Description: 查询用户基本信息时公共的返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param nickname - 用户昵称
+     * @param phoneNum - 手机号
+     * @param isCertification - 是否实名 1、未实名  2、已实名
+     * @param isActive - 用户当前状态：1、正常用户 2、黑名单
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/13 21:45
+     */
+    public static String assembleBasicResult(long stime, String token, String sign, String nickname, String phoneNum, Integer isCertification, Integer isActive){
+        ResponseConsumer dataModel = new ResponseConsumer();
+        dataModel.nickname = nickname;
+        dataModel.phoneNum = phoneNum;
+        dataModel.isCertification = isCertification;
+        dataModel.isActive = isActive;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
 
     /**
      * @Description: 查询固定信息时，校验基本数据是否非法
@@ -294,6 +321,31 @@ public class PublicMethod {
         // 校验所有数据
         if (requestConsumer == null ){
             throw new ServiceException(PfErrorCode.ENUM_ERROR.C00015.geteCode(), PfErrorCode.ENUM_ERROR.C00015.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestConsumer.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 查询取用户的基本信息时，校验基本数据是否非法
+     * @param requestConsumer - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkBasicData(RequestConsumer requestConsumer) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestConsumer == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00023.geteCode(), PfErrorCode.ENUM_ERROR.C00023.geteDesc());
         }
 
         // 校验token值
@@ -387,6 +439,21 @@ public class PublicMethod {
             throw new ServiceException(PfErrorCode.ENUM_ERROR.C00010.geteCode(), PfErrorCode.ENUM_ERROR.C00010.geteDesc());
         }
         return memberId;
+    }
+
+
+    /**
+     * @Description: 组装用户固定账号的查询数据
+     * @param requestConsumer - 用户账号基本信息
+     * @param memberId - 用户ID
+     * @return ConsumerFixedModel
+     * @author yoko
+     * @date 2019/11/21 19:24
+     */
+    public static ConsumerFixedModel assembleConsumerFixedAdd(RequestConsumer requestConsumer, long memberId){
+        ConsumerFixedModel resBean = BeanUtils.copy(requestConsumer, ConsumerFixedModel.class);
+        resBean.setMemberId(memberId);
+        return resBean;
     }
 
 
@@ -857,6 +924,32 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/11/21 18:59
      */
+    public static long checkTradeRuleData(RequestTrade requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00029.geteCode(), PfErrorCode.ENUM_ERROR.T00029.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+        return memberId;
+    }
+
+
+
+    /**
+     * @Description: 查询交易开市时间时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
     public static long checkTradeTimeData(RequestTrade requestTrade) throws Exception{
         long memberId;
         // 校验所有数据
@@ -910,6 +1003,43 @@ public class PublicMethod {
             num = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO;
         }
         return num;
+    }
+
+
+    /**
+     * @Description: 交易数据展现-规则的数据组装返回客户端的方法
+     * <p>
+     *     A.开市时间
+     *     B.当前买量、今日成交量
+     *     C.虚拟币每天兑换的价格
+     * </p>
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param isTrade - 是否是开市时间范围内：1表示属于开市时间，2表示目前不是开市时间
+     * @param tradeTime - 开市交易时间
+     * @param buyTradeNum - 当前买量
+     * @param sucTradeNum - 今日成交量
+     * @param virtualCoinPriceDto - 虚拟币每天兑换的价格
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleTradeRuleResult(long stime, String token, String sign, int isTrade, String tradeTime,
+                                                 String buyTradeNum, String sucTradeNum, VirtualCoinPriceDto virtualCoinPriceDto){
+        ResponseTradeRule dataModel = BeanUtils.copy(virtualCoinPriceDto, ResponseTradeRule.class);
+        dataModel.isTrade = isTrade;
+        dataModel.tradeTime = tradeTime;
+        if (!StringUtils.isBlank(buyTradeNum)){
+            dataModel.buyTradeNum = buyTradeNum;
+        }
+        if (!StringUtils.isBlank(sucTradeNum)){
+            dataModel.sucTradeNum = sucTradeNum;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
     }
 
 
@@ -1690,6 +1820,36 @@ public class PublicMethod {
         return memberId;
     }
 
+
+
+    /**
+     * @Description: 查询获取我的申诉详情时：根据ID查询，校验基本数据是否非法
+     * @param requestAppeal - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkInfoData(RequestAppeal requestAppeal) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAppeal == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00018.geteCode(), PfErrorCode.ENUM_ERROR.A00018.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAppeal.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAppeal.getToken());
+
+        if(requestAppeal.getId() == null || requestAppeal.getId() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.A00019.geteCode(), PfErrorCode.ENUM_ERROR.A00019.geteDesc());
+        }
+        return memberId;
+    }
+
     /**
      * @Description: 组装查询申诉数据的查询条件
      * @param requestAppeal - 申诉的基本信息
@@ -1729,6 +1889,30 @@ public class PublicMethod {
         }
         if (rowCount != null){
             dataModel.rowCount = rowCount;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+
+    /**
+     * @Description: 申诉的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param appealModel - 申诉信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleAppealByIdResult(long stime, String token, String sign, AppealModel appealModel){
+        ResponseAppeal dataModel = new ResponseAppeal();
+        if (appealModel != null){
+            Appeal appeal = BeanUtils.copy(appealModel, Appeal.class);
+            dataModel.appeal = appeal;
         }
         dataModel.setStime(stime);
         dataModel.setToken(token);

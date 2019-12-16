@@ -136,7 +136,7 @@ public class ConsumerController {
      * @date 2019/11/7 16:58
      * local:http://localhost:8082/play/csm/getData
      * 请求的属性类:RequestConsumer
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段（用户固定账号不为空）:fixedType+fixedNum+stime+token+秘钥=sign
      * 服务端加密字段（用户固定账号为空）:stime+token+秘钥=sign
@@ -202,7 +202,7 @@ public class ConsumerController {
      * @date 2019/11/7 16:58
      * local:http://localhost:8082/play/csm/addData
      * 请求的属性类:RequestConsumer
-     * 必填字段:{"fullName":"小五哥","idCard":"435202111111111111","fixedType":2,"fixedNum":13717505292,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"fullName":"小五哥","idCard":"435202111111111111","fixedType":2,"fixedNum":13717505292,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fullName+idCard+fixedType+fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -230,8 +230,7 @@ public class ConsumerController {
                 throw new ServiceException(PfErrorCode.ENUM_ERROR.C00012.geteCode(), PfErrorCode.ENUM_ERROR.C00012.geteDesc());
             }
             // 添加固定账号数据
-            ConsumerFixedModel addDataModel = new ConsumerFixedModel();
-            addDataModel.setMemberId(memberId);
+            ConsumerFixedModel addDataModel = PublicMethod.assembleConsumerFixedAdd(requestConsumer, memberId);
             ComponentUtil.consumerFixedService.add(addDataModel);
 
 
@@ -273,7 +272,7 @@ public class ConsumerController {
      * @date 2019/11/7 16:58
      * local:http://localhost:8082/play/csm/upData
      * 请求的属性类:RequestConsumer
-     * 必填字段:{"fixedNum":13717505293,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"fixedNum":13717505293,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -360,7 +359,7 @@ public class ConsumerController {
      * @date 2019/11/21 22:58
      * local:http://localhost:8082/play/csm/getRatio
      * 请求的属性类:RequestConsumer
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:empiricalLevel+ratio+stime+token+秘钥=sign
      */
@@ -390,6 +389,63 @@ public class ConsumerController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(consumerModel.getEmpiricalLevel(), consumerModel.getRatio(), stime, token, secretKeySign); //maxPrice+minPrice+stime+token+秘钥=sign
             String strData = PublicMethod.assembleRatioResult(stime, token, sign, consumerModel.getEmpiricalLevel(), consumerModel.getRatio());
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 获取用户的基本信息
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/21 22:58
+     * local:http://localhost:8082/play/csm/getBasic
+     * 请求的属性类:RequestConsumer
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:phoneNum+isActive+stime+token+秘钥=sign
+     */
+    @RequestMapping(value = "/getBasic", method = {RequestMethod.POST})
+    public JsonResult<Object> getBasic(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkBasicData(requestConsumer);
+            token = requestConsumer.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 组装查询用户信息的查询条件
+            ConsumerModel consumerQuery = PublicMethod.assembleConsumerModel(memberId);
+            ConsumerModel consumerModel = ComponentUtil.consumerFixedService.getConsumer(consumerQuery);
+            PublicMethod.checkConsumer(consumerModel);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(consumerModel.getPhoneNum(), consumerModel.getIsActive(), stime, token, secretKeySign); // phoneNum+isActive+stime+token+秘钥=sign
+            String strData = PublicMethod.assembleBasicResult(stime, token, sign, consumerModel.getNickname(), consumerModel.getPhoneNum(), consumerModel.getIsCertification(), consumerModel.getIsActive());
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);

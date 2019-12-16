@@ -74,7 +74,6 @@
             </if>
 
             and a.yn = 0
-            and b.yn = 0
         </trim>
     </sql>
 
@@ -116,7 +115,7 @@
     <select id="findAll" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -124,7 +123,7 @@
     <select id="findByCondition" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
     </select>
@@ -133,7 +132,7 @@
     <select id="findByObject" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause"/>
         limit 1
     </select>
@@ -142,7 +141,7 @@
     <select id="findById" parameterType="java.lang.Long" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause_id"/>
     </select>
 
@@ -151,7 +150,7 @@
     <!-- 查询总数-->
     <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
         select count(1)
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause"/>
     </select>
 
@@ -159,7 +158,7 @@
     <select id="queryByList" parameterType="Object" resultType="com.pf.play.rule.core.model.trade.TradeModel">
         select
         <include refid="Base_Column_List" />
-        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id and b.yn = 0
         <include refid="Example_Where_Clause"/>
         <include refid="Example_Order_By"/>
         limit #{start},#{end}
@@ -406,7 +405,8 @@
     <!-- 计算当前买量、今日成交量-->
     <select id="getOrderTradeNum" parameterType="Object" resultType="java.lang.String">
         select
-          sum(a.trade_num) as trade_data_num
+          <!-- sum(a.trade_num) as trade_data_num -->
+          ifnull(sum(a.trade_num), 0) as trade_data_num
         from tb_pf_order a
         <include refid="Example_Where_Clause"/>
     </select>

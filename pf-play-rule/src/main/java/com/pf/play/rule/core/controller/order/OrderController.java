@@ -80,7 +80,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","sortType":"1", "pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","sortType":"1", "pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -138,7 +138,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/addData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"tradeNum":"10","tradePrice":"1.92","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"agtVer":1,"clientVer":1,"tradeNum":"10","tradePrice":"1.92","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:tradeNum+tradePrice+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -201,7 +201,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getBuyData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -259,7 +259,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getCancelData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -323,7 +323,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/upCancelData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"orderNo":"1111","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"orderNo":"1111","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
@@ -384,7 +384,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getUnpaidData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:超时时间+stime+token+秘钥=sign
      * result=={
@@ -456,7 +456,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getReceivableData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:超时时间+stime+token+秘钥=sign
      * result=={
@@ -526,7 +526,7 @@ public class OrderController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/od/getFinishData
      * 请求的属性类:RequestOrder
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={

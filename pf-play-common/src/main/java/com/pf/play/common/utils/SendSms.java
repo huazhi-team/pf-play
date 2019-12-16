@@ -66,8 +66,8 @@ public class SendSms {
 
 
     public static void main(String[] args) {
-        String phoneNum = "15967171415";
-        String code = "1231";
+        String phoneNum = "15221696790";
+        String code = "1298";
         boolean flag = aliSendSms(phoneNum, code);
         System.out.println(flag);
     }

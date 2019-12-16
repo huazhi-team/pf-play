@@ -71,7 +71,7 @@ public class AppealController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/al/getActiveData
      * 请求的属性类:RequestAppeal
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={
@@ -138,7 +138,7 @@ public class AppealController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/al/getPassiveData
      * 请求的属性类:RequestAppeal
-     * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
+     * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={
@@ -197,7 +197,7 @@ public class AppealController {
 
 
     /**
-     * @Description: 更新申诉的数据
+     * @Description: 更新我的申诉的数据
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -205,7 +205,7 @@ public class AppealController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/al/upActive
      * 请求的属性类:RequestAppeal
-     * 必填字段:{"id":1,"appealDescribe":"更新_申诉原因_1","appealReplenish":"更新_申诉补充_1","pictureAds":"http://www.baidu.com","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"id":1,"appealDescribe":"更新_申诉原因_1","appealReplenish":"更新_申诉补充_1","pictureAds":"http://www.baidu.com","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:id+appealDescribe+pictureAds+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={
@@ -269,7 +269,7 @@ public class AppealController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/al/upPassive
      * 请求的属性类:RequestAppeal
-     * 必填字段:{"id":1,"refuteDescribe":"更新_反驳原因_1","refuteReplenish":"更新_反驳补充_1","refutePictureAds":"http://www.baidu.com","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"id":1,"refuteDescribe":"更新_反驳原因_1","refuteReplenish":"更新_反驳补充_1","refutePictureAds":"http://www.baidu.com","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:id+refuteDescribe+refutePictureAds+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={
@@ -334,8 +334,8 @@ public class AppealController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/al/addData
      * 请求的属性类:RequestAppeal
-     * 必填字段:{"orderNo":"order_no_1","appealDescribe":"更新_申诉原因_1","appealReplenish":"更新_申诉补充_1","pictureAds":"http://www.baidu.com","ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
-     * 客户端加密字段:id+appealDescribe+pictureAds+ctime+cctime+token+秘钥=sign
+     * 必填字段:{"orderNo":"order_no_1","appealDescribe":"更新_申诉原因_1","appealReplenish":"更新_申诉补充_1","pictureAds":"http://www.baidu.com","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+appealDescribe+pictureAds+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={
      *     "errcode": "0",
@@ -396,6 +396,71 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 获取我的申诉或者被申诉的数据-根据ID查询申诉的详情
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/al/getInfoData
+     * 请求的属性类:RequestAppeal
+     * 必填字段:{"id":1,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": 0,
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJhcHBlYWwiOnsiYXBwZWFsRGVzY3JpYmUiOiLmm7TmlrBf55Sz6K+J5Y6f5ZugXzEiLCJhcHBlYWxSZXBsZW5pc2giOiLmm7TmlrBf55Sz6K+J6KGl5YWFXzEiLCJhcHBlYWxSZXN1bHQiOjAsImJ1eU5pY2tuYW1lIjoi5bCP6aOe6b6ZMSIsImNyZWF0ZVRpbWUiOiIyMDE5LTEyLTA1IDE1OjI1OjQ0IiwiaWQiOjEsImlkZW50aXR5VHlwZSI6MSwib3JkZXJObyI6Im9yZGVyX25vXzEiLCJvcmRlclRyYWRlVGltZSI6IjIwMTktMTItMDQgMTA6MjU6MzYiLCJwaWN0dXJlQWRzIjoiaHR0cDovL3d3dy5iYWlkdS5jb20iLCJyZWZ1dGVEZXNjcmliZSI6IuabtOaWsF/lj43pqbPljp/lm6BfMSIsInJlZnV0ZVBpY3R1cmVBZHMiOiJodHRwOi8vd3d3LmJhaWR1LmNvbSIsInJlZnV0ZVJlcGxlbmlzaCI6IuabtOaWsF/lj43pqbPooaXlhYVfMSIsInNlbGxOaWNrbmFtZSI6IuWwj+mjnum+mTMiLCJzZXJ2aWNlQ2hhcmdlIjoiMy4zIiwidG90YWxQcmljZSI6IjEyLjEiLCJ0cmFkZU51bSI6IjExIiwidHJhZGVQcmljZSI6IjEuMSJ9LCJzaWduIjoiODYxNTUzY2UyMDcyMjg1NTE4OGEzNWZhYTlkOTI4MDQiLCJzdGltZSI6MTU3NjI0MjY0OTM4NiwidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912132110370000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
+    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkInfoData(requestAppeal);
+            token = requestAppeal.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 申诉数据
+//            AppealModel appealQuery = PublicMethod.assembleAppealQuery(requestAppeal, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            AppealModel appealModel = (AppealModel) ComponentUtil.appealService.findById(requestAppeal.getId());
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleAppealByIdResult(stime, token, sign, appealModel);
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);

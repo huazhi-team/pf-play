@@ -16,6 +16,8 @@ public class ResponseAppeal extends BaseResponse implements Serializable {
 
     public List<Appeal> aList;
 
+    public Appeal appeal;
+
     public Integer rowCount;
 
     public ResponseAppeal(){

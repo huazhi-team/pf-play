@@ -33,6 +33,9 @@ public class RegisterSingleton {
 
     public VcMemberGive vcMemberGive;
 
+    public Integer realNameCycle ;
+    public Double realNameReward ;
+
     public List<SysTypeDictionary> commenType ;
     public List<SysTypeDictionary> masonryType ;
     public List<SysTypeDictionary> empiricalType ;
@@ -94,5 +97,21 @@ public class RegisterSingleton {
 
     public void setProcedType(List<SysTypeDictionary> procedType) {
         this.procedType = procedType;
+    }
+
+    public Integer getRealNameCycle() {
+        return realNameCycle;
+    }
+
+    public void setRealNameCycle(Integer realNameCycle) {
+        this.realNameCycle = realNameCycle;
+    }
+
+    public Double getRealNameReward() {
+        return realNameReward;
+    }
+
+    public void setRealNameReward(Double realNameReward) {
+        this.realNameReward = realNameReward;
     }
 }

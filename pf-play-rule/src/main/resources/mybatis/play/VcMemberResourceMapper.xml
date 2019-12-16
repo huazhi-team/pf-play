@@ -392,6 +392,16 @@
   </update>
 
 
-
-
+  <update id="updateRealName" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="pushPeople != null" >
+        push_people = push_people+#{pushPeople},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
 </mapper>

@@ -23,12 +23,14 @@ import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.CommonService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
+import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +50,8 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     @Autowired
     private VcThirdPartyMapper vcThirdPartyMapper;
 
-
+    @Autowired
+    private USubRewardMapper uSubRewardMapper;
 
     @Autowired
     private VcMemberResourceMapper vcMemberResourceMapper;
@@ -324,5 +327,19 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     @Override
     public VcMember getSuperiorIdToPushPeople(VcMember vcMember) {
         return vcMemberMapper.selectLevel1(vcMember);
+    }
+
+    @Override
+    public void toRealName(Integer memberId) {
+        VcMember   vcMember  = TaskMethod.getMember(memberId);
+        VcMember   rsVcMember = vcMemberMapper.selectByMemberId(vcMember);
+        Double    activeValue =RegisterSingleton.getInstance().getRealNameReward();
+        Integer   totalNum =RegisterSingleton.getInstance().getRealNameCycle();
+
+        USubReward  uSubReward = TaskMethod.changUSubReward(rsVcMember.getSuperiorId(),memberId,Constant.REWARD_TASK1,activeValue,totalNum);
+
+        VcMember  updateVcMember  = TaskMethod.changRealnameMember(memberId);
+        VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
+        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource);
     }
 }

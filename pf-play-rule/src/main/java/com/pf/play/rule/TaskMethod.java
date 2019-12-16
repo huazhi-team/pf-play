@@ -1261,8 +1261,60 @@ public class TaskMethod {
         return  masonry;
     }
 
+    /**
+     * @Description: TODO
+     * @param memberId   奖励人
+    * @param subMemberId  直推人id
+    * @param type   类型 1 、实名制   2 、直推任务
+    * @param activeValue  活跃值
+    * @param totalNum    总次数
+    * @param endTime    有效时间
+     * @return com.pf.play.rule.core.model.USubReward
+     * @author long
+     * @date 2019/12/16 20:20
+     */
+    public static USubReward   changUSubReward(Integer memberId,Integer subMemberId,Integer type,Double activeValue,Integer totalNum){
+        DateModel   dateModel = TaskMethod.getDate();
+        USubReward  uSubReward =  new USubReward();
+        BeanUtils.copy(dateModel,uSubReward);
+        uSubReward.setMemberId(memberId);
+        uSubReward.setSubId(subMemberId);
+        uSubReward.setTotalNum(totalNum);
+        uSubReward.setRewardType(type);
+        Date endTime = DateUtil.getDateBetween(dateModel.getCreateTime(),totalNum);
+        uSubReward.setEndTime(endTime);
+        uSubReward.setActiveValue(activeValue);
+        return  uSubReward;
+    }
 
+    /**
+     * @Description: 实名制修改VcMember字段
+     * @param memberId
+     * @return com.pf.play.rule.core.model.VcMember
+     * @author long
+     * @date 2019/12/16 21:42
+     */
+    public static VcMember   changRealnameMember(Integer memberId){
+        VcMember   vcMember =  new VcMember();
+        vcMember.setMemberId(memberId);
+        vcMember.setIsCertification(2);
+        return  vcMember;
+    }
 
+    /**
+     * @Description: 实名制修改VcMemberResource字段
+     * @param memberId
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/16 21:44
+     */
+    public static VcMemberResource   changRealnameResource(Integer memberId){
+        VcMemberResource   vcMemberResource =  new VcMemberResource();
+        vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setPushPeople(1);
+        vcMemberResource.setUpdateTime(new Date());
+        return  vcMemberResource;
+    }
 
 
 }

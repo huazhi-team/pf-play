@@ -51,8 +51,12 @@ public class Constant {
     public  static  String    USER_SYNCHRONOUS_URL="http://114.55.67.167:9093/qhr/api/syncUserInfo";
     /***********同步上下级信息详细信息**********/
     public  static  String    PRARENT_SYNCHRONOUS_URL="http://114.55.67.167:9093/qhr/api/syncPrarentId";
-
+    /*********** 比例信息 **********/
     public  static  Double    ACTIVE_VALUE_MASONRY =  0.4 ;
 
+
+    /*********** 下级奖励表的类型信息 **********/
+    public  static  int  REWARD_TASK1    =  1 ; //实名制
+    public  static  int  REWARD_TASK2    =  2 ; //下级购买任务
 
 }

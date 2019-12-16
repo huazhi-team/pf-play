@@ -108,4 +108,9 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
         TaskSingleton.getInstance().setDisVitalityAttribute1(attributeList1);
         TaskSingleton.getInstance().setDisVitalityAttribute2(attributeList2);
     }
+
+    @Override
+    public void initSystemDictionary() {
+
+    }
 }

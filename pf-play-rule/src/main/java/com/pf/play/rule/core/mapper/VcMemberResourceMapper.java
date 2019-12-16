@@ -44,6 +44,9 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
     int updateByMasonry(VcMemberResource record);
 
 
+    int updateRealName(VcMemberResource record);
+
+
 
 
 }

@@ -418,6 +418,20 @@ public class UserController {
     }
 
 
+    @PostMapping("/test")
+    public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+        JsonResult<Object>     result  = null;
+        try{
+
+            ComponentUtil.userInfoSevrice.toRealName(2);
+
+            return JsonResult.successResult(null);
+        }catch (Exception e){
+            e.printStackTrace();
+            Map<String,String> map=ExceptionMethod.getException(e);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
 
 
 }

@@ -55,6 +55,10 @@ public class CommonServiceImpl<T> extends BaseServiceImpl<T> implements CommonSe
                 taskType.add(sysTypeDictionary);
             }else if(sysTypeDictionary.getTypeValue().equals("6")){
                 procedType.add(sysTypeDictionary);
+            }else if(sysTypeDictionary.getTypeValue().equals("7")){
+                RegisterSingleton.getInstance().setRealNameReward(Double.valueOf(sysTypeDictionary.getValue()));
+            }else if(sysTypeDictionary.getTypeValue().equals("8")){
+                RegisterSingleton.getInstance().setRealNameCycle(Integer.parseInt(sysTypeDictionary.getValue()));
             }
         }
         RegisterSingleton.getInstance().setMasonryType(masonryType);

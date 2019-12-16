@@ -53,6 +53,9 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     @Autowired
     private UNumberTypeLogMapper  uNumberTypeLogMapper ;
 
+    @Autowired
+    private USubRewardMapper  uSubRewardMapper ;
+
 
 
 
@@ -165,5 +168,12 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         }
         uMasonryListLogMapper.insertSelective(taskTaskLog);
         vcMemberResourceMapper.updateByMasonry(resource);
+    }
+
+    @Override
+    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource) {
+        uSubRewardMapper.insertSelective(uSubReward);
+        vcMemberResourceMapper.updateRealName(vcMemberResource);
+        vcMemberMapper.updateByPrimaryKeySelective(updateVcMember);
     }
 }

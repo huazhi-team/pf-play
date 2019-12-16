@@ -72,7 +72,7 @@ public class OrderController {
 
 
     /**
-     * @Description: 获取订单信息
+     * @Description: 获取订单信息-列表
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -190,10 +190,65 @@ public class OrderController {
     }
 
 
+    /**
+     * @Description: 获取订单详情
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/getInfoData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"orderNo":"order_no_dzf_1","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     */
+    @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
+    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkOrderInfoData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 订单详情
+            OrderModel orderQuery = PublicMethod.assembleOrderInfoQuery(requestOrder, memberId);
+            OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleOrderInfoResult(stime, token, sign, orderModel);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
 
 
     /**
-     * @Description: 获取买入订单信息
+     * @Description: 获取买入订单信息-列表
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -282,7 +337,7 @@ public class OrderController {
             // 校验sign
 
             // 订单列表-已取消的订单
-            OrderModel orderQuery = PublicMethod.assembleCancelOrderQuery(memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            OrderModel orderQuery = PublicMethod.assembleCancelOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
             orderQuery.getPage();
             log.info("data :" + orderList.size());
@@ -324,7 +379,7 @@ public class OrderController {
      * local:http://localhost:8082/play/od/upCancelData
      * 请求的属性类:RequestOrder
      * 必填字段:{"orderNo":"order_no_dzf_1","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
-     * 客户端加密字段:ctime+cctime+token+秘钥=sign
+     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/upCancelData", method = {RequestMethod.POST})
@@ -386,7 +441,7 @@ public class OrderController {
      * 请求的属性类:RequestOrder
      * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
-     * 服务端加密字段:超时时间+stime+token+秘钥=sign
+     * 服务端加密字段:overtime(超时时间)+stime+token+秘钥=sign
      * result=={
      *     "errcode": "0",
      *     "message": "success",
@@ -458,7 +513,7 @@ public class OrderController {
      * 请求的属性类:RequestOrder
      * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
-     * 服务端加密字段:超时时间+stime+token+秘钥=sign
+     * 服务端加密字段:overtime(超时时间)+stime+token+秘钥=sign
      * result=={
      *     "errcode": "0",
      *     "message": "success",

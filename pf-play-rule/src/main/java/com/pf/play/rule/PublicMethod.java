@@ -619,6 +619,36 @@ public class PublicMethod {
     }
 
 
+    /**
+     * @Description: 查询订单详情时，校验基本数据是否非法
+     * @param requestOrder - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkOrderInfoData(RequestOrder requestOrder) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestOrder == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00001.geteCode(), PfErrorCode.ENUM_ERROR.D00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestOrder.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestOrder.getToken());
+
+        // 校验token值
+        if (StringUtils.isBlank(requestOrder.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00015.geteCode(), PfErrorCode.ENUM_ERROR.D00015.geteDesc());
+        }
+        return memberId;
+    }
+
+
 
     /**
      * @Description: 查询订单时，校验基本数据是否非法
@@ -788,6 +818,23 @@ public class PublicMethod {
 
 
     /**
+     * @Description: 组装查询订单详情的查询条件
+     * @param requestOrder - 查询的基本信息
+     * @param memberId - 用户ID
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/22 18:01
+     */
+    public static OrderModel assembleOrderInfoQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBen = new OrderModel();
+        resBen.setOrderNo(requestOrder.getOrderNo());
+        resBen.setMemberId(memberId);
+        return resBen;
+    }
+
+
+
+    /**
      * @Description: 组装查询用户购买的订单（买入订单）列表的查询条件
      * @param requestOrder - 查询的基本信息
      * @param memberId - 用户ID
@@ -806,6 +853,31 @@ public class PublicMethod {
         resBen.setSortType(sortType);
         return resBen;
     }
+
+
+    /**
+     * @Description: 订单的详细信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderModel - 订单详情信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleOrderInfoResult(long stime, String token, String sign, OrderModel orderModel){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderModel != null){
+            ConsumerOrder consumerOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
+            dataModel.coOrder = consumerOrder;
+        }
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
 
     /**
      * @Description: 买入、取消的订单的订单信息的数据组装返回客户端的方法
@@ -890,7 +962,7 @@ public class PublicMethod {
             // 订单状态不等于1的订单无法取消
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00008.geteCode(), PfErrorCode.ENUM_ERROR.D00008.geteDesc());
         }
-        if (orderModel.getOrderStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+        if (orderModel.getOrderTradeStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
             // 订单交易状态：0初始化，1锁定，2确认付款，3完成；
             // 订单交易状态不等于0的订单无法取消
             throw new ServiceException(PfErrorCode.ENUM_ERROR.D00009.geteCode(), PfErrorCode.ENUM_ERROR.D00009.geteDesc());
@@ -907,8 +979,8 @@ public class PublicMethod {
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleCancelOrderQuery(long memberId, int orderStatus, int sortType){
-        OrderModel resBen = new OrderModel();
+    public static OrderModel assembleCancelOrderQuery(RequestOrder requestOrder, long memberId, int orderStatus, int sortType){
+        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
         resBen.setMemberId(memberId);
         resBen.setOrderStatus(orderStatus);
         resBen.setSortType(sortType);

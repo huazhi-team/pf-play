@@ -200,6 +200,11 @@ public class OrderModel extends BasePage implements Serializable {
      */
     private Integer orderType;
 
+    /**
+     * 支付图片上传
+     */
+    private String pictureAds;
+
     public Long getId() {
         return id;
     }
@@ -506,5 +511,13 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setTradeAppealStatus(Integer tradeAppealStatus) {
         this.tradeAppealStatus = tradeAppealStatus;
+    }
+
+    public String getPictureAds() {
+        return pictureAds;
+    }
+
+    public void setPictureAds(String pictureAds) {
+        this.pictureAds = pictureAds;
     }
 }

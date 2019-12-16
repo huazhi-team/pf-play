@@ -20,11 +20,51 @@ public class ResponseOrder  extends BaseResponse implements Serializable {
 
     public List<ConsumerOrder> coList;
 
+    public ConsumerOrder coOrder;
+
     public Integer rowCount;
 
     public ResponseOrder(){
 
     }
 
+    public Integer getOvertime() {
+        return overtime;
+    }
 
+    public void setOvertime(Integer overtime) {
+        this.overtime = overtime;
+    }
+
+    public List<Order> getoList() {
+        return oList;
+    }
+
+    public void setoList(List<Order> oList) {
+        this.oList = oList;
+    }
+
+    public List<ConsumerOrder> getCoList() {
+        return coList;
+    }
+
+    public void setCoList(List<ConsumerOrder> coList) {
+        this.coList = coList;
+    }
+
+    public ConsumerOrder getCoOrder() {
+        return coOrder;
+    }
+
+    public void setCoOrder(ConsumerOrder coOrder) {
+        this.coOrder = coOrder;
+    }
+
+    public Integer getRowCount() {
+        return rowCount;
+    }
+
+    public void setRowCount(Integer rowCount) {
+        this.rowCount = rowCount;
+    }
 }

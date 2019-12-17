@@ -4,7 +4,7 @@
 
   <sql id="Base_Column_List" >
     id, task_id, task_name, hold_number, need_resource, task_circle_day, task_validity_day, 
-    provide_type, every_num, total_num, create_time, task_level, update_time, is_valid
+    provide_type, every_num, total_num,charm_value, create_time, task_level, update_time, is_valid
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.DisTaskType">
     select 

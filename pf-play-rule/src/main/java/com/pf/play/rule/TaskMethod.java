@@ -1096,6 +1096,7 @@ public class TaskMethod {
     public static UdailyTaskStat   changUdailyTaskStat(Integer memberId){
         UdailyTaskStat  vcMemberResource =  new UdailyTaskStat();
         vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setCurday(DateUtil.getDayNumber(new Date()));
         return  vcMemberResource;
     }
 
@@ -1180,10 +1181,10 @@ public class TaskMethod {
             if(uTaskHave.getTaskId()==disTaskAttribute.getTaskId()){
                 todayTaskResp.setLookCommodityNumCount(Integer.parseInt(disTaskAttribute.getKey1()));
                 todayTaskResp.setAcceptNumberCount(Integer.parseInt(disTaskAttribute.getKey2()));
-                if(udailyTaskStat.getAcceptNumber()>Integer.parseInt(disTaskAttribute.getKey1())&&udailyTaskStat.getLookCommodityNum()>=Integer.parseInt(disTaskAttribute.getKey2())){
+                if(udailyTaskStat.getAcceptNumber()>=Integer.parseInt(disTaskAttribute.getKey1())&&udailyTaskStat.getLookCommodityNum()>=Integer.parseInt(disTaskAttribute.getKey2())){
                     todayTaskResp.setIsComplete(2);
                 }
-                break;
+//                break;
             }
         }
 
@@ -1329,7 +1330,7 @@ public class TaskMethod {
         List<DisTaskType>   list  =   TaskSingleton.getInstance().getDisTaskTypeList();
         for(DisTaskType disTaskType :list ){
             if(disTaskType.getTaskId()==taskId){
-                charmValue=disTaskType.getNeedCharmValue();
+                charmValue=disTaskType.getCharmValue();
                 break;
             }
         }

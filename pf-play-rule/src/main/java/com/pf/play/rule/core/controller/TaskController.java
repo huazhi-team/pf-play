@@ -171,6 +171,7 @@ public class TaskController {
             }
             return JsonResult.successResult(insertFlag);
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

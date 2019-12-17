@@ -22,11 +22,12 @@
     look_commodity_num, is_complete, curday, curhour, curminute, create_time, update_time, 
     is_valid
   </sql>
-  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UdailyTaskStat" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UdailyTaskStat"  >
     select 
     <include refid="Base_Column_List" />
     from u_daily_task_stat
-    where id = #{id,jdbcType=BIGINT}
+    where member_id = #{memberId}
+    and curday = #{curday}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from u_daily_task_stat

@@ -8,6 +8,7 @@
     empirical_level,daren_level,is_vitality_value,team_people,team_active,hero_active,alliance_active,
     DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%s") uqdate_time_str,
     DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%s") create_time_str,
+    charm_value,
     is_valid
   </sql>
 
@@ -322,7 +323,7 @@
                 on    a.member_id=  b.member_id
                 where  a.superior_id=#{memberId}
                 order  by   b.active_value desc
-                limit  2) d   set    v.hero_active = d.active_value
+                ) d   set    v.team_active = d.active_value
                 where  v.member_id = #{memberId}
     </update>
 

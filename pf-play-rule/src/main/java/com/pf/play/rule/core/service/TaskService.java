@@ -86,4 +86,7 @@ public interface TaskService  <T> extends BaseService<T> {
 
     Double   grantReward(VcMemberResource  vcMemberResource,List<UTaskHave>  list);
 
+//    void   vitalitySettlement();
+
+
 }

@@ -76,7 +76,7 @@ public class DisTaskType {
      *
      * @mbggenerated
      */
-    private Double needCharmValue;
+    private Double CharmValue;
 
     /**
      * 创建时间
@@ -280,11 +280,11 @@ public class DisTaskType {
         this.totalNum = totalNum;
     }
 
-    public Double getNeedCharmValue() {
-        return needCharmValue;
+    public Double getCharmValue() {
+        return CharmValue;
     }
 
-    public void setNeedCharmValue(Double needCharmValue) {
-        this.needCharmValue = needCharmValue;
+    public void setCharmValue(Double CharmValue) {
+        this.CharmValue = CharmValue;
     }
 }

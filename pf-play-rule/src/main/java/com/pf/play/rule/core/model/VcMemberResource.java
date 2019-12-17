@@ -168,6 +168,13 @@ public class VcMemberResource {
      */
     private String phone;
 
+    /**
+     * 上级id
+     *
+     * @mbggenerated
+     */
+    private Integer superiorId;
+
 
     private List<Integer> idList;
     /**
@@ -425,5 +432,13 @@ public class VcMemberResource {
 
     public void setCharmValue(Double charmValue) {
         this.charmValue = charmValue;
+    }
+
+    public Integer getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Integer superiorId) {
+        this.superiorId = superiorId;
     }
 }

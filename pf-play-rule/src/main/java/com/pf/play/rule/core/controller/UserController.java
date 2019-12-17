@@ -344,7 +344,6 @@ public class UserController {
     public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
 
 
-        JsonResult<Object>     result  = null;
         try{
             log.info("----------:myTodayTask!");
             TodayTaskResp   todayTaskResp  = new TodayTaskResp();

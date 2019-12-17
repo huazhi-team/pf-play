@@ -487,7 +487,6 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Override
     public void openUpdateTask() {
         while (true){
-
             try{
                 UvitalityValueList uVitalityValueList = new UvitalityValueList();
                 List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
@@ -571,26 +570,23 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         //查询用户需要修改的
         VcMemberResource  updateMyResource =   TaskMethod.getUqdateMyActiveValue(uVitalityValueList.getMemberId(),uVitalityValueList.getActiveValue(),uVitalityValueList.getSymbolType());
 
-        List<VcMemberResource>     list    =   vcMemberResourceMapper.selectByTeamActive(updateMyResource);//查询英雄值
-        VcMemberResource   vcMemberResource =  TaskMethod.updateHeroActive(uVitalityValueList.getMemberId(),list);
-
-
-        ComponentUtil.transactionalService.updateMyActiveValue(updateMyResource,vcMember);
-
+//        List<VcMemberResource>     list    =   vcMemberResourceMapper.selectByTeamActive(updateMyResource);//查询英雄值
+//        VcMemberResource   vcMemberResource =  TaskMethod.updateHeroActive(uVitalityValueList.getMemberId(),list);
         int   uqdateCount  =  vcMemberResourceMapper.updateByActiveValue(updateMyResource);
-
+//        ComponentUtil.transactionalService.updateMyActiveValue(updateMyResource,vcMember);
         if(uqdateCount==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
         }
+
         //团队活力值的  需要修改的总体的一个list
         List<Integer>    updateList =   TaskMethod.getSuperiorIdList(vcMember1);
 
         for(Integer memberId :updateList){  //挨个遍历更新 英雄活力 和联盟活力值
-            VcMemberResource  updateMyResource1 = TaskMethod.getUqdateTeamActive(memberId,uVitalityValueList.getActiveValue());
+//            VcMemberResource  updateMyResource1 = TaskMethod.getUqdateTeamActive(memberId,uVitalityValueList.getActiveValue());
             VcMember     updateVcMember   =  TaskMethod.getMember(memberId);
             VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
             VcMemberResource   rsVcMemberResource      =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource); //查询等级信息
-            ComponentUtil.transactionalService.updataActiveValue(updateMyResource1,updateVcMember);
+            ComponentUtil.transactionalService.updataActiveValue(rsVcMemberResource,updateVcMember);
         }
 
         //筛选用户有哪些需要变更的

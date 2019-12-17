@@ -15,6 +15,7 @@ public class LoginResp {
     private   String   birthday;
     private   String   province;
     private   String   city;
+    private   String   inviteCode;
 
     public String getNickname() {
         return nickname;
@@ -78,5 +79,13 @@ public class LoginResp {
 
     public void setMemberAdd(String memberAdd) {
         this.memberAdd = memberAdd;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }

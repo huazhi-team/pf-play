@@ -4,6 +4,8 @@ import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.model.USubReward;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface USubRewardMapper<T> extends BaseDao<T> {
     int deleteByPrimaryKey(Long id);
@@ -17,4 +19,6 @@ public interface USubRewardMapper<T> extends BaseDao<T> {
     int updateByPrimaryKeySelective(USubReward record);
 
     int updateByPrimaryKey(USubReward record);
+
+    List<USubReward> selectByValid(USubReward record);
 }

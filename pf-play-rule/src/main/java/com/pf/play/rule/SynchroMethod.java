@@ -214,6 +214,7 @@ public class SynchroMethod {
     public   static  VcMemberResource  changUpdateResource(Integer memberId,Double masonry){
         VcMemberResource  vcMemberResource = new  VcMemberResource();
         vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setCharmValue(masonry);
         vcMemberResource.setDayMasonry(masonry);
         vcMemberResource.setFrozenMasonry(masonry);
         return   vcMemberResource;

@@ -61,4 +61,6 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
 
     void     toRealName(Integer  memberId);
 
+    boolean   isCharmValueOk(Integer  memberId,Integer  task);
+
 }

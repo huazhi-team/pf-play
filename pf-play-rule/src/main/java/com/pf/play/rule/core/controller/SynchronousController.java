@@ -51,6 +51,15 @@ public class SynchronousController {
         }
     }
 
+    /**
+     * @Description: 商品同步
+     * @param request
+    * @param response
+    * @param userCommonReq
+     * @return com.pf.play.common.utils.JsonResult<java.lang.Object>
+     * @author long
+     * @date 2019/12/17 9:57
+     */
     @PostMapping("/goods")
     public JsonResult<Object> goods(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         try{
@@ -114,7 +123,7 @@ public class SynchronousController {
                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getMasonryCount());
 
             if(count==0){
-                return JsonResult.failedResult("交易手续费未部署",00003+"");
+                return JsonResult.failedResult("交易手续费未部署",00004+"");
             }
             return JsonResult.successResult(true);
         }catch (Exception e){

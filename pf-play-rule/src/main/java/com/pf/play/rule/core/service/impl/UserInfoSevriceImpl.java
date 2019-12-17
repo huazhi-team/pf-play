@@ -24,6 +24,7 @@ import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.CommonService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
+import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -341,5 +342,13 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         VcMember  updateVcMember  = TaskMethod.changRealnameMember(memberId);
         VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
         ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource);
+    }
+
+    @Override
+    public boolean isCharmValueOk(Integer memberId, Integer task) {
+        VcMemberResource vcMemberResource = TaskMethod.changvcMemberResource(memberId);
+        VcMemberResource resource = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
+        boolean  flag =TaskMethod.isCharmValue(resource,task);
+        return flag;
     }
 }

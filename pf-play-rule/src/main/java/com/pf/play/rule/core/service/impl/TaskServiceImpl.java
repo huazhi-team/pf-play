@@ -74,6 +74,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Autowired
     private UMasonryListLogMapper uMasonryListLogMapper;
 
+    @Autowired
+    private USubRewardMapper uSubRewardMapper;
+
 
 
 
@@ -378,11 +381,14 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         vcMemberResource.setMemberId(memberId);
         VcMember record =new VcMember();
         record.setMemberId(memberId);
+
+
         VcMemberResource  resourceRs = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
         VcMember record1 = vcMemberMapper.selectByPrimaryKey(record);
-        Double  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource();
+        Double  masonry=resourceRs.getDayMasonry()-taskType.getNeedResource() ;
         Double  myActiveValue=Double.valueOf(disTaskAttribute.getKey1());
         Double  upActiveValue=Double.valueOf(disTaskAttribute.getKey2());
+
         if(masonry<0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR5.geteDesc());
         }
@@ -870,18 +876,23 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         if(activeValue==0&&taskTask==0){
             return rewardMasonry;
         }
+
+        USubReward   uSubReward =  TaskMethod.toUsubReward(vcMemberResource.getMemberId());
+        List<USubReward>   listUSubReward  = uSubRewardMapper.selectByValid(uSubReward);
+        Double      uSubReward1  = TaskMethod.countUSubReward(listUSubReward);
+        UMasonryListLog  uSubLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE11,Constant.TASK_SYMBOL_TYPE1,uSubReward1);
+
 //        if(taskTask!=0){
 //            uMasonryListLogMapper.insertSelective(taskTaskLog);
 //        }
         //查看该用户是否在做交易
         String lockKey_send = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_CONSUMER, vcMemberResource.getMemberId());
         boolean send = ComponentUtil.redisIdService.lock(lockKey_send);
-        rewardMasonry = activeValue + taskTask;
+        rewardMasonry = activeValue + taskTask + uSubReward1;
         VcMemberResource updateResource = TaskMethod.changeUpdateResource(vcMemberResource.getMemberId(),rewardMasonry);
         if(send){
-            ComponentUtil.transactionalService.gratitudeupdateMyActiveValue(uMasonryListLog,taskTaskLog,updateResource);
+            ComponentUtil.transactionalService.gratitudeupdateMyActiveValue(uMasonryListLog,taskTaskLog,uSubLog,updateResource);
         }
-
         return rewardMasonry;
     }
 }

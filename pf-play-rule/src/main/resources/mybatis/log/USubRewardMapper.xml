@@ -170,4 +170,13 @@
       is_valid = #{isValid,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+    <select id="selectByValid" resultType="com.pf.play.rule.core.model.USubReward" >
+        select
+        <include refid="Base_Column_List" />
+        from u_sub_reward
+        where member_id = #{memberId}
+        and  end_time > #{endTime}
+        and  is_valid = 1
+    </select>
 </mapper>

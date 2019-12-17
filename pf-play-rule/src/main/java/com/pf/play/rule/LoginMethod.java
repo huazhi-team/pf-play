@@ -91,6 +91,7 @@ public class LoginMethod {
         loginResp.setCity(userInfoResp.getCity());
         loginResp.setProvince(userInfoResp.getProvince());
         loginResp.setMemberId(userInfoResp.getMemberId());
+        loginResp.setInviteCode(userInfoResp.getInviteCode());
         return  loginResp;
     }
 

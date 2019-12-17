@@ -146,14 +146,19 @@ public class TaskController {
     public JsonResult<Object> exeReceiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq){
         try{
             log.info("----------:exeReceiveTask!");
-            String    token  ="d9680065409547b69746912de48ee8d4";
-            String    wxOpenId  ="slllsdjdjsa";
-            Integer   taskId    = 2;
             boolean   cheakFlag  = TaskMethod.checkUserTaskIsEffective(taskReq);
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
+            if (memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
+            }
+            cheakFlag  = ComponentUtil.userInfoSevrice.isCharmValueOk(memberId,taskReq.getTaskId());
+
+            if(!cheakFlag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR12.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR12.geteDesc());
+            }
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
             boolean  checkFlag  =   ComponentUtil.taskService.checkUserCondition(memberId,taskReq.getTaskId());
             if(!checkFlag){

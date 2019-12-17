@@ -108,12 +108,12 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     @Override
     public void buyTaskUpdateInfo(UTaskHave uTaskHave, VcMemberResource resource,
                                         UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary) {
-        uTaskHaveMapper.insertSelective(uTaskHave);
-        vcMemberResourceMapper.updateByPrimaryKeySelective(resource);
-        uMasonryListLogMapper.insertSelective(uMasonryLog);
-        uVitalityValueListMapper.insertSelective(my);
-        uVitalityValueListMapper.insertSelective(uq);
-        uMasonrySummaryMapper.updateByPrimaryKeySelective(uMasonrySummary);
+        uTaskHaveMapper.insertSelective(uTaskHave);         //任务拥有表添加
+        uMasonryListLogMapper.insertSelective(uMasonryLog); //砖石明细表
+        uVitalityValueListMapper.insertSelective(my);       //自己加活力值明细
+        uVitalityValueListMapper.insertSelective(uq);       //上级加活力值明细
+        vcMemberResourceMapper.updateByPrimaryKeySelective(resource);   // 修改资源表信息
+        uMasonrySummaryMapper.updateByPrimaryKeySelective(uMasonrySummary);  //更新砖石汇总表
     }
 
 
@@ -162,11 +162,12 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     }
 
     @Override
-    public void gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog, VcMemberResource resource) {
+    public void gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource) {
         if(uMasonryListLog!=null){
             uMasonryListLogMapper.insertSelective(uMasonryListLog);
         }
         uMasonryListLogMapper.insertSelective(taskTaskLog);
+        uMasonryListLogMapper.insertSelective(realNameLog);
         vcMemberResourceMapper.updateByMasonry(resource);
     }
 

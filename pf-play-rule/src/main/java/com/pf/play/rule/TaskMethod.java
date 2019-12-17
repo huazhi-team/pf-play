@@ -1316,5 +1316,61 @@ public class TaskMethod {
         return  vcMemberResource;
     }
 
+    /**
+     * @Description: 当前用户魅力值是否满足要求
+     * @param vcMemberResource
+    * @param taskId
+     * @return boolean
+     * @author long
+     * @date 2019/12/17 11:33
+     */
+    public static boolean  isCharmValue(VcMemberResource vcMemberResource,Integer  taskId){
+        double   charmValue =   0D ;
+        List<DisTaskType>   list  =   TaskSingleton.getInstance().getDisTaskTypeList();
+        for(DisTaskType disTaskType :list ){
+            if(disTaskType.getTaskId()==taskId){
+                charmValue=disTaskType.getNeedCharmValue();
+                break;
+            }
+        }
+        if(vcMemberResource.getCharmValue()>=charmValue){
+            return  true;
+        }
+
+        return   false ;
+    }
+
+
+    /**
+     * @Description: TODO
+     * @param list
+     * @return java.lang.Double
+     * @author long
+     * @date 2019/12/17 13:59
+     */
+    public static Double  countUSubReward(List<USubReward> list){
+        Double  activeValue  =0D;
+        for(USubReward  uSubReward:list){
+            activeValue = activeValue + uSubReward.getActiveValue();
+        }
+        return   activeValue ;
+    }
+
+    /**
+     * @Description: TODO
+     * @param memberId
+     * @return com.pf.play.rule.core.model.USubReward
+     * @author long
+     * @date 2019/12/17 14:28
+     */
+    public static USubReward    toUsubReward(Integer memberId){
+        USubReward  uSubReward  = new USubReward();
+        uSubReward.setMemberId(memberId);
+        uSubReward.setEndTime(new Date());
+        return uSubReward;
+    }
+
+
+
 
 }

@@ -72,6 +72,13 @@ public class DisTaskType {
     private Double totalNum;
 
     /**
+     * 需要消耗魅力值
+     *
+     * @mbggenerated
+     */
+    private Double needCharmValue;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -271,5 +278,13 @@ public class DisTaskType {
 
     public void setTotalNum(Double totalNum) {
         this.totalNum = totalNum;
+    }
+
+    public Double getNeedCharmValue() {
+        return needCharmValue;
+    }
+
+    public void setNeedCharmValue(Double needCharmValue) {
+        this.needCharmValue = needCharmValue;
     }
 }

@@ -52,6 +52,12 @@ public class VcMemberResource {
      * @mbggenerated
      */
     private Double frozenMasonry;
+    /**
+     * 魅力值
+     *
+     * @mbggenerated
+     */
+    private Double charmValue;
 
     /**
      * 经验值
@@ -411,5 +417,13 @@ public class VcMemberResource {
 
     public void setTeamActive(Double teamActive) {
         this.teamActive = teamActive;
+    }
+
+    public Double getCharmValue() {
+        return charmValue;
+    }
+
+    public void setCharmValue(Double charmValue) {
+        this.charmValue = charmValue;
     }
 }

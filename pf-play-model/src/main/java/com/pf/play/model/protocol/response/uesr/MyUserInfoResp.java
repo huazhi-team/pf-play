@@ -19,6 +19,7 @@ public class MyUserInfoResp {
     private Double activeValue;
     private Double masonry;
     private Integer isCertif;
+    private String  inviteCode;
 
     public String getNickname() {
         return nickname;
@@ -114,5 +115,13 @@ public class MyUserInfoResp {
 
     public void setIsCertif(Integer isCertif) {
         this.isCertif = isCertif;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }

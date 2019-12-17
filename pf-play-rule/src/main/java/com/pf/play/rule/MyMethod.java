@@ -258,6 +258,7 @@ public class MyMethod {
         myUserInfoResp.setActiveValue(vcMemberResource.getActiveValue());
         myUserInfoResp.setEmpiricalValue(vcMemberResource.getEmpiricalValue());
         myUserInfoResp.setIsCertif(vcMember.getIsCertification());
+        myUserInfoResp.setInviteCode(vcMember.getInviteCode());
         return myUserInfoResp;
     }
 

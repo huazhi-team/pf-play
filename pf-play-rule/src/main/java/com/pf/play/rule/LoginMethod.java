@@ -146,7 +146,6 @@ public class LoginMethod {
                 }catch (Exception e ){
                     e.printStackTrace();
                 }
-
             }
         }.start();
     }

@@ -242,6 +242,10 @@ public class UserController {
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
 
+            if(memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
+            }
+
             VcMember   vcMember=ComponentUtil.userInfoSevrice.getMemeber(memberId);
 
             VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
@@ -250,6 +254,7 @@ public class UserController {
             }
             return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember,vcMemberResource));
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map=ExceptionMethod.getException(e);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

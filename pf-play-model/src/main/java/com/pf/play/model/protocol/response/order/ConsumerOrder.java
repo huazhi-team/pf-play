@@ -31,6 +31,8 @@ public class ConsumerOrder implements Serializable {
 
     public String nickname;
 
+    public String sellFixedNum;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -174,5 +176,13 @@ public class ConsumerOrder implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getSellFixedNum() {
+        return sellFixedNum;
+    }
+
+    public void setSellFixedNum(String sellFixedNum) {
+        this.sellFixedNum = sellFixedNum;
     }
 }

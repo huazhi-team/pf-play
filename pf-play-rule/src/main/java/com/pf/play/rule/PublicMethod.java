@@ -1137,6 +1137,39 @@ public class PublicMethod {
     }
 
 
+
+    /**
+     * @Description: 查询用户待付款订单详情时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkUnpaidInfoData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00011.geteCode(), PfErrorCode.ENUM_ERROR.D00011.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验订单号值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00016.geteCode(), PfErrorCode.ENUM_ERROR.D00016.geteDesc());
+        }
+        return memberId;
+    }
+
+
+
     /**
      * @Description: 查询用户待付款订单时，校验基本数据是否非法
      * @param requestTrade - 基础数据
@@ -1162,8 +1195,37 @@ public class PublicMethod {
     }
 
 
+
     /**
-     * @Description: 组装查询待付款的订单的查询条件
+     * @Description: 组装查询待付款的订单详情的查询条件
+     * @param requestOrder - 订单信息
+     * @param memberId - 用户ID
+    //     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成 --这里查询状态为1的
+     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleUnpaidOrderByOrderOnQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
+        List<Integer> orderTradeStatusList = new ArrayList<>();
+        orderTradeStatusList.add(1); // 订单流水状态1：锁定
+        orderTradeStatusList.add(2);// 订单流水状态2：确认付款（等待中：等待卖家确认收款）
+        resBean.setOrderTradeStatusList(orderTradeStatusList);
+        List<Integer> tradeStatusList = new ArrayList<>();
+        tradeStatusList.add(2);
+        tradeStatusList.add(4);
+        resBean.setTradeStatusList(tradeStatusList);
+        resBean.setBuyMemberId(memberId);
+        return resBean;
+    }
+
+
+
+
+    /**
+     * @Description: 组装查询待付款的订单列表的查询条件
      * @param requestOrder - 订单信息
      * @param memberId - 用户ID
 //     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成 --这里查询状态为1的
@@ -1190,23 +1252,80 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 买入、取消的订单的订单信息的数据组装返回客户端的方法
+     * @Description: 买入、取消的订单的订单详情信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderModel - 订单详情信息
+     * @param buyOvertime - 买家超时时间
+     * @param sellOverTime - 卖家超时时间
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleUnpaidOrderByOrderNoResult(long stime, String token, String sign, OrderModel orderModel, int buyOvertime, int sellOverTime){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderModel != null){
+            ConsumerOrder coOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
+            dataModel.coOrder = coOrder;
+        }
+        dataModel.buyOvertime = buyOvertime;
+        dataModel.sellOverTime = sellOverTime;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 买入、取消的订单的订单详细信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderModel - 订单信息
+     * @param buyOvertime - 买家超时时间
+     * @param sellOverTime - 卖家超时时间
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleUnpaidOrderInfoResult(long stime, String token, String sign, OrderModel orderModel, int buyOvertime, int sellOverTime){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderModel != null){
+            ConsumerOrder coOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
+            dataModel.coOrder = coOrder;
+        }
+        dataModel.sellOverTime = sellOverTime;
+        dataModel.buyOvertime = buyOvertime;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 买入、取消的订单的订单列表信息的数据组装返回客户端的方法
      * @param stime - 服务器的时间
      * @param token - 登录token
      * @param sign - 签名
      * @param orderList - 订单信息
+     * @param buyOvertime - 买家超时时间
+     * @param sellOverTime - 卖家超时时间
      * @param rowCount - 总行数
      * @return java.lang.String
      * @author yoko
      * @date 2019/11/25 22:45
      */
-    public static String assembleUnpaidOrderResult(long stime, String token, String sign, List <OrderModel> orderList, int overtime, Integer rowCount){
+    public static String assembleUnpaidOrderResult(long stime, String token, String sign, List <OrderModel> orderList, int buyOvertime, int sellOverTime, Integer rowCount){
         ResponseOrder dataModel = new ResponseOrder();
         if (orderList != null && orderList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
             List<ConsumerOrder> dataList = BeanUtils.copyList(orderList, ConsumerOrder.class);
             dataModel.coList = dataList;
         }
-        dataModel.overtime = overtime;
+        dataModel.buyOvertime = buyOvertime;
+        dataModel.sellOverTime = sellOverTime;
         if (rowCount != null){
             dataModel.rowCount = rowCount;
         }
@@ -1752,7 +1871,37 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 查询用户待收款订单时，校验基本数据是否非法
+     * @Description: 查询用户待收款订单详情时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkReceivableInfoData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00017.geteCode(), PfErrorCode.ENUM_ERROR.D00017.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验orderNo值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00018.geteCode(), PfErrorCode.ENUM_ERROR.D00018.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 查询用户待收款订单列表时，校验基本数据是否非法
      * @param requestTrade - 基础数据
      * @return void
      * @author yoko
@@ -1776,8 +1925,34 @@ public class PublicMethod {
     }
 
 
+
     /**
-     * @Description: 组装查询待收款的订单的查询条件
+     * @Description: 组装查询待收款的订单详情的查询条件
+     * @param requestOrder - 订单信息
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleReceivableInfoQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        List<Integer> orderTradeStatusList = new ArrayList<>();
+        orderTradeStatusList.add(1); // 订单流水状态1：锁定
+        orderTradeStatusList.add(2);// 订单流水状态2：确认付款（等待中：等待卖家确认收款）
+        resBean.setOrderTradeStatusList(orderTradeStatusList);
+        List<Integer> tradeStatusList = new ArrayList<>();
+        tradeStatusList.add(2);
+        tradeStatusList.add(4);
+        resBean.setTradeStatusList(tradeStatusList);
+        resBean.setSellMemberId(memberId);
+        return resBean;
+    }
+
+
+
+
+    /**
+     * @Description: 组装查询待收款的订单列表的查询条件
      * @param requestOrder - 订单信息
      * @param memberId - 用户ID
      * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
@@ -1800,9 +1975,43 @@ public class PublicMethod {
         return resBean;
     }
 
+    /**
+     * @Description: 查询用户已完成订单详情时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkFinishInfoData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00019.geteCode(), PfErrorCode.ENUM_ERROR.D00019.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验orderNo值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00020.geteCode(), PfErrorCode.ENUM_ERROR.D00020.geteDesc());
+        }
+        // 校验订单类型(orderType)值
+        // ：1求购订单，2卖出订单
+        if (requestTrade.getOrderType() == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00021.geteCode(), PfErrorCode.ENUM_ERROR.D00021.geteDesc());
+        }
+        return memberId;
+    }
+
 
     /**
-     * @Description: 查询用户已完成订单时，校验基本数据是否非法
+     * @Description: 查询用户已完成订单列表时，校验基本数据是否非法
      * @param requestTrade - 基础数据
      * @return void
      * @author yoko
@@ -1825,9 +2034,28 @@ public class PublicMethod {
         return memberId;
     }
 
+    /**
+     * @Description: 组装查询已完成的订单详情的查询条件
+     * @param requestOrder - 基本信息
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleFinishInfoQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        if (requestOrder.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 1求购订单
+            resBean.setBuyMemberId(memberId);
+        }else if (requestOrder.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            // 2卖出订单
+            resBean.setSellMemberId(memberId);
+        }
+        return resBean;
+    }
 
     /**
-     * @Description: 组装查询已完成的订单的查询条件
+     * @Description: 组装查询已完成的订单列表的查询条件
      * @param requestOrder - 基本信息
      * @param memberId - 用户ID
      * @return
@@ -1843,7 +2071,30 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 买入、取消的订单的订单信息的数据组装返回客户端的方法
+     * @Description: 买入、取消的订单的订单详情信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderModel - 订单信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleFinishOrderInfoResult(long stime, String token, String sign, OrderModel orderModel){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderModel != null){
+            ConsumerOrder coOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
+            dataModel.coOrder = coOrder;
+        }
+        dataModel.setStime(stime);
+        dataModel.setSign(sign);
+        dataModel.setToken(token);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 买入、取消的订单的订单列表信息的数据组装返回客户端的方法
      * @param stime - 服务器的时间
      * @param token - 登录token
      * @param sign - 签名

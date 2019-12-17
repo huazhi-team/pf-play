@@ -205,6 +205,16 @@ public class OrderModel extends BasePage implements Serializable {
      */
     private String pictureAds;
 
+    /**
+     * 卖家的固定账号
+     */
+    private String sellFixedNum;
+
+    /**
+     * 买家的固定账号
+     */
+    private String buyFixedNum;
+
     public Long getId() {
         return id;
     }
@@ -519,5 +529,21 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setPictureAds(String pictureAds) {
         this.pictureAds = pictureAds;
+    }
+
+    public String getSellFixedNum() {
+        return sellFixedNum;
+    }
+
+    public void setSellFixedNum(String sellFixedNum) {
+        this.sellFixedNum = sellFixedNum;
+    }
+
+    public String getBuyFixedNum() {
+        return buyFixedNum;
+    }
+
+    public void setBuyFixedNum(String buyFixedNum) {
+        this.buyFixedNum = buyFixedNum;
     }
 }

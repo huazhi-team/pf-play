@@ -56,6 +56,11 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
     }
 
     @Override
+    public OrderModel getUnpaidOrder(OrderModel model) throws Exception {
+        return orderMapper.getUnpaidOrder(model);
+    }
+
+    @Override
     public List<OrderModel> getUnpaidOrderList(OrderModel model) throws Exception {
         Integer rowCount = orderMapper.countUnpaidOrder(model);
         model.setRowCount(rowCount);
@@ -71,6 +76,21 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
         }
         return true;
     }
+
+    @Override
+    public OrderModel getFinishOrder(OrderModel model) throws Exception {
+        // 订单类型：1求购订单，2卖出订单
+        if (model.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 1求购订单
+            return orderMapper.getFinishOrderByBuy(model);
+        }else if (model.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            // 2卖出订单
+            return orderMapper.getFinishOrderBySell(model);
+        }else {
+            return null;
+        }
+    }
+
 
     @Override
     public List<OrderModel> getFinishOrderList(OrderModel model) throws Exception {

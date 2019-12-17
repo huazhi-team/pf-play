@@ -233,7 +233,7 @@ public class ConsumerController {
             ConsumerFixedModel addDataModel = PublicMethod.assembleConsumerFixedAdd(requestConsumer, memberId);
             ComponentUtil.consumerFixedService.add(addDataModel);
 
-
+            ComponentUtil.userInfoSevrice.toRealName(Integer.parseInt(memberId + ""));
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
 //            String tokon = SignUtil.getSgin(memberId, stime, secretKeySign); // 用户did+用户账号+秘钥=token

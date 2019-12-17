@@ -24,7 +24,16 @@ public interface OrderService<T> extends BaseService<T> {
     public int cancelOrder(OrderModel model) throws Exception;
 
     /**
-     * @Description: 获取用户的待支付订单数据
+     * @Description: 获取用户的待支付、待确认付款订单数据-详情
+     * @param model
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getUnpaidOrder(OrderModel model) throws Exception;
+
+    /**
+     * @Description: 获取用户的待支付、待收款订单数据-列表
      * @param model
      * @return List
      * @author yoko
@@ -47,7 +56,21 @@ public interface OrderService<T> extends BaseService<T> {
 
 
     /**
-     * @Description: 获取用户的已完成的订单数据
+     * @Description: 获取用户的已完成的订单数据-详情
+     * <p>
+     *     注意:客户端会传orderNo、orderType这两个参数；
+     *     因为涉及到求购以及卖出的两种类型订单，所以调用的SQL语句使用了2个方法
+     * </p>
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getFinishOrder(OrderModel model) throws Exception;
+
+
+    /**
+     * @Description: 获取用户的已完成的订单数据-列表
      * @param model
      * @return List
      * @author yoko

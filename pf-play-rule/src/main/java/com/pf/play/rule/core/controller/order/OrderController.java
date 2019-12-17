@@ -429,9 +429,80 @@ public class OrderController {
     }
 
 
+    /**
+     * @Description: 获取用户待付款的订单信息-详情
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/getUnpaidInfoData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"orderNo":"order_no_3","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:buyOvertime+sellOverTime+stime+token+秘钥=sign
+     * result=={
+     *     "errcode": 0,
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJidXlPdmVydGltZSI6MzAsImNvT3JkZXIiOnsiYXBwZWFsU3RhdHVzIjoyLCJidXlOaWNrbmFtZSI6IuS5sOWutl/mmLXnp7BfMSIsImNyZWF0ZVRpbWUiOiIyMDE5LTExLTAzIDE0OjQ4OjIyIiwib3JkZXJObyI6Im9yZGVyX25vXzMiLCJvcmRlclN0YXR1cyI6MSwib3JkZXJUcmFkZVN0YXR1cyI6MSwicGF5VGltZSI6IjIwMTktMTItMDMgMjA6NDY6NTYiLCJwaWN0dXJlQWRzIjoiaHR0cHM6Ly9waWNzNy5iYWlkdS5jb20vZmVlZC8yMWE0NDYyMzA5Zjc5MDUyODgxMGE1MDY3MzhiMDBjZjdiY2JkNTdkLmpwZWc/dG9rZW49MTNlMWY4OGQ2Nzk2NDM2ZjliZWUwZjc0MGQ4Y2M3YjMmcz0wRTIxRDIwNTVFNzIxMDk0NzQ4NDY4QjcwMzAwQTAwMiIsInJlY2VpdmVUaW1lIjoiMjAxOS0xMi0wNCAxNzo0MDoyOCIsInNlbGxOaWNrbmFtZSI6IuWNluWutl/mmLXnp7BfMiIsInNlcnZpY2VDaGFyZ2UiOiIwLjUiLCJ0b3RhbFByaWNlIjoiMTA4LjkiLCJ0cmFkZUNyZWF0ZVRpbWUiOiIyMDE5LTExLTI3IDIxOjUzOjAyIiwidHJhZGVOdW0iOiIzMyIsInRyYWRlUHJpY2UiOiIzLjMiLCJ1cGRhdGVUaW1lIjoiMjAxOS0xMi0wNiAxOToyOToyMSJ9LCJzZWxsT3ZlclRpbWUiOjYwLCJzaWduIjoiNjkzMDY1MzRkZjI4ZWZmMDkwMzdkYTBhMDUwMGIyZmYiLCJzdGltZSI6MTU3NjU1NTI0MDk5MSwidG9rZW4iOiIxMTExMTEifQ=="
+     *     },
+     *     "sgid": "201912171200060000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/getUnpaidInfoData", method = {RequestMethod.POST})
+    public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkUnpaidInfoData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 策略:查询指定的买家支付超时时间
+            StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
+            StrategyModel buyStrategyModel = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            // 策略:查询指定的卖家确认收款超时时间
+            StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
+            StrategyModel sellStrategyModel = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            // 获取待付款订单列表
+            OrderModel orderQuery = PublicMethod.assembleUnpaidOrderByOrderOnQuery(requestOrder, memberId);
+            OrderModel orderModel = ComponentUtil.orderService.getUnpaidOrder(orderQuery);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUnpaidOrderByOrderNoResult(stime, token, sign, orderModel, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()));
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
 
     /**
-     * @Description: 获取用户待付款的订单信息
+     * @Description: 获取用户待付款的订单信息-列表
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -441,7 +512,7 @@ public class OrderController {
      * 请求的属性类:RequestOrder
      * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
-     * 服务端加密字段:overtime(超时时间)+stime+token+秘钥=sign
+     * 服务端加密字段:buyOvertime+sellOverTime+stime+token+秘钥=sign
      * result=={
      *     "errcode": "0",
      *     "message": "success",
@@ -471,8 +542,11 @@ public class OrderController {
             // 校验sign
 
             // 策略:查询指定的买家支付超时时间
-            StrategyModel strategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
-            StrategyModel strategyModel = ComponentUtil.strategyService.getStrategyModel(strategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
+            StrategyModel buyStrategyModel = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            // 策略:查询指定的卖家确认收款超时时间
+            StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
+            StrategyModel sellStrategyModel = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
             // 获取待付款订单列表
             OrderModel orderQuery = PublicMethod.assembleUnpaidOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List<OrderModel> orderList = ComponentUtil.orderService.getUnpaidOrderList(orderQuery);
@@ -480,8 +554,79 @@ public class OrderController {
             log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
-            String sign = SignUtil.getSgin(strategyModel.getStgValue(), stime, token, secretKeySign); // 超时时间+stime+token+秘钥=sign
-            String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(strategyModel.getStgValue()), orderQuery.getRowCount());
+            String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()), orderQuery.getRowCount());
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 获取用户待收款的订单信息-详情
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/getReceivableInfoData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"orderNo":"order_no_dzf_2","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:buyOvertime+sellOverTime+stime+token+秘钥=sign
+     * result=={
+     *     "errcode": 0,
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJidXlPdmVydGltZSI6MzAsImNvT3JkZXIiOnsiYXBwZWFsU3RhdHVzIjoxLCJidXlOaWNrbmFtZSI6IuS5sOWutl9zYl8yIiwiY3JlYXRlVGltZSI6IjIwMTktMTEtMjYgMTM6NTE6NDYiLCJvcmRlck5vIjoib3JkZXJfbm9fZHpmXzIiLCJvcmRlclN0YXR1cyI6MSwib3JkZXJUcmFkZVN0YXR1cyI6MiwicGF5VGltZSI6IjIwMTktMTItMDQgMTc6NDA6MjgiLCJwaWN0dXJlQWRzIjoiaHR0cDovL3d3dy5iYWlkdS5jb20iLCJyZWNlaXZlVGltZSI6IjIwMTktMTItMDQgMTc6NDA6MjgiLCJzZWxsRml4ZWROdW0iOiIxMzcxNzUwNTIwMyIsInNlbGxOaWNrbmFtZSI6IuWNluWutl9zYl8yIiwic2VydmljZUNoYXJnZSI6IjAuNiIsInRvdGFsUHJpY2UiOiI0IiwidHJhZGVDcmVhdGVUaW1lIjoiMjAxOS0xMi0wNCAxNzo0MDoyOCIsInRyYWRlTnVtIjoiMiIsInRyYWRlUHJpY2UiOiIyIiwidXBkYXRlVGltZSI6IjIwMTktMTItMTcgMTQ6NTk6NTQifSwic2VsbE92ZXJUaW1lIjo2MCwic2lnbiI6IjNhMTRkZWVhMzRiMjI0ZWEwMmRkMDUxNTY1ZTM4ZGZiIiwic3RpbWUiOjE1NzY1NjY5NTI4NzMsInRva2VuIjoiMTExMTExIn0="
+     *     },
+     *     "sgid": "201912171515480000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/getReceivableInfoData", method = {RequestMethod.POST})
+    public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "4");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkReceivableInfoData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 策略:查询指定的买家支付超时时间
+            StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
+            StrategyModel buyStrategyModel = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            // 策略:查询指定的卖家确认收款超时时间
+            StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
+            StrategyModel sellStrategyModel = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            // 获取待付款订单-详情
+            OrderModel orderQuery = PublicMethod.assembleReceivableInfoQuery(requestOrder, memberId);
+            OrderModel orderModel = ComponentUtil.orderService.getUnpaidOrder(orderQuery);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUnpaidOrderInfoResult(stime, token, sign, orderModel, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()));
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
@@ -501,9 +646,8 @@ public class OrderController {
 
 
 
-
     /**
-     * @Description: 获取用户待收款的订单信息
+     * @Description: 获取用户待收款的订单信息-列表
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
@@ -513,7 +657,7 @@ public class OrderController {
      * 请求的属性类:RequestOrder
      * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","pageNumber":1,"pageSize":3}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
-     * 服务端加密字段:overtime(超时时间)+stime+token+秘钥=sign
+     * 服务端加密字段:buyOvertime+sellOverTime+stime+token+秘钥=sign
      * result=={
      *     "errcode": "0",
      *     "message": "success",
@@ -542,9 +686,12 @@ public class OrderController {
             // 校验ctime
             // 校验sign
 
+            // 策略:查询指定的买家支付超时时间
+            StrategyModel buyStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_BUY_OVERTIME.getStgType());
+            StrategyModel buyStrategyModel = ComponentUtil.strategyService.getStrategyModel(buyStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
             // 策略:查询指定的卖家确认收款超时时间
-            StrategyModel strategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
-            StrategyModel strategyModel = ComponentUtil.strategyService.getStrategyModel(strategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            StrategyModel sellStrategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SELL_OVERTIME.getStgType());
+            StrategyModel sellStrategyModel = ComponentUtil.strategyService.getStrategyModel(sellStrategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
             // 获取待付款订单列表
             OrderModel orderQuery = PublicMethod.assembleReceivableQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List<OrderModel> orderList = ComponentUtil.orderService.getUnpaidOrderList(orderQuery);
@@ -552,8 +699,8 @@ public class OrderController {
             log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
-            String sign = SignUtil.getSgin(strategyModel.getStgValue(), stime, token, secretKeySign); // 超时时间+stime+token+秘钥=sign
-            String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(strategyModel.getStgValue()), orderQuery.getRowCount());
+            String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
+            String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()), orderQuery.getRowCount());
             // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
@@ -573,7 +720,73 @@ public class OrderController {
 
 
     /**
-     * @Description: 获取用户已完成的订单信息
+     * @Description: 获取用户已完成的订单信息-详情
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/od/getFinishInfoData
+     * 请求的属性类:RequestOrder
+     * 必填字段:{"orderNo":"order_no_dzf_2","orderType":1,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+orderType+ctime+cctime+token+秘钥=sign
+     * 服务端加密字段:stime+token+秘钥=sign
+     * result=={
+     *     "errcode": 0,
+     *     "message": "success",
+     *     "content": {
+     *         "jsonData": "eyJjb09yZGVyIjp7ImFwcGVhbFN0YXR1cyI6MSwiYnV5Tmlja25hbWUiOiLkubDlrrZfc2JfOCIsImNyZWF0ZVRpbWUiOiIyMDE5LTExLTI2IDEzOjUxOjQ2Iiwib3JkZXJObyI6Im9yZGVyX25vX3l3Y18xIiwib3JkZXJTdGF0dXMiOjMsIm9yZGVyVHJhZGVTdGF0dXMiOjMsIm9yZGVyVHlwZSI6MSwicGF5VGltZSI6IjIwMTktMTItMDQgMTc6NDA6MjgiLCJwaWN0dXJlQWRzIjoiaHR0cDovL3d3dy5iYWlkdS5jb20iLCJyZWNlaXZlVGltZSI6IjIwMTktMTItMDQgMTc6NDA6MjgiLCJzZWxsRml4ZWROdW0iOiIxMzcxNzUwNTIwMyIsInNlbGxOaWNrbmFtZSI6IuWNluWutl9zYl84Iiwic2VydmljZUNoYXJnZSI6IjAuMyIsInRvdGFsUHJpY2UiOiIxIiwidHJhZGVDcmVhdGVUaW1lIjoiMjAxOS0xMi0wNCAxNzo0MDoyOCIsInRyYWRlTnVtIjoiMSIsInRyYWRlUHJpY2UiOiIxIiwidXBkYXRlVGltZSI6IjIwMTktMTItMTcgMTY6NDk6NDYifSwic2lnbiI6ImUwOTA1ZmRkN2E4M2IyMTBiZDMxNjhiZTU5M2Y1MzVhIiwic3RpbWUiOjE1NzY1NzI4MTk0NTQsInRva2VuIjoiMTExMTExIn0="
+     *     },
+     *     "sgid": "201912171653340000001",
+     *     "cgid": ""
+     * }
+     */
+    @RequestMapping(value = "/getFinishInfoData", method = {RequestMethod.POST})
+    public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        try{
+            String tempToken = "111111";
+            ComponentUtil.redisService.set(tempToken, "3");
+            log.info("jsonData:" + requestData.jsonData);
+            // 解密
+            String data = StringUtil.decoderBase64(requestData.jsonData);
+            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            // check校验数据、校验用户是否登录、获得用户ID
+            long memberId = PublicMethod.checkFinishInfoData(requestOrder);
+            token = requestOrder.getToken();
+            // 校验ctime
+            // 校验sign
+
+            // 获取已完成订单详情
+            OrderModel orderQuery = PublicMethod.assembleFinishInfoQuery(requestOrder, memberId);
+            OrderModel orderModel = ComponentUtil.orderService.getFinishOrder(orderQuery);
+            // 组装返回客户端的数据
+            long stime = System.currentTimeMillis();
+            String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
+            String strData = PublicMethod.assembleFinishOrderInfoResult(stime, token, sign, orderModel);
+            // #插入流水
+            // 数据加密
+            String encryptionData = StringUtil.mergeCodeBase64(strData);
+            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+            resultDataModel.jsonData = encryptionData;
+            // 用户注册完毕则直接让用户处于登录状态
+            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 返回数据给客户端
+            return JsonResult.successResult(resultDataModel, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e);
+            // 添加错误异常数据
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+
+    /**
+     * @Description: 获取用户已完成的订单信息-列表
      * @param request
      * @param response
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>

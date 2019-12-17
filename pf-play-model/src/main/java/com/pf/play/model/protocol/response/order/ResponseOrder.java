@@ -14,7 +14,9 @@ import java.util.List;
 public class ResponseOrder  extends BaseResponse implements Serializable {
     private static final long   serialVersionUID = 1233023331141L;
 
-    public Integer overtime;
+    public Integer buyOvertime;
+
+    public Integer sellOverTime;
 
     public List<Order> oList;
 
@@ -28,12 +30,20 @@ public class ResponseOrder  extends BaseResponse implements Serializable {
 
     }
 
-    public Integer getOvertime() {
-        return overtime;
+    public Integer getBuyOvertime() {
+        return buyOvertime;
     }
 
-    public void setOvertime(Integer overtime) {
-        this.overtime = overtime;
+    public void setBuyOvertime(Integer buyOvertime) {
+        this.buyOvertime = buyOvertime;
+    }
+
+    public Integer getSellOverTime() {
+        return sellOverTime;
+    }
+
+    public void setSellOverTime(Integer sellOverTime) {
+        this.sellOverTime = sellOverTime;
     }
 
     public List<Order> getoList() {

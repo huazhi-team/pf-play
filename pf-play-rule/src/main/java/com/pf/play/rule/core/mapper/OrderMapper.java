@@ -33,6 +33,16 @@ public interface OrderMapper<T> extends BaseDao<T> {
      */
     public int countUnpaidOrder(OrderModel model);
 
+
+    /**
+     * @Description: 获取用户的待支付、待确认付款订单数据-详情
+     * @param model
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getUnpaidOrder(OrderModel model);
+
     /**
      * @Description: 获取用户的待支付订单数据
      * @param model
@@ -66,7 +76,25 @@ public interface OrderMapper<T> extends BaseDao<T> {
     public int countFinishOrder(OrderModel model);
 
     /**
-     * @Description: 获取用户的已完成的订单数据
+     * @Description: 获取用户的已完成的订单数据-买入订单-详情
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getFinishOrderByBuy(OrderModel model);
+
+    /**
+     * @Description: 获取用户的已完成的订单数据-卖出订单-详情
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getFinishOrderBySell(OrderModel model);
+
+    /**
+     * @Description: 获取用户的已完成的订单数据-列表
      * @param model
      * @return List
      * @author yoko

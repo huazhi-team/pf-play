@@ -18,6 +18,7 @@ public class RequestOrder extends BaseRequest implements Serializable {
     public Integer sortType;
     public String phoneNum;
     public String nickname;
+    public Integer orderType;
 
     public RequestOrder(){
     }
@@ -68,5 +69,13 @@ public class RequestOrder extends BaseRequest implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 }

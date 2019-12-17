@@ -119,4 +119,47 @@ public interface OrderMapper<T> extends BaseDao<T> {
      * @date 2019/12/10 10:05
      */
     public int updateOrderOverTime(OrderModel model);
+
+
+    /**
+     * @Description: 获取已超时的订单数据-买入订单-详情
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getOverTimeOrderByBuy(OrderModel model);
+
+    /**
+     * @Description: 获取已超时的订单数据-卖出订单-详情
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getOverTimeOrderBySell(OrderModel model);
+
+
+
+
+    /**
+     * @Description: 获取已超时订单数据的总行数
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public int countOverTimeOrder(OrderModel model);
+
+    /**
+     * @Description: 获取已超时订单数据-列表
+     * <p>
+     *     超时订单分两部分订单：求购订单（买家确认支付超时）、卖出订单（卖家确认收款超时）
+     * </p>
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public List<OrderModel> getOverTimeOrderList(OrderModel model);
 }

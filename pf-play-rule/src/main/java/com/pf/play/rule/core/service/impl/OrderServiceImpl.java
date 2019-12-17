@@ -109,4 +109,26 @@ public class OrderServiceImpl<T> extends BaseServiceImpl<T> implements OrderServ
     public int updateOrderOverTime(OrderModel model) {
         return orderMapper.updateOrderOverTime(model);
     }
+
+    @Override
+    public OrderModel getOverTimeOrder(OrderModel model) throws Exception {
+        // 订单类型：1求购订单，2卖出订单
+        if (model.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 1求购订单
+            return orderMapper.getOverTimeOrderByBuy(model);
+        }else if (model.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            // 2卖出订单
+            return orderMapper.getOverTimeOrderBySell(model);
+        }else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<OrderModel> getOverTimeOrderList(OrderModel model) throws Exception {
+        Integer rowCount = orderMapper.countOverTimeOrder(model);
+        model.setRowCount(rowCount);
+        List<OrderModel> list = orderMapper.getOverTimeOrderList(model);
+        return list;
+    }
 }

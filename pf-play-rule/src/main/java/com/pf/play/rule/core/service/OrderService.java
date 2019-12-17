@@ -97,4 +97,32 @@ public interface OrderService<T> extends BaseService<T> {
     public int updateOrderOverTime(OrderModel model);
 
 
+    /**
+     * @Description: 获取已超时订单数据-详情
+     * <p>
+     *     注意:客户端会传orderNo、orderType这两个参数；
+     *     因为涉及到求购以及卖出的两种类型订单，所以调用的SQL语句使用了2个方法
+     * </p>
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public OrderModel getOverTimeOrder(OrderModel model) throws Exception;
+
+
+
+    /**
+     * @Description: 获取已超时订单数据-列表
+     * <p>
+     *     超时订单分两部分订单：求购订单（买家确认支付超时）、卖出订单（卖家确认收款超时）
+     * </p>
+     * @param model
+     * @return List
+     * @author yoko
+     * @date 2019/11/28 11:21
+     */
+    public List<OrderModel> getOverTimeOrderList(OrderModel model) throws Exception;
+
+
 }

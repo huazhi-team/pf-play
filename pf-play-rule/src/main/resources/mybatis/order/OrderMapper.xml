@@ -695,4 +695,223 @@
 
 
 
+    <!-- 获取已超时的订单数据-买入订单-详情 -->
+    <select id="getOverTimeOrderByBuy" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+        select
+          a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
+          a.is_overtime,a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.create_time,a.update_time,a.yn,
+          b.sell_fixed_num,b.buy_fixed_num,b.service_charge,b.sell_nickname,b.buy_nickname,b.trade_status,b.picture_ads,
+          b.ratio,b.pay_time,b.receive_time,b.appeal_status as trade_appeal_status,b.create_time as trade_create_time,
+          1 as order_type
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        where 1 = 1
+            and a.order_no = #{orderNo}
+            and b.buy_member_id = #{buyMemberId}
+            and a.is_overtime = 2
+            and a.yn = 0
+            and b.yn = 0
+    </select>
+
+
+
+    <!-- 获取已超时的订单数据-卖出订单-详情 -->
+    <select id="getOverTimeOrderBySell" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+        select
+          a.id,a.order_no,a.member_id,a.trade_num,a.trade_price,a.order_trade_status,a.order_status,a.appeal_status,
+          a.is_overtime,a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.create_time,a.update_time,a.yn,
+          b.sell_fixed_num,b.buy_fixed_num,b.service_charge,b.sell_nickname,b.buy_nickname,b.trade_status,b.picture_ads,
+          b.ratio,b.pay_time,b.receive_time,b.appeal_status as trade_appeal_status,b.create_time as trade_create_time,
+          2 as order_type
+        from tb_pf_order a left join tb_pf_order_trade b on a.id = b.order_id
+        where 1 = 1
+            and a.order_no = #{orderNo}
+            and b.trade_status = 1
+            and b.sell_member_id = #{sellMemberId}
+            and a.yn = 0
+            and b.yn = 0
+    </select>
+
+
+    <!-- 查询总数-获取已超时订单数据的总行数-->
+    <select id="countOverTimeOrder" resultType="java.lang.Integer"  parameterType="Object">
+        select count(1) from
+        (
+        select
+          a.id,
+          a.order_no,
+          a.member_id,
+          a.trade_num,
+          a.trade_price,
+          a.order_trade_status,
+          a.order_status,
+          a.appeal_status,
+          a.is_overtime,
+          a.curday,
+          a.curhour,
+          a.curminute,
+          a.run_num,
+          a.run_status,
+          a.create_time,
+          a.update_time,
+          a.yn,
+          b.sell_fixed_num,
+          b.buy_fixed_num,
+          b.service_charge,
+          b.sell_nickname,
+          b.buy_nickname,
+          b.trade_status,
+          b.picture_ads,
+          b.ratio,
+          b.pay_time,
+          b.receive_time,
+          b.appeal_status as trade_appeal_status,
+          b.create_time        as trade_create_time,
+          1 as order_type
+        from tb_pf_order a
+          left join tb_pf_order_trade b
+            on a.id = b.order_id
+        where 1 = 1
+            and b.buy_member_id = #{buyMemberId}
+            and a.is_overtime = 2
+            and a.yn = 0
+            and b.yn = 0
+        union all
+        select
+          a.id,
+          a.order_no,
+          a.member_id,
+          a.trade_num,
+          a.trade_price,
+          a.order_trade_status,
+          a.order_status,
+          a.appeal_status,
+          a.is_overtime,
+          a.curday,
+          a.curhour,
+          a.curminute,
+          a.run_num,
+          a.run_status,
+          a.create_time,
+          a.update_time,
+          a.yn,
+          b.sell_fixed_num,
+          b.buy_fixed_num,
+          b.service_charge,
+          b.sell_nickname,
+          b.buy_nickname,
+          b.trade_status,
+          b.picture_ads,
+          b.ratio,
+          b.pay_time,
+          b.receive_time,
+          b.appeal_status as trade_appeal_status,
+          b.create_time        as trade_create_time,
+          2 as order_type
+        from tb_pf_order a
+          left join tb_pf_order_trade b
+            on a.id = b.order_id
+        where 1 = 1
+            and b.sell_member_id = #{sellMemberId}
+            and b.trade_status = 1
+            and a.yn = 0
+            and b.yn = 0
+            ) a1
+    </select>
+
+    <!-- 查询分页列表-获取已超时订单数据-列表 -->
+    <select id="getOverTimeOrderList" parameterType="Object" resultType="com.pf.play.rule.core.model.order.OrderModel">
+        select a1.id,a1.order_no,a1.member_id,a1.trade_num,a1.trade_price,a1.order_trade_status,a1.order_status,a1.appeal_status,
+          a1.is_overtime,a1.curday,a1.curhour,a1.curminute,a1.run_num,a1.run_status,a1.create_time,
+          a1.update_time,a1.yn,a1.sell_fixed_num,a1.buy_fixed_num,a1.service_charge,a1.sell_nickname,
+          a1.buy_nickname,a1.trade_status,a1.picture_ads,a1.ratio,a1.pay_time,a1.receive_time,
+          a1.appeal_status as trade_appeal_status,a1.create_time as trade_create_time,a1.order_type
+          from
+        (
+        select
+          a.id,
+          a.order_no,
+          a.member_id,
+          a.trade_num,
+          a.trade_price,
+          a.order_trade_status,
+          a.order_status,
+          a.appeal_status,
+          a.is_overtime,
+          a.curday,
+          a.curhour,
+          a.curminute,
+          a.run_num,
+          a.run_status,
+          a.create_time,
+          a.update_time,
+          a.yn,
+          b.sell_fixed_num,
+          b.buy_fixed_num,
+          b.service_charge,
+          b.sell_nickname,
+          b.buy_nickname,
+          b.trade_status,
+          b.picture_ads,
+          b.ratio,
+          b.pay_time,
+          b.receive_time,
+          b.appeal_status as trade_appeal_status,
+          b.create_time        as trade_create_time,
+          1 as order_type
+        from tb_pf_order a
+          left join tb_pf_order_trade b
+            on a.id = b.order_id
+        where 1 = 1
+            and b.buy_member_id = #{buyMemberId}
+            and a.is_overtime = 2
+            and a.yn = 0
+            and b.yn = 0
+        union all
+        select
+          a.id,
+          a.order_no,
+          a.member_id,
+          a.trade_num,
+          a.trade_price,
+          a.order_trade_status,
+          a.order_status,
+          a.appeal_status,
+          a.is_overtime,
+          a.curday,
+          a.curhour,
+          a.curminute,
+          a.run_num,
+          a.run_status,
+          a.create_time,
+          a.update_time,
+          a.yn,
+          b.sell_fixed_num,
+          b.buy_fixed_num,
+          b.service_charge,
+          b.sell_nickname,
+          b.buy_nickname,
+          b.trade_status,
+          b.picture_ads,
+          b.ratio,
+          b.pay_time,
+          b.receive_time,
+          b.appeal_status as trade_appeal_status,
+          b.create_time        as trade_create_time,
+          2 as order_type
+        from tb_pf_order a
+          left join tb_pf_order_trade b
+            on a.id = b.order_id
+        where 1 = 1
+            and b.trade_status = 1
+            and b.sell_member_id = #{sellMemberId}
+            and a.yn = 0
+            and b.yn = 0
+            ) a1 order by a1.create_time desc
+        limit #{start},#{end}
+    </select>
+
+
+
+
+
 </mapper>

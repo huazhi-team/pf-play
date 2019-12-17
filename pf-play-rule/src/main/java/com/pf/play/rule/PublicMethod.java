@@ -820,15 +820,13 @@ public class PublicMethod {
     /**
      * @Description: 组装查询订单详情的查询条件
      * @param requestOrder - 查询的基本信息
-     * @param memberId - 用户ID
      * @return OrderModel
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleOrderInfoQuery(RequestOrder requestOrder, long memberId){
+    public static OrderModel assembleOrderInfoQuery(RequestOrder requestOrder){
         OrderModel resBen = new OrderModel();
         resBen.setOrderNo(requestOrder.getOrderNo());
-        resBen.setMemberId(memberId);
         return resBen;
     }
 
@@ -2011,6 +2009,41 @@ public class PublicMethod {
 
 
     /**
+     * @Description: 查询用户已超时订单详情时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkOverTimeInfoData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00022.geteCode(), PfErrorCode.ENUM_ERROR.D00022.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+
+        // 校验orderNo值
+        if (StringUtils.isBlank(requestTrade.getOrderNo())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00023.geteCode(), PfErrorCode.ENUM_ERROR.D00023.geteDesc());
+        }
+        // 校验订单类型(orderType)值
+        // ：1求购订单，2卖出订单
+        if (requestTrade.getOrderType() == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00024.geteCode(), PfErrorCode.ENUM_ERROR.D00024.geteDesc());
+        }
+        return memberId;
+    }
+
+
+    /**
      * @Description: 查询用户已完成订单列表时，校验基本数据是否非法
      * @param requestTrade - 基础数据
      * @return void
@@ -2034,6 +2067,32 @@ public class PublicMethod {
         return memberId;
     }
 
+
+    /**
+     * @Description: 查询用户已超时订单列表时，校验基本数据是否非法
+     * @param requestTrade - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkOverTimeData(RequestOrder requestTrade) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestTrade == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00025.geteCode(), PfErrorCode.ENUM_ERROR.D00025.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestTrade.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestTrade.getToken());
+        return memberId;
+    }
+
+
     /**
      * @Description: 组装查询已完成的订单详情的查询条件
      * @param requestOrder - 基本信息
@@ -2043,6 +2102,26 @@ public class PublicMethod {
      * @date 2019/11/26 21:31
      */
     public static OrderModel assembleFinishInfoQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        if (requestOrder.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            // 1求购订单
+            resBean.setBuyMemberId(memberId);
+        }else if (requestOrder.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+            // 2卖出订单
+            resBean.setSellMemberId(memberId);
+        }
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装查询已超时的订单详情的查询条件
+     * @param requestOrder - 基本信息
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleOverTimeInfoQuery(RequestOrder requestOrder, long memberId){
         OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
         if (requestOrder.getOrderType() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
             // 1求购订单
@@ -2071,7 +2150,23 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 买入、取消的订单的订单详情信息的数据组装返回客户端的方法
+     * @Description: 组装查询已超时的订单列表的查询条件
+     * @param requestOrder - 基本信息
+     * @param memberId - 用户ID
+     * @return
+     * @author yoko
+     * @date 2019/11/26 21:31
+     */
+    public static OrderModel assembleOverTimeQuery(RequestOrder requestOrder, long memberId){
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setSellMemberId(memberId);
+        resBean.setBuyMemberId(memberId);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 已完成的订单的订单详情信息的数据组装返回客户端的方法
      * @param stime - 服务器的时间
      * @param token - 登录token
      * @param sign - 签名
@@ -2094,7 +2189,30 @@ public class PublicMethod {
 
 
     /**
-     * @Description: 买入、取消的订单的订单列表信息的数据组装返回客户端的方法
+     * @Description: 已超时的订单的订单详情信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderModel - 订单信息
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleOverTimeInfoResult(long stime, String token, String sign, OrderModel orderModel){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderModel != null){
+            ConsumerOrder coOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
+            dataModel.coOrder = coOrder;
+        }
+        dataModel.setToken(token);
+        dataModel.setStime(stime);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+
+    /**
+     * @Description: 已完成的订单的订单列表信息的数据组装返回客户端的方法
      * @param stime - 服务器的时间
      * @param token - 登录token
      * @param sign - 签名
@@ -2115,6 +2233,32 @@ public class PublicMethod {
         }
         dataModel.setStime(stime);
         dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+    /**
+     * @Description: 已超时的订单的订单列表信息的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param orderList - 订单信息
+     * @param rowCount - 总行数
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleOverTimeOrderResult(long stime, String token, String sign, List <OrderModel> orderList, Integer rowCount){
+        ResponseOrder dataModel = new ResponseOrder();
+        if (orderList != null && orderList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            List<ConsumerOrder> dataList = BeanUtils.copyList(orderList, ConsumerOrder.class);
+            dataModel.coList = dataList;
+        }
+        if (rowCount != null){
+            dataModel.rowCount = rowCount;
+        }
+        dataModel.setToken(token);
+        dataModel.setStime(stime);
         dataModel.setSign(sign);
         return JSON.toJSONString(dataModel);
     }

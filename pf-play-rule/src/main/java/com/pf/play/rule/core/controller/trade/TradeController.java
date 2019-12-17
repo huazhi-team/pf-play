@@ -290,18 +290,18 @@ public class TradeController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/td/addData
      * 请求的属性类:RequestTrade
-     * 必填字段:{"orderNo":"order_no_2","payPw":"3","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
-     * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
+     * 必填字段:{"orderNo":"order_no_test_1","payPw":"3","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 客户端加密字段:orderNo+payPw+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * UPDATE tb_pf_order SET order_trade_status = 0 WHERE order_no = '';
      * UPDATE tb_pf_order_trade SET yn = 1 WHERE order_id =;
      * result=={
-     *     "errcode": "0",
+     *     "errcode": 0,
      *     "message": "success",
      *     "content": {
-     *         "jsonData": "eyJzaWduIjoiMGU3Nzc4NDdkYjMwYmMwZDhmZTExYTYxY2Y3OWI4YmIiLCJzdGltZSI6MTU3NTQyNjMzNTQ0NywidG9rZW4iOiIxMTExMTEifQ=="
+     *         "jsonData": "eyJzaWduIjoiYjFiZDVmNGJkMmYyYzU4YWU2NTBiMjk5NWRmODk0MzMiLCJzdGltZSI6MTU3NjU3NTk2NjYzMSwidG9rZW4iOiIxMTExMTEifQ=="
      *     },
-     *     "sgid": "201912041025250000001",
+     *     "sgid": "201912171745590000001",
      *     "cgid": ""
      * }
      */
@@ -405,7 +405,7 @@ public class TradeController {
         String token;
         try{
             String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "1");
+            ComponentUtil.redisService.set(tempToken, "4");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
             String data = StringUtil.decoderBase64(requestData.jsonData);
@@ -457,7 +457,7 @@ public class TradeController {
      * @date 2019/11/25 22:58
      * local:http://localhost:8082/play/td/confirmRpt
      * 请求的属性类:RequestTrade
-     * 必填字段:{"orderNo":"order_no_1","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+     * 必填字段:{"orderNo":"order_no_test_1","agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:orderNo+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      * result=={

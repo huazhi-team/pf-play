@@ -50,6 +50,36 @@ import java.util.List;
  */
 public class PublicMethod {
 
+
+    /**
+     * @Description: check用户第一次设置支付密码的客户端上传的数据
+     * @param requestConsumer - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 17:57
+     */
+    public static long checkFirstPayCodeData(RequestConsumer requestConsumer)throws Exception{
+        long memberId;
+        // 1.校验所有数据
+        if (requestConsumer == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00001.geteCode(), PfErrorCode.ENUM_ERROR.C00001.geteDesc());
+        }
+
+        // 2.校验token值
+        if (StringUtils.isBlank(requestConsumer.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 3.校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestConsumer.getToken());
+
+        // 4.校验支付密码
+        if (StringUtils.isBlank(requestConsumer.getPayPw())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00003.geteCode(), PfErrorCode.ENUM_ERROR.C00003.geteDesc());
+        }
+        return memberId;
+    }
+
     /**
      * @Description: check用户更新设置支付密码的客户端上传的数据
      * @param requestConsumer - 基础数据

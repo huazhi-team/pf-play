@@ -121,6 +121,7 @@ dependencies {
 
     compile group: 'org.springframework', name: 'spring-web', version: '5.2.0.RELEASE'
     compile group: 'org.mybatis', name: 'mybatis', version: '3.5.3'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
 test {

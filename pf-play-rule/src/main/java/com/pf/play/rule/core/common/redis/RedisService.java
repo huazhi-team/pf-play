@@ -138,6 +138,28 @@ public class RedisService {
     }
 
     /**
+     * 哈希 添加-失效时间
+     * @param key
+     * @param hashKey
+     * @param value
+     */
+    public void hmTimeSet(String key, Object hashKey, Object value, long expireTime, TimeUnit unit){
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        hash.put(key,hashKey,value);
+        redisTemplate.expire(key, expireTime, unit);
+    }
+
+    /**
+     * 哈希 删除
+     * @param key
+     * @param hashKey
+     */
+    public void deHmSet(String key, Object... hashKey){
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        hash.delete(key, hashKey);
+    }
+
+    /**
      * 哈希获取数据
      * @param key
      * @param hashKey

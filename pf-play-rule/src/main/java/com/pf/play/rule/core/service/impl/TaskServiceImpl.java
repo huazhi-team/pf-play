@@ -7,10 +7,7 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
-import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
-import com.pf.play.rule.core.common.utils.constant.Constant;
-import com.pf.play.rule.core.common.utils.constant.ErrorCode;
-import com.pf.play.rule.core.common.utils.constant.PfCacheKey;
+import com.pf.play.rule.core.common.utils.constant.*;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.TaskService;
@@ -587,7 +584,20 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
             VcMemberResource   rsVcMemberResource      =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource); //查询等级信息
             ComponentUtil.transactionalService.updataActiveValue(rsVcMemberResource,updateVcMember);
+
+            VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
+
+            Integer  level  =  TaskMethod.getLevel(rsVcMemberUpdate); //条件满足等级
+
+
+            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,memberId,1);
+
+            ComponentUtil.taskService.checkLevel1(memberId);
+
+
         }
+
+
 
         //筛选用户有哪些需要变更的
 
@@ -619,7 +629,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         //查询实名制的用户信息
         VcMember  vcMember   = TaskMethod.changvcMemberTOsuperiorId(memberId);
         VcMember  rsVcMember = vcMemberMapper.selectByIsCertificationNum(vcMember); //直推人数
-        Integer  level  = TaskMethod.getLevel(rsVcMember,queryVcMember);
+        Integer  level  = TaskMethod.getLevel(queryVcMember);
         Integer  darenLevel = ComponentUtil.taskService.CheckCondition(vcMember.getDarenLevel(),level,vcMember.getMemberId());
 
         VcMemberResource vcMemberResource1 =TaskMethod.updateResourceLevel(memberId,darenLevel);
@@ -891,4 +901,6 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }
         return rewardMasonry;
     }
+
+
 }

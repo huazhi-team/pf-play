@@ -905,65 +905,25 @@ public class TaskMethod {
 
     /**
      * @Description: 根据用户信息查看该用户的属于的等级情况
-     * @param vcMember
-    * @param queryVcMember
+     * @param queryVcMember
      * @return java.lang.Integer
      * @author long
      * @date 2019/12/11 17:18
      */
-    public static   Integer   getLevel(VcMember  vcMember,VcMemberResource  queryVcMember){
+    public static   Integer   getLevel(VcMemberResource  queryVcMember){
         Integer   level  =  0  ;
         List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
         for(DisVitalityValue  disVitalityValue:list){
             if(queryVcMember.getDarenLevel()==0){
                 continue;
             }
-            if(disVitalityValue.getPushNumber()>vcMember.getPushPeople()||
+
+            if(disVitalityValue.getPushNumber()>queryVcMember.getPushPeople()||
                     disVitalityValue.getTeamVitalitNum()>queryVcMember.getTeamActive()||
                         disVitalityValue.getAllianceVitalitNum()>queryVcMember.getAllianceActive()){
                 break;
             }
             level++;
-        }
-
-        int  count = level;
-        boolean  flag = false ;
-        for(int  i =0;i<level;i++ ){
-            if(level==1){
-                flag = ComponentUtil.taskService.checkLevel1(vcMember.getMemberId());
-                if(flag){
-                    break;
-                }
-            }
-
-            if(level==2){
-                flag = ComponentUtil.taskService.checkLevel2(vcMember.getMemberId());
-                if(flag){
-                    break;
-                }
-            }
-
-            if(level==3){
-                flag = ComponentUtil.taskService.checkLevel3(vcMember.getMemberId());
-                if(flag){
-                    break;
-                }
-            }
-
-            if(level==4){
-                flag = ComponentUtil.taskService.checkLevel4(vcMember.getMemberId());
-                if(flag){
-                    break;
-                }
-            }
-
-            if(level==5){
-                flag = ComponentUtil.taskService.checkLevel5(vcMember.getMemberId());
-                if(flag){
-                    break;
-                }
-            }
-            level--;
         }
         return level;
     }

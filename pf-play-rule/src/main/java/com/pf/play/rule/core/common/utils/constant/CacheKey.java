@@ -44,5 +44,40 @@ public interface CacheKey {
     String MEMBER_ID_INFO = "-7";
 
 
+    /***
+     * 等级0的
+     */
+    String LEVEL0 = "level0";
+
+    /***
+     * 等级1的
+     */
+    String LEVEL1 = "level1";
+
+
+    /***
+     * 等级2的
+     */
+    String LEVEL2 = "level2";
+
+
+    /***
+     * 等级3的
+     */
+    String LEVEL3 = "level3";
+
+
+    /***
+     * 等级4的
+     */
+    String LEVEL4 = "level4";
+
+
+    /***
+     * 等级5的
+     */
+    String LEVEL5 = "level5";
+
+
 
 }

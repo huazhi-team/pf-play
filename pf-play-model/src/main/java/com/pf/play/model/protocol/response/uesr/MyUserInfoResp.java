@@ -20,6 +20,7 @@ public class MyUserInfoResp {
     private Double masonry;
     private Integer isCertif;
     private String  inviteCode;
+    private Integer isPayWord;
 
     public String getNickname() {
         return nickname;
@@ -123,5 +124,13 @@ public class MyUserInfoResp {
 
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+
+    public Integer getIsPayWord() {
+        return isPayWord;
+    }
+
+    public void setIsPayWord(Integer isPayWord) {
+        this.isPayWord = isPayWord;
     }
 }

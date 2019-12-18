@@ -18,6 +18,7 @@ import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
+import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.util.ComponentUtil;
@@ -426,8 +427,12 @@ public class UserController {
     public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{
+            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,2,1);
+            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,2));
 
-            ComponentUtil.userInfoSevrice.toRealName(2);
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL0,2);
+            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,2));
+//            ComponentUtil.userInfoSevrice.toRealName(2);
 
             return JsonResult.successResult(null);
         }catch (Exception e){

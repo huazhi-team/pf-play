@@ -91,7 +91,11 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private OrderViolateService orderViolateService;
 
+    @Autowired
+    private RegionService regionService;
 
+    @Autowired
+    private StreamConsumerService streamConsumerService;
 
     Thread runThread = null;
 
@@ -128,6 +132,8 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.taskOrderTradeService = taskOrderTradeService;
         ComponentUtil.synchroService = synchroService;
         ComponentUtil.orderViolateService = orderViolateService;
+        ComponentUtil.regionService = regionService;
+        ComponentUtil.streamConsumerService = streamConsumerService;
 
 
         runThread = new RunThread();

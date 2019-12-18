@@ -89,15 +89,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOrderData(requestOrder);
+            memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -105,8 +108,6 @@ public class OrderController {
             // 订单列表
             OrderModel orderQuery = PublicMethod.assembleOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -147,18 +148,21 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // 获取虚拟币今日价格信息
             VirtualCoinPriceModel VirtualCoinPriceQuery = PublicMethod.assembleVirtualCoinPriceQueryToday();
             VirtualCoinPriceModel virtualCoinPriceModel = ComponentUtil.virtualCoinPriceService.getVirtualCoinPrice(VirtualCoinPriceQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkAddOrderData(requestOrder, virtualCoinPriceModel);
+            memberId = PublicMethod.checkAddOrderData(requestOrder, virtualCoinPriceModel);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -208,15 +212,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOrderInfoData(requestOrder);
+            memberId = PublicMethod.checkOrderInfoData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -265,15 +272,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOrderData(requestOrder);
+            memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -281,8 +291,6 @@ public class OrderController {
             // 订单列表
             OrderModel orderQuery = PublicMethod.assembleBuySellOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -323,15 +331,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOrderData(requestOrder);
+            memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -339,8 +350,6 @@ public class OrderController {
             // 订单列表-已取消的订单
             OrderModel orderQuery = PublicMethod.assembleCancelOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List <OrderModel> orderList = ComponentUtil.orderService.queryByList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -387,15 +396,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkCancelOrderData(requestOrder);
+            memberId = PublicMethod.checkCancelOrderData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -456,15 +468,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUnpaidInfoData(requestOrder);
+            memberId = PublicMethod.checkUnpaidInfoData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -528,15 +543,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUnpaidData(requestOrder);
+            memberId = PublicMethod.checkUnpaidData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -601,15 +619,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "4");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkReceivableInfoData(requestOrder);
+            memberId = PublicMethod.checkReceivableInfoData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -673,15 +694,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "4");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkReceivableData(requestOrder);
+            memberId = PublicMethod.checkReceivableData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -746,15 +770,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkFinishInfoData(requestOrder);
+            memberId = PublicMethod.checkFinishInfoData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -812,15 +839,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkFinishData(requestOrder);
+            memberId = PublicMethod.checkFinishData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -828,8 +858,6 @@ public class OrderController {
             // 获取已完成订单列表
             OrderModel orderQuery = PublicMethod.assembleFinishQuery(requestOrder, memberId);
             List<OrderModel> orderList = ComponentUtil.orderService.getFinishOrderList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -878,15 +906,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOverTimeInfoData(requestOrder);
+            memberId = PublicMethod.checkOverTimeInfoData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -943,15 +974,18 @@ public class OrderController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkOverTimeData(requestOrder);
+            memberId = PublicMethod.checkOverTimeData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign

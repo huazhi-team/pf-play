@@ -31,6 +31,8 @@ public class ComponentUtil {
     public static OrderViolateService orderViolateService;
 
     public static SynchroService synchroService;
+    public static RegionService regionService;
+    public static StreamConsumerService streamConsumerService;
 
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;

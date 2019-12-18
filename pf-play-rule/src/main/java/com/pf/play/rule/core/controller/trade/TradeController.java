@@ -87,15 +87,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeRuleData(requestOrder);
+            memberId = PublicMethod.checkTradeRuleData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -171,15 +174,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeTimeData(requestOrder);
+            memberId = PublicMethod.checkTradeTimeData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -229,15 +235,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeTimeData(requestOrder);
+            memberId = PublicMethod.checkTradeTimeData(requestOrder);
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
@@ -310,15 +319,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeAddData(requestTrade);
+            memberId = PublicMethod.checkTradeAddData(requestTrade);
             token = requestTrade.getToken();
             // 校验ctime
             // 校验sign
@@ -403,15 +415,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "4");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeConfirmPayData(requestTrade);
+            memberId = PublicMethod.checkTradeConfirmPayData(requestTrade);
             token = requestTrade.getToken();
             // 校验ctime
             // 校验sign
@@ -475,15 +490,18 @@ public class TradeController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkTradeConfirmReceiptData(requestTrade);
+            memberId = PublicMethod.checkTradeConfirmReceiptData(requestTrade);
             token = requestTrade.getToken();
             // 校验ctime
             // 校验sign

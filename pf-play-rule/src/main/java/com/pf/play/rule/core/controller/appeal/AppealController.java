@@ -89,15 +89,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkActiveData(requestAppeal);
+            memberId = PublicMethod.checkActiveData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign
@@ -105,8 +108,6 @@ public class AppealController {
             // 申诉数据
             AppealModel appealQuery = PublicMethod.assembleAppealQuery(requestAppeal, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
             List<AppealModel> appealList = ComponentUtil.appealService.queryByList(appealQuery);
-            appealQuery.getPage();
-            log.info("data :" + appealList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -156,15 +157,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkPassiveData(requestAppeal);
+            memberId = PublicMethod.checkPassiveData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign
@@ -172,8 +176,6 @@ public class AppealController {
             // 被申诉数据
             AppealModel appealQuery = PublicMethod.assembleAppealQuery(requestAppeal, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List<AppealModel> appealList = ComponentUtil.appealService.queryByList(appealQuery);
-            appealQuery.getPage();
-            log.info("data :" + appealList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
@@ -223,15 +225,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUpActiveData(requestAppeal);
+            memberId = PublicMethod.checkUpActiveData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign
@@ -287,15 +292,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "4");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUpPassiveData(requestAppeal);
+            memberId = PublicMethod.checkUpPassiveData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign
@@ -352,15 +360,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkAddAppealData(requestAppeal);
+            memberId = PublicMethod.checkAddAppealData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign
@@ -441,15 +452,18 @@ public class AppealController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkInfoData(requestAppeal);
+            memberId = PublicMethod.checkInfoData(requestAppeal);
             token = requestAppeal.getToken();
             // 校验ctime
             // 校验sign

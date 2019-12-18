@@ -84,15 +84,18 @@ public class VirtualCoinPriceController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkGetVirtualCoinPriceData(requestConsumer);
+            memberId = PublicMethod.checkGetVirtualCoinPriceData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.StreamConsumerMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的-访问*-->
+    <sql id="Base_Column_List_visit">
+        a.id,a.sgid,a.cgid,a.member_id,a.ip,a.province,a.city,a.android_ver,a.client_ver,a.action_type,a.action_name,
+        a.is_black,a.is_attestation,a.paramet_json,a.result_json,a.agt_ver,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.create_time,a.update_time,a.ts_time,a.yn
+    </sql>
+
+    <!-- 定义数据库基本列,只适用代替单表的-异常*-->
+    <sql id="Base_Column_List_visit">
+        a.id,a.sgid,a.cgid,a.member_id,a.ip,a.province,a.city,a.android_ver,a.client_ver,a.action_type,a.action_name,
+        a.is_black,a.is_attestation,a.paramet_json,a.result_json,a.error_code,a.error_info,a.agt_ver,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.create_time,a.update_time,a.ts_time,a.yn
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                and a.member_id = #{memberId}
+            </if>
+            <if test="actionType != null and actionType != '' " >
+                and a.action_type = #{actionType}
+            </if>
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+
+
+    <!-- 添加用户访问正常的流水数据 -->
+    <insert id="addVisit" parameterType="com.pf.play.rule.core.model.stream.StreamConsumerModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into play_stream.tb_pf_stream_consumer_visit_${suffix}
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sgid != null and sgid != '' " >
+                sgid,
+            </if>
+            <if test="cgid != null and cgid != '' " >
+                cgid,
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                member_id,
+            </if>
+            <if test="ip != null and ip != '' " >
+                ip,
+            </if>
+            <if test="province != null and province != '' " >
+                province,
+            </if>
+            <if test="city != null and city != '' " >
+                city,
+            </if>
+            <if test="androidVer != null and androidVer != '' " >
+                android_ver,
+            </if>
+            <if test="clientVer != null and clientVer != '' " >
+                client_ver,
+            </if>
+            <if test="actionType != null and actionType != '' " >
+                action_type,
+            </if>
+            <if test="actionName != null and actionName != '' " >
+                action_name,
+            </if>
+            <if test="isBlack != null and isBlack != '' " >
+                is_black,
+            </if>
+            <if test="isAttestation != null and isAttestation != '' " >
+                is_attestation,
+            </if>
+            <if test="parametJson != null and parametJson != '' " >
+                paramet_json,
+            </if>
+            <if test="resultJson != null and resultJson != '' " >
+                result_json,
+            </if>
+            <if test="agtVer != null and agtVer != '' " >
+                agt_ver,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sgid != null and sgid != '' " >
+                <![CDATA[  #{sgid}, ]]>
+            </if>
+            <if test="cgid != null and cgid != '' " >
+                <![CDATA[  #{cgid}, ]]>
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                <![CDATA[  #{memberId}, ]]>
+            </if>
+            <if test="ip != null and ip != '' " >
+                <![CDATA[  #{ip}, ]]>
+            </if>
+            <if test="province != null and province != '' " >
+                <![CDATA[  #{province}, ]]>
+            </if>
+            <if test="city != null and city != '' " >
+                <![CDATA[  #{city}, ]]>
+            </if>
+            <if test="androidVer != null and androidVer != '' " >
+                <![CDATA[  #{androidVer}, ]]>
+            </if>
+            <if test="clientVer != null and clientVer != '' " >
+                <![CDATA[  #{clientVer}, ]]>
+            </if>
+            <if test="actionType != null and actionType != '' " >
+                <![CDATA[  #{actionType}, ]]>
+            </if>
+            <if test="actionName != null and actionName != '' " >
+                <![CDATA[  #{actionName}, ]]>
+            </if>
+            <if test="isBlack != null and isBlack != '' " >
+                <![CDATA[  #{isBlack}, ]]>
+            </if>
+            <if test="isAttestation != null and isAttestation != '' " >
+                <![CDATA[  #{isAttestation}, ]]>
+            </if>
+            <if test="parametJson != null and parametJson != '' " >
+                <![CDATA[  #{parametJson}, ]]>
+            </if>
+            <if test="resultJson != null and resultJson != '' " >
+                <![CDATA[  #{resultJson}, ]]>
+            </if>
+            <if test="agtVer != null and agtVer != '' " >
+                <![CDATA[  #{agtVer}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+
+
+
+    <!-- 添加用户访问异常的流水数据 -->
+    <insert id="addError" parameterType="com.pf.play.rule.core.model.stream.StreamConsumerModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into play_stream.tb_pf_stream_consumer_error_${suffix}
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sgid != null and sgid != '' " >
+                sgid,
+            </if>
+            <if test="cgid != null and cgid != '' " >
+                cgid,
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                member_id,
+            </if>
+            <if test="ip != null and ip != '' " >
+                ip,
+            </if>
+            <if test="province != null and province != '' " >
+                province,
+            </if>
+            <if test="city != null and city != '' " >
+                city,
+            </if>
+            <if test="androidVer != null and androidVer != '' " >
+                android_ver,
+            </if>
+            <if test="clientVer != null and clientVer != '' " >
+                client_ver,
+            </if>
+            <if test="actionType != null and actionType != '' " >
+                action_type,
+            </if>
+            <if test="actionName != null and actionName != '' " >
+                action_name,
+            </if>
+            <if test="isBlack != null and isBlack != '' " >
+                is_black,
+            </if>
+            <if test="isAttestation != null and isAttestation != '' " >
+                is_attestation,
+            </if>
+            <if test="parametJson != null and parametJson != '' " >
+                paramet_json,
+            </if>
+            <if test="resultJson != null and resultJson != '' " >
+                result_json,
+            </if>
+            <if test="errorCode != null and errorCode != '' " >
+                error_code,
+            </if>
+            <if test="errorInfo != null and errorInfo != '' " >
+                error_info,
+            </if>
+            <if test="agtVer != null and agtVer != '' " >
+                agt_ver,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sgid != null and sgid != '' " >
+                <![CDATA[  #{sgid}, ]]>
+            </if>
+            <if test="cgid != null and cgid != '' " >
+                <![CDATA[  #{cgid}, ]]>
+            </if>
+            <if test="memberId != null and memberId != '' " >
+                <![CDATA[  #{memberId}, ]]>
+            </if>
+            <if test="ip != null and ip != '' " >
+                <![CDATA[  #{ip}, ]]>
+            </if>
+            <if test="province != null and province != '' " >
+                <![CDATA[  #{province}, ]]>
+            </if>
+            <if test="city != null and city != '' " >
+                <![CDATA[  #{city}, ]]>
+            </if>
+            <if test="androidVer != null and androidVer != '' " >
+                <![CDATA[  #{androidVer}, ]]>
+            </if>
+            <if test="clientVer != null and clientVer != '' " >
+                <![CDATA[  #{clientVer}, ]]>
+            </if>
+            <if test="actionType != null and actionType != '' " >
+                <![CDATA[  #{actionType}, ]]>
+            </if>
+            <if test="actionName != null and actionName != '' " >
+                <![CDATA[  #{actionName}, ]]>
+            </if>
+            <if test="isBlack != null and isBlack != '' " >
+                <![CDATA[  #{isBlack}, ]]>
+            </if>
+            <if test="isAttestation != null and isAttestation != '' " >
+                <![CDATA[  #{isAttestation}, ]]>
+            </if>
+            <if test="parametJson != null and parametJson != '' " >
+                <![CDATA[  #{parametJson}, ]]>
+            </if>
+            <if test="resultJson != null and resultJson != '' " >
+                <![CDATA[  #{resultJson}, ]]>
+            </if>
+            <if test="errorCode != null and errorCode != '' " >
+                <![CDATA[  #{errorCode}, ]]>
+            </if>
+            <if test="errorInfo != null and errorInfo != '' " >
+                <![CDATA[  #{errorInfo}, ]]>
+            </if>
+            <if test="agtVer != null and agtVer != '' " >
+                <![CDATA[  #{agtVer}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+
+
+
+
+</mapper>

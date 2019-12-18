@@ -84,15 +84,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             //解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkFirstPayCodeData(requestConsumer);
+            memberId = PublicMethod.checkFirstPayCodeData(requestConsumer);
             token = requestConsumer.getToken();
 
             // 校验ctime
@@ -142,15 +145,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             //解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUpPayCodeData(requestConsumer);
+            memberId = PublicMethod.checkUpPayCodeData(requestConsumer);
             token = requestConsumer.getToken();
 
             // 校验短信验证码是否正确
@@ -207,15 +213,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkGetFixedData(requestConsumer);
+            memberId = PublicMethod.checkGetFixedData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign
@@ -272,15 +281,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkAddFixedData(requestConsumer);
+            memberId = PublicMethod.checkAddFixedData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign
@@ -342,15 +354,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkUpFixedData(requestConsumer);
+            memberId = PublicMethod.checkUpFixedData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign
@@ -382,31 +397,9 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            String code = "";
-            String message = "";
-            if (e instanceof ServiceException){
-                if (!StringUtils.isBlank(((ServiceException) e).getCode())){
-                    code = ((ServiceException) e).getCode();
-                    message = e.getMessage();
-                }else {
-                    code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-                }
-            }else {
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
-                message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
-            }
-            log.error(String.format("this ConsumerController.upFixed() is error , the errorCode=%s and cgid=%s and sgid=%s and all data=%s!", code, "null", "null", request.getQueryString()));
-            // 记录错误日志
-            int mailRemind = ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO;
-            if (code.equals(ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE)){
-                //是属于系统错误，需要发送邮件提醒
-                mailRemind = ServerConstant.PUBLIC_CONSTANT.MAIL_REMIND_YES;
-            }else{
-                code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
-            }
-            e.printStackTrace();
+            Map<String,String> map = ExceptionMethod.getException(e);
             // 添加错误异常数据
-            return JsonResult.failedResult(message, code, cgid, sgid);
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
 
@@ -429,15 +422,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkRatioData(requestConsumer);
+            memberId = PublicMethod.checkRatioData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign
@@ -486,15 +482,18 @@ public class ConsumerController {
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data;
+        long memberId;
         try{
             String tempToken = "111111";
             ComponentUtil.redisService.set(tempToken, "3");
             log.info("jsonData:" + requestData.jsonData);
             // 解密
-            String data = StringUtil.decoderBase64(requestData.jsonData);
+            data = StringUtil.decoderBase64(requestData.jsonData);
             RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            long memberId = PublicMethod.checkBasicData(requestConsumer);
+            memberId = PublicMethod.checkBasicData(requestConsumer);
             token = requestConsumer.getToken();
             // 校验ctime
             // 校验sign

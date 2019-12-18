@@ -19,16 +19,15 @@ import com.pf.play.rule.core.controller.price.VirtualCoinPriceController;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
+import com.pf.play.rule.core.model.region.RegionModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,20 +84,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getData", method = {RequestMethod.POST})
-    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
@@ -112,18 +113,25 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOrderResult(stime, token, sign, orderList);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
+
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -144,20 +152,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
-    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // 获取虚拟币今日价格信息
             VirtualCoinPriceModel VirtualCoinPriceQuery = PublicMethod.assembleVirtualCoinPriceQueryToday();
             VirtualCoinPriceModel virtualCoinPriceModel = ComponentUtil.virtualCoinPriceService.getVirtualCoinPrice(VirtualCoinPriceQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
@@ -177,18 +187,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOrderResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_ADDDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_ADDDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -208,20 +224,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOrderInfoData(requestOrder);
             token = requestOrder.getToken();
@@ -235,18 +253,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOrderInfoResult(stime, token, sign, orderModel);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -268,20 +292,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getBuyData", method = {RequestMethod.POST})
-    public JsonResult<Object> getBuyData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getBuyData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getBuyData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
@@ -295,18 +321,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleBuyOrderResult(stime, token, sign, orderList);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -327,20 +359,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getCancelData", method = {RequestMethod.POST})
-    public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOrderData(requestOrder);
             token = requestOrder.getToken();
@@ -354,18 +388,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleBuyOrderResult(stime, token, sign, orderList);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -392,20 +432,22 @@ public class OrderController {
      * 服务端加密字段:stime+token+秘钥=sign
      */
     @RequestMapping(value = "/upCancelData", method = {RequestMethod.POST})
-    public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkCancelOrderData(requestOrder);
             token = requestOrder.getToken();
@@ -424,18 +466,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOrderResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -464,20 +512,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getUnpaidInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkUnpaidInfoData(requestOrder);
             token = requestOrder.getToken();
@@ -497,18 +547,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
             String strData = PublicMethod.assembleUnpaidOrderByOrderNoResult(stime, token, sign, orderModel, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()));
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -539,20 +595,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getUnpaidData", method = {RequestMethod.POST})
-    public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkUnpaidData(requestOrder);
             token = requestOrder.getToken();
@@ -568,24 +626,28 @@ public class OrderController {
             // 获取待付款订单列表
             OrderModel orderQuery = PublicMethod.assembleUnpaidOrderQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List<OrderModel> orderList = ComponentUtil.orderService.getUnpaidOrderList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
             String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()), orderQuery.getRowCount());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -615,20 +677,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getReceivableInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "4");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "4");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkReceivableInfoData(requestOrder);
             token = requestOrder.getToken();
@@ -648,18 +712,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
             String strData = PublicMethod.assembleUnpaidOrderInfoResult(stime, token, sign, orderModel, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()));
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -690,20 +760,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getReceivableData", method = {RequestMethod.POST})
-    public JsonResult<Object> getReceivableData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getReceivableData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getReceivableData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "4");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "4");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkReceivableData(requestOrder);
             token = requestOrder.getToken();
@@ -719,24 +791,28 @@ public class OrderController {
             // 获取待付款订单列表
             OrderModel orderQuery = PublicMethod.assembleReceivableQuery(requestOrder, memberId, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             List<OrderModel> orderList = ComponentUtil.orderService.getUnpaidOrderList(orderQuery);
-            orderQuery.getPage();
-            log.info("data :" + orderList.size());
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(buyStrategyModel.getStgValue(), sellStrategyModel.getStgValue(), stime, token, secretKeySign); // buyOvertime+sellOverTime+stime+token+秘钥=sign
             String strData = PublicMethod.assembleUnpaidOrderResult(stime, token, sign, orderList, Integer.parseInt(buyStrategyModel.getStgValue()), Integer.parseInt(sellStrategyModel.getStgValue()), orderQuery.getRowCount());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -766,20 +842,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getFinishInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkFinishInfoData(requestOrder);
             token = requestOrder.getToken();
@@ -793,18 +871,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleFinishOrderInfoResult(stime, token, sign, orderModel);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -835,20 +919,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getFinishData", method = {RequestMethod.POST})
-    public JsonResult<Object> getFinishData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getFinishData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getFinishData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkFinishData(requestOrder);
             token = requestOrder.getToken();
@@ -862,18 +948,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleFinishOrderResult(stime, token, sign, orderList, orderQuery.getRowCount());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -902,20 +994,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getOverTimeInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getOverTimeInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getOverTimeInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getOverTimeInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOverTimeInfoData(requestOrder);
             token = requestOrder.getToken();
@@ -929,18 +1023,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOverTimeInfoResult(stime, token, sign, orderModel);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -970,20 +1070,22 @@ public class OrderController {
      * }
      */
     @RequestMapping(value = "/getOverTimeData", method = {RequestMethod.POST})
-    public JsonResult<Object> getOverTimeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getOverTimeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getOverTimeData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestOrder requestOrder = new RequestOrder();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestOrder requestOrder  = JSON.parseObject(data, RequestOrder.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestOrder  = JSON.parseObject(data, RequestOrder.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkOverTimeData(requestOrder);
             token = requestOrder.getToken();
@@ -997,18 +1099,24 @@ public class OrderController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleOverTimeOrderResult(stime, token, sign, orderList, orderQuery.getRowCount());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getType(),
+                    ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

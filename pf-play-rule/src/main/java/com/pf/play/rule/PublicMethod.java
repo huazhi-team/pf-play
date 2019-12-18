@@ -19,8 +19,7 @@ import com.pf.play.model.protocol.response.trade.ResponseTrade;
 import com.pf.play.model.protocol.response.trade.ResponseTradeRule;
 import com.pf.play.model.protocol.response.trade.ResponseTradeTime;
 import com.pf.play.rule.core.common.exception.ServiceException;
-import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
-import com.pf.play.rule.core.common.utils.constant.ServerConstant;
+import com.pf.play.rule.core.common.utils.constant.*;
 import com.pf.play.rule.core.model.UserInfoModel;
 import com.pf.play.rule.core.model.appeal.AppealModel;
 import com.pf.play.rule.core.model.consumer.ConsumerFixedModel;
@@ -28,7 +27,9 @@ import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
+import com.pf.play.rule.core.model.region.RegionModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.core.model.task.TaskOrderTradeModel;
 import com.pf.play.rule.core.model.task.base.StatusModel;
 import com.pf.play.rule.core.model.trade.TradeModel;
@@ -41,6 +42,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 公共方法类
@@ -123,7 +125,8 @@ public class PublicMethod {
     */
     public static long checkIsLogin(String token) throws Exception{
         Long memberId;
-        String strCache = (String) ComponentUtil.redisService.get(token);
+        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+        String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
         if (!StringUtils.isBlank(strCache)) {
             // 登录存储在缓存中的用户id
             memberId = Long.parseLong(strCache);
@@ -2884,6 +2887,113 @@ public class PublicMethod {
         resBean.setId(taskOrderTradeModel.getId());
         resBean.setTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
         return resBean;
+    }
+
+    /**
+     * @Description: 组装查询地域的查询条件
+     * @param ip
+     * @return RegionModel
+     * @author yoko
+     * @date 2019/12/18 18:41
+    */
+    public static RegionModel assembleRegionModel(String ip){
+        RegionModel resBean = new RegionModel();
+        resBean.setIp(ip);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装用户访问流水、异常的数据
+     * @param sgid - 服务端会话ID
+     * @param cgid - 客户端会话ID
+     * @param memberId - 用户ID
+     * @param regionModel - 地域
+     * @param requestObj - 请求的数据参数
+     * @param actionType - 接口类型-枚举
+     * @param actionName - 接口名称-枚举
+     * @param consumerModel - 用户基本信息
+     * @param parametJson - 客户端传参
+     * @param resultJson - 服务端返回的参数
+     * @param errorMap - 异常
+     * @return com.pf.play.rule.core.model.stream.StreamConsumerModel
+     * @author yoko
+     * @date 2019/12/18 18:40
+     */
+    public static StreamConsumerModel assembleStream(String sgid, String cgid, long memberId, RegionModel regionModel, Object requestObj,
+                                                     int actionType, String actionName, ConsumerModel consumerModel, String parametJson,
+                                                     String resultJson, Map<String,String> errorMap) throws Exception{
+        StreamConsumerModel resBean = new StreamConsumerModel();
+        resBean.setSgid(sgid);
+        if (!StringUtils.isBlank(cgid)){
+            resBean.setCgid(cgid);
+        }
+        resBean.setMemberId(memberId);
+        if (regionModel != null){
+            // 获取地域信息
+            if (!StringUtils.isBlank(regionModel.getIp())){
+                regionModel = ComponentUtil.regionService.getCacheRegion(regionModel);
+                resBean.setIp(regionModel.getIp());
+                if (!StringUtils.isBlank(regionModel.getProvince())){
+                    resBean.setProvince(regionModel.getProvince());
+                }
+                if (!StringUtils.isBlank(regionModel.getCity())){
+                    resBean.setCity(regionModel.getCity());
+                }
+            }
+        }
+
+        if (requestObj != null){
+            Map<String, Object> requestMap = BeanUtils.transBeanToMap(requestObj);
+            if (requestMap != null){
+                if (requestMap.get("clientVer") != null){
+                    resBean.setClientVer((Integer) requestMap.get("clientVer"));
+                }
+                if (requestMap.get("agtVer") != null){
+                    resBean.setAgtVer((Integer) requestMap.get("agtVer"));
+                }
+            }
+        }
+        resBean.setActionType(actionType);
+        resBean.setActionName(actionName);
+        if (consumerModel != null){
+            if (consumerModel.getIsActive() != null){
+                resBean.setIsBlack(consumerModel.getIsActive());
+            }
+            if (consumerModel.getIsCertification() != null){
+                resBean.setIsAttestation(consumerModel.getIsCertification());
+            }
+        }
+        if (!StringUtils.isBlank(parametJson)){
+            resBean.setParametJson(parametJson);
+        }
+        if (!StringUtils.isBlank(resultJson)){
+            resBean.setResultJson(resultJson);
+        }
+        if (errorMap != null){
+            if (!StringUtils.isBlank(errorMap.get("dbCode"))){
+                resBean.setErrorCode(errorMap.get("dbCode"));
+                if (!StringUtils.isBlank(errorMap.get("dbMessage"))){
+                    resBean.setErrorInfo(errorMap.get("dbMessage"));
+                }
+            }else {
+                if (!StringUtils.isBlank(errorMap.get("code"))){
+                    resBean.setErrorInfo(errorMap.get("code"));
+                    if (!StringUtils.isBlank(errorMap.get("message"))){
+                        if (errorMap.get("message").length() > 200){
+                            resBean.setErrorInfo(errorMap.get("message").substring(0, 190));
+                        }else {
+                            resBean.setErrorInfo(errorMap.get("message"));
+                        }
+                    }
+                }
+            }
+        }
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        resBean.setSuffix(String.valueOf(DateUtil.getDayNumber(new Date())));
+        return resBean;
+
     }
 
 

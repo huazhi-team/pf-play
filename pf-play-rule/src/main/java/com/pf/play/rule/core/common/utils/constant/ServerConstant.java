@@ -202,6 +202,99 @@ public class ServerConstant {
     }
 
 
+    /**
+     * @Description: 服务的所有接口说明的枚举
+     * @author yoko
+     * @date 2019/12/10 9:54
+     */
+    public enum InterfaceEnum{
+        APPEAL_GETACTIVEDATA(1, "AppealController.getActiveData", "获取我的申诉（主动发起的申诉）-列表"),
+        APPEAL_GETPASSIVEDATA(2, "AppealController.getPassiveData", "获取被申诉（被他人申诉）-列表"),
+        APPEAL_UPACTIVE(3, "AppealController.upActive", "更新我的申诉的数据"),
+        APPEAL_UPPASSIVE(4, "AppealController.upPassive", "更新被申诉的数据"),
+        APPEAL_ADDDATA(5, "AppealController.addData", "添加申诉的数据"),
+        APPEAL_GETINFODATA(6, "AppealController.getInfoData", "获取我的申诉或者被申诉的数据-根据ID查询申诉的详情"),
+
+        CODE_GETCD(7, "CodeController.getCd", "获取验证码-修改支付密码时"),
+
+        CONSUMER_UPFIRSTPAYCODE(8, "ConsumerController.upFirstPayCode", "用户更新设置支付密码-第一次设置密码"),
+        CONSUMER_UPPAYCODE(9, "ConsumerController.upPayCode", "用户更新设置支付密码"),
+        CONSUMER_GETDATA(10, "ConsumerController.getData", "查询用户固定账号/支付宝信息"),
+        CONSUMER_ADDDATA(11, "ConsumerController.addData", "用户添加固定账号/支付宝信息"),
+        CONSUMER_UPDATA(12, "ConsumerController.upData", "更新添加固定账号/支付宝信息"),
+        CONSUMER_GETRATIO(13, "ConsumerController.getRatio", "获取用户手续费百分比的信息"),
+        CONSUMER_GETBASIC(14, "ConsumerController.getBasic", "获取用户的基本信息"),
+
+        ORDER_GETDATA(15, "OrderController.getData", "获取订单信息-列表"),
+        ORDER_ADDDATA(16, "OrderController.addData", "发布订单号/我要买QHR"),
+        ORDER_GETINFODATA(17, "OrderController.getInfoData", "获取订单详情"),
+        ORDER_GETBUYDATA(18, "OrderController.getBuyData", "获取买入订单信息-列表"),
+        ORDER_GETCANCELDATA(19, "OrderController.getCancelData", "获取已取消的订单信息-列表"),
+        ORDER_UPCANCELDATA(20, "OrderController.upCancelData", "购买的订单：取消"),
+        ORDER_GETUNPAIDINFODATA(21, "OrderController.getUnpaidInfoData", "获取用户待付款的订单信息-详情"),
+        ORDER_GETUNPAIDDATA(22, "OrderController.getUnpaidData", "获取用户待付款的订单信息-列表"),
+        ORDER_GETRECEIVABLEINFODATA(23, "OrderController.getReceivableInfoData", "获取用户待收款的订单信息-详情"),
+        ORDER_GETRECEIVABLEDATA(24, "OrderController.getReceivableData", "获取用户待收款的订单信息-列表"),
+        ORDER_GETFINISHINFODATA(25, "OrderController.getFinishInfoData", "获取用户已完成的订单信息-详情"),
+        ORDER_GETFINISHDATA(26, "OrderController.getFinishData", "获取用户已完成的订单信息-列表"),
+        ORDER_GETOVERTIMEINFODATA(27, "OrderController.getOverTimeInfoData", "获取用户已超时的订单信息-详情"),
+        ORDER_GETOVERTIMEDATA(28, "OrderController.getOverTimeData", "获取用户已超时的订单信息-列表"),
+
+        VIRTUAL_GETDATA(29, "VirtualCoinPriceController.getData", "获取虚拟币每天兑换的价格"),
+
+        TRADE_GETTRADERULE(30, "TradeController.getTradeRule", "交易数据展现-规则"),
+        TRADE_GETTRADETIME(31, "TradeController.getTradeTime", "获取交易所的开市时间"),
+        TRADE_GETTRADEDATA(32, "TradeController.getTradeData", "获取交易所的当前买量、今日成交量"),
+        TRADE_ADDDATA(33, "TradeController.addData", "卖家卖给买家/也就是添加订单交易流水"),
+        TRADE_CONFIRMPAY(34, "TradeController.confirmPay", "买家确认支付"),
+        TRADE_CONFIRMRPT(35, "TradeController.confirmRpt", "卖家确认已收款"),
+
+        ;
+        /**
+         * 类型
+         */
+        private int type;
+        /**
+         * 接口地址
+         */
+        private String ads;
+        /**
+         * 接口描述
+         */
+        private String desc;
+
+        private InterfaceEnum(int type,String ads, String desc){
+            this.type = type;
+            this.ads = ads;
+            this.desc = desc;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        public String getAds() {
+            return ads;
+        }
+
+        public void setAds(String ads) {
+            this.ads = ads;
+        }
+    }
+
+
 
 
 

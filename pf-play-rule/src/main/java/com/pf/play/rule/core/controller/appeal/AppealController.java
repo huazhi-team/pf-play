@@ -13,15 +13,14 @@ import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.appeal.AppealModel;
 import com.pf.play.rule.core.model.order.OrderModel;
+import com.pf.play.rule.core.model.region.RegionModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,20 +84,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/getActiveData", method = {RequestMethod.POST})
-    public JsonResult<Object> getActiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getActiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getActiveData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkActiveData(requestAppeal);
             token = requestAppeal.getToken();
@@ -112,18 +113,24 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleAppealResult(stime, token, sign, appealList, appealQuery.getRowCount());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -153,20 +160,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/getPassiveData", method = {RequestMethod.POST})
-    public JsonResult<Object> getPassiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getPassiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getPassiveData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkPassiveData(requestAppeal);
             token = requestAppeal.getToken();
@@ -187,11 +196,18 @@ public class AppealController {
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -221,20 +237,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/upActive", method = {RequestMethod.POST})
-    public JsonResult<Object> upActive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> upActive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> upActive(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkUpActiveData(requestAppeal);
             token = requestAppeal.getToken();
@@ -248,18 +266,24 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -288,20 +312,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/upPassive", method = {RequestMethod.POST})
-    public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "4");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "4");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkUpPassiveData(requestAppeal);
             token = requestAppeal.getToken();
@@ -315,18 +341,24 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -356,20 +388,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
-    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkAddAppealData(requestAppeal);
             token = requestAppeal.getToken();
@@ -407,18 +441,24 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleUpAppealResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -448,20 +488,22 @@ public class AppealController {
      * }
      */
     @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
-    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestAppeal requestAppeal = new RequestAppeal();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestAppeal requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestAppeal  = JSON.parseObject(data, RequestAppeal.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkInfoData(requestAppeal);
             token = requestAppeal.getToken();
@@ -475,18 +517,24 @@ public class AppealController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleAppealByIdResult(stime, token, sign, appealModel);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getType(),
+                    ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

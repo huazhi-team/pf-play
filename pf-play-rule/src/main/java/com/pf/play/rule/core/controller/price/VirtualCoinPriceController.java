@@ -15,15 +15,14 @@ import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
+import com.pf.play.rule.core.model.region.RegionModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,20 +79,22 @@ public class VirtualCoinPriceController {
      * 服务端加密字段:maxPrice+minPrice+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getData", method = {RequestMethod.POST})
-    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestConsumer requestConsumer = new RequestConsumer();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestConsumer requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkGetVirtualCoinPriceData(requestConsumer);
             token = requestConsumer.getToken();
@@ -111,18 +112,24 @@ public class VirtualCoinPriceController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(virtualCoinPriceDto.getMaxPrice(), virtualCoinPriceDto.getMinPrice(), stime, token, secretKeySign); //maxPrice+minPrice+stime+token+秘钥=sign
             String strData = PublicMethod.assembleDayPriceResult(stime, token, sign, virtualCoinPriceDto);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getType(),
+                    ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getType(),
+                    ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

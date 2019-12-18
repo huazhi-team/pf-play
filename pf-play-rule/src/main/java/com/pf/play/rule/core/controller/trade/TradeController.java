@@ -17,16 +17,15 @@ import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
+import com.pf.play.rule.core.model.region.RegionModel;
 import com.pf.play.rule.core.model.strategy.StrategyModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.core.model.trade.TradeModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,23 +82,25 @@ public class TradeController {
      * 服务端加密字段:isTrade+tradeTime+maxPrice+minPrice+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getTradeRule", method = {RequestMethod.POST})
-    public JsonResult<Object> getTradeRule(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getTradeRule(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getTradeRule(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            memberId = PublicMethod.checkTradeRuleData(requestOrder);
-            token = requestOrder.getToken();
+            memberId = PublicMethod.checkTradeRuleData(requestTrade);
+            token = requestTrade.getToken();
             // 校验ctime
             // 校验sign
 
@@ -137,18 +138,24 @@ public class TradeController {
             String sign = SignUtil.getSgin(isTrade, strategyTimeModel.getStgValue(), virtualCoinPriceDto.getMaxPrice(),
                     virtualCoinPriceDto.getMinPrice(), stime, token, secretKeySign); // isTrade+tradeTime+maxPrice+minPrice+stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeRuleResult(stime, token, sign, isTrade, strategyTimeModel.getStgValue(), buyTradeNum, sucTradeNum, virtualCoinPriceDto);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -170,23 +177,25 @@ public class TradeController {
      * 服务端加密字段:isTrade+tradeTime+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getTradeTime", method = {RequestMethod.POST})
-    public JsonResult<Object> getTradeTime(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getTradeTime(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getTradeTime(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            memberId = PublicMethod.checkTradeTimeData(requestOrder);
-            token = requestOrder.getToken();
+            memberId = PublicMethod.checkTradeTimeData(requestTrade);
+            token = requestTrade.getToken();
             // 校验ctime
             // 校验sign
 
@@ -198,18 +207,24 @@ public class TradeController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(isTrade, strategyModel.getStgValue(), stime, token, secretKeySign); // isTrade+tradeTime+stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeTimeResult(stime, token, sign, isTrade, strategyModel.getStgValue());
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -231,23 +246,25 @@ public class TradeController {
      * 服务端加密字段:buyTradeNum+sucTradeNum+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getTradeData", method = {RequestMethod.POST})
-    public JsonResult<Object> getTradeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> getTradeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getTradeData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestOrder  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            memberId = PublicMethod.checkTradeTimeData(requestOrder);
-            token = requestOrder.getToken();
+            memberId = PublicMethod.checkTradeTimeData(requestTrade);
+            token = requestTrade.getToken();
             // 校验ctime
             // 校验sign
 
@@ -270,18 +287,24 @@ public class TradeController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(buyTradeNum, sucTradeNum, stime, token, secretKeySign); // buyTradeNum+sucTradeNum+stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeDataResult(stime, token, sign, buyTradeNum, sucTradeNum);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -315,20 +338,22 @@ public class TradeController {
      * }
      */
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
-    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkTradeAddData(requestTrade);
             token = requestTrade.getToken();
@@ -368,7 +393,6 @@ public class TradeController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
@@ -376,11 +400,18 @@ public class TradeController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // #提醒买家 - 卖家已卖出钻石，请买家进行支付
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_ADDDATA.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_ADDDATA.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_ADDDATA.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -411,20 +442,22 @@ public class TradeController {
      * }
      */
     @RequestMapping(value = "/confirmPay", method = {RequestMethod.POST})
-    public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "4");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "4");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkTradeConfirmPayData(requestTrade);
             token = requestTrade.getToken();
@@ -444,7 +477,6 @@ public class TradeController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
@@ -452,11 +484,18 @@ public class TradeController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // #提醒卖家 - 买家已付款，卖家需要核实是否收到款
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -486,20 +525,22 @@ public class TradeController {
      * }
      */
     @RequestMapping(value = "/confirmRpt", method = {RequestMethod.POST})
-    public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
-        String data;
-        long memberId;
+        String data = "";
+        long memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        RequestTrade requestTrade = new RequestTrade();
         try{
-            String tempToken = "111111";
-            ComponentUtil.redisService.set(tempToken, "3");
-            log.info("jsonData:" + requestData.jsonData);
+//            String tempToken = "111111";
+//            ComponentUtil.redisService.set(tempToken, "3");
             // 解密
-            data = StringUtil.decoderBase64(requestData.jsonData);
-            RequestTrade requestTrade  = JSON.parseObject(data, RequestTrade.class);
+            data = StringUtil.decoderBase64(jsonData);
+            requestTrade  = JSON.parseObject(data, RequestTrade.class);
             // check校验数据、校验用户是否登录、获得用户ID
             memberId = PublicMethod.checkTradeConfirmReceiptData(requestTrade);
             token = requestTrade.getToken();
@@ -528,7 +569,6 @@ public class TradeController {
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
             String strData = PublicMethod.assembleTradeResult(stime, token, sign);
-            // #插入流水
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
@@ -536,11 +576,18 @@ public class TradeController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // #提醒买家 - 卖家已确认收款，买家需要核实是否收到钻石
+            // 添加流水
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getDesc(), null, data, strData, null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
-            // 添加错误异常数据
+            // 添加异常
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getType(),
+                    ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getDesc(), null, data, null, map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

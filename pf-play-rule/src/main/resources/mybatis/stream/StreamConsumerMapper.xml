@@ -13,7 +13,7 @@
     </sql>
 
     <!-- 定义数据库基本列,只适用代替单表的-异常*-->
-    <sql id="Base_Column_List_visit">
+    <sql id="Base_Column_List_error">
         a.id,a.sgid,a.cgid,a.member_id,a.ip,a.province,a.city,a.android_ver,a.client_ver,a.action_type,a.action_name,
         a.is_black,a.is_attestation,a.paramet_json,a.result_json,a.error_code,a.error_info,a.agt_ver,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.create_time,a.update_time,a.ts_time,a.yn

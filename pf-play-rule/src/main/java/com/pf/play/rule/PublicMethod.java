@@ -1,13 +1,16 @@
 package com.pf.play.rule;
 
 import com.alibaba.fastjson.JSON;
+import com.pf.play.common.alipay.model.AlipayModel;
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
 import com.pf.play.common.utils.StringUtil;
+import com.pf.play.model.protocol.request.alipay.RequestAlipay;
 import com.pf.play.model.protocol.request.appeal.RequestAppeal;
 import com.pf.play.model.protocol.request.consumer.RequestConsumer;
 import com.pf.play.model.protocol.request.order.RequestOrder;
 import com.pf.play.model.protocol.request.trade.RequestTrade;
+import com.pf.play.model.protocol.response.alipay.ResponseAlipay;
 import com.pf.play.model.protocol.response.appeal.Appeal;
 import com.pf.play.model.protocol.response.appeal.ResponseAppeal;
 import com.pf.play.model.protocol.response.consumer.ResponseConsumer;
@@ -2994,6 +2997,131 @@ public class PublicMethod {
         resBean.setSuffix(String.valueOf(DateUtil.getDayNumber(new Date())));
         return resBean;
 
+    }
+
+
+    /**
+     * @Description: 发送组装阿里支付宝支付订单时，校验基本数据是否非法
+     * @param requestAlipay - 基础数据
+     * @return void
+     * @author yoko
+     * @date 2019/11/21 18:59
+     */
+    public static long checkAlipayData(RequestAlipay requestAlipay) throws Exception{
+        long memberId;
+        // 校验所有数据
+        if (requestAlipay == null ){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.U00001.geteCode(), PfErrorCode.ENUM_ERROR.U00001.geteDesc());
+        }
+
+        // 校验token值
+        if (StringUtils.isBlank(requestAlipay.getToken())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.C00002.geteCode(), PfErrorCode.ENUM_ERROR.C00002.geteDesc());
+        }
+
+        // 校验用户是否登录
+        memberId = PublicMethod.checkIsLogin(requestAlipay.getToken());
+        return memberId;
+    }
+
+
+    /**
+     * @Description: 校验判断是否阿里支付实名认证默认金额
+     * @param strategyModel - 阿里订单默认金额
+     * @return String
+     * @author yoko
+     * @date 2019/11/27 17:16
+     */
+    public static String checkAlipayMoney(StrategyModel strategyModel) throws Exception{
+        String str = "";
+        if (strategyModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.U00002.geteCode(), PfErrorCode.ENUM_ERROR.U00002.geteDesc());
+        }
+        if (StringUtils.isBlank(strategyModel.getStgValue())){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.U00003.geteCode(), PfErrorCode.ENUM_ERROR.U00003.geteDesc());
+        }else {
+            str = strategyModel.getStgValue();
+        }
+        return str;
+    }
+
+
+    /**
+     * @Description: 组装阿里支付的订单访问数据
+     * @param requestAlipay - 阿里支付订单的基本信息
+     * @param outTradeNo - 交易订单号
+     * @param totalAmount - 订单总金额
+     * @return AlipayModel
+     * @author yoko
+     * @date 2019/12/19 20:36
+    */
+    public static AlipayModel assembleAlipayData(RequestAlipay requestAlipay, String outTradeNo, String totalAmount){
+        AlipayModel resBean = new AlipayModel();
+        if (requestAlipay != null){
+            if (!StringUtils.isBlank(requestAlipay.body)){
+                resBean.body = requestAlipay.body;
+            }else {
+                resBean.body = "实名认证";
+            }
+            if (!StringUtils.isBlank(requestAlipay.subject)){
+                resBean.subject = requestAlipay.subject;
+            }else {
+                resBean.subject = "趣红人实名认证";
+            }
+            if (!StringUtils.isBlank(requestAlipay.outTradeNo)){
+                resBean.outTradeNo = requestAlipay.outTradeNo;
+            }else {
+                resBean.outTradeNo = outTradeNo;
+            }
+            if (!StringUtils.isBlank(requestAlipay.timeoutExpress)){
+                resBean.timeoutExpress = requestAlipay.timeoutExpress;
+            }else {
+                resBean.timeoutExpress = "30m";
+            }
+            if (!StringUtils.isBlank(requestAlipay.totalAmount)){
+                resBean.totalAmount = requestAlipay.totalAmount;
+            }else {
+                resBean.totalAmount = totalAmount;
+            }
+            if (!StringUtils.isBlank(requestAlipay.productCode)){
+                resBean.productCode = requestAlipay.productCode;
+            }else {
+                resBean.productCode = "QHR_SMRZ";
+            }
+        }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 开市时间的数据组装返回客户端的方法
+     * @param stime - 服务器的时间
+     * @param token - 登录token
+     * @param sign - 签名
+     * @param aliOrder - 调用阿里支付返回的订单码
+     * @return java.lang.String
+     * @author yoko
+     * @date 2019/11/25 22:45
+     */
+    public static String assembleAlipayResult(long stime, String token, String sign, String aliOrder){
+        ResponseAlipay dataModel = new ResponseAlipay();
+        dataModel.aliOrder = aliOrder;
+        dataModel.setStime(stime);
+        dataModel.setToken(token);
+        dataModel.setSign(sign);
+        return JSON.toJSONString(dataModel);
+    }
+
+    /**
+     * @Description: 校验阿里支付的订单数据
+     * @param aliOrder - 阿里支付订单数据
+     * @author yoko
+     * @date 2019/12/19 21:16
+    */
+    public static void checkAliOrder(String aliOrder) throws Exception{
+        if (StringUtils.isBlank(aliOrder)){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.U00004.geteCode(), PfErrorCode.ENUM_ERROR.U00004.geteDesc());
+        }
     }
 
 

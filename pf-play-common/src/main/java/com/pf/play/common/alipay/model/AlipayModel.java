@@ -39,6 +39,7 @@ public class AlipayModel {
      */
     public String productCode;
 
+
     public AlipayModel(){
 
     }
@@ -90,4 +91,5 @@ public class AlipayModel {
     public void setProductCode(String productCode) {
         this.productCode = productCode;
     }
+
 }

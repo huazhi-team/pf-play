@@ -64,7 +64,7 @@ public class RegisterMethod {
         memberModel.setCreateTime(createTime);
         memberModel.setLoginTime(loginTime);
         memberModel.setSuperiorId(superiorId);
-        memberModel.setExtensionMemberId(extensionMemberId+","+superiorId);
+        memberModel.setExtensionMemberId(extensionMemberId+","+memberId);
         return   memberModel;
     }
 

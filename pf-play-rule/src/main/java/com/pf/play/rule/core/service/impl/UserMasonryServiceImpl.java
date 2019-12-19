@@ -125,19 +125,21 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     public Integer queryTokenMemberId(String token,String wxOpenId) {
         UserInfoModel  model =null;
         try{
-            String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-            String rsTokens =(String) ComponentUtil.redisService.get(tokens);
-            if(StringUtils.isBlank(rsTokens)||!rsTokens.equals("1")){
+//            String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+            String rsTokens =(String) ComponentUtil.redisService.get(token);
+            if(StringUtils.isBlank(rsTokens)){
                 return  0 ;
+            }else{
+                return  Integer.parseInt(rsTokens);
             }
 
-            UserInfoModel  userInfoModel = new  UserInfoModel();
-            userInfoModel.setToken(token);
-            userInfoModel.setWxOpenid(wxOpenId);
-            model  = userInfoMapper.select(userInfoModel);
-            if(null == model||model.getMemberId()==0){
-                return  0;
-            }
+//            UserInfoModel  userInfoModel = new  UserInfoModel();
+//            userInfoModel.setToken(token);
+//            userInfoModel.setWxOpenid(wxOpenId);
+//            model  = userInfoMapper.select(userInfoModel);
+//            if(null == model||model.getMemberId()==0){
+//                return  0;
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }

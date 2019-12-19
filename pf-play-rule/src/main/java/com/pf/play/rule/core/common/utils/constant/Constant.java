@@ -64,4 +64,8 @@ public class Constant {
     public  static  int  CODE_ERROR_TYPE1    =  1 ; //显示给前端
     public  static  int  CODE_ERROR_TYPE2    =  2 ; //不显示显示给前端
 
+    public  static  long  TOKEN_EXPIRE_S    =  1296000L ;
+
+
+
 }

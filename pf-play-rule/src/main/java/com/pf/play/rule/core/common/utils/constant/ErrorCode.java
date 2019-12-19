@@ -44,7 +44,7 @@ public class ErrorCode {
     public enum ENUM_ERROR {
 //        PROGRAM
 
-        IS_USER_ERROR("-1","请先登录","信息验证不通过"),
+        IS_USER_ERROR("-1001","请先登录","信息验证不通过"),
         PARAMETER_ERROR("-255","信息验证不通过","信息验证不通过"),
 
         /********************注册信息*****************************/

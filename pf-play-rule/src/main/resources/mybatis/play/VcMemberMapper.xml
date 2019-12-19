@@ -346,9 +346,9 @@
           </foreach>
         </if>
 
-      <if test="idList != null and idList.size()>0">
-        and
-      </if>
+      <!--<if test="idList != null and idList.size()>0">-->
+        <!--and-->
+      <!--</if>-->
   </select>
 
 

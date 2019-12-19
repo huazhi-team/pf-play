@@ -8,6 +8,7 @@ import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.task.*;
+import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
@@ -914,6 +915,7 @@ public class TaskMethod {
         Integer   level  =  0  ;
         List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
         for(DisVitalityValue  disVitalityValue:list){
+
             if(queryVcMember.getDarenLevel()==0){
                 continue;
             }
@@ -1329,6 +1331,63 @@ public class TaskMethod {
         uSubReward.setMemberId(memberId);
         uSubReward.setEndTime(new Date());
         return uSubReward;
+    }
+
+    /**
+     * @Description: 去除联盟值的
+     * @param listAll
+    * @param listHero
+     * @return java.util.List<java.lang.Integer>
+     * @author long
+     * @date 2019/12/18 18:49
+     */
+    public static List<Integer>    removeHeroes(List<VcMember> listAll,List<VcMember>    listHero){
+        List<Integer>  list  = new ArrayList<>();
+        for(VcMember  all:listAll){
+            boolean  flag = true;
+            for(VcMember hero :listHero){
+                if (all.getMemberId()==hero.getMemberId()){
+                    flag = false  ;
+                    break;
+                }
+            }
+            if(flag){
+                list.add(all.getMemberId());
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @Description: 删除用户redis 信息
+     * @param memberId
+    * @param level
+     * @return void
+     * @author long
+     * @date 2019/12/18 20:09
+     */
+    public static  void   deleteRedisLevel(Integer memberId,Integer level){
+        if(level==0){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL0,memberId+"");
+        }else if(level==1){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL1,memberId+"");
+        }else if(level==2){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL2,memberId+"");
+        }else if(level==3){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL3,memberId+"");
+        }else if(level==4){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL4,memberId+"");
+        }else if(level==5){
+            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL5,memberId+"");
+        }
+    }
+
+
+
+    public static VcMember toIdList(List<Integer>   idList){
+        VcMember  vcMember = new VcMember();
+        vcMember.setIdList(idList);
+        return  vcMember;
     }
 
 

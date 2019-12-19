@@ -78,6 +78,10 @@ public interface CacheKey {
      */
     String LEVEL5 = "level5";
 
+    /***
+     * 等级
+     */
+    String  LEVEL="level-";
 
 
 }

@@ -15,6 +15,7 @@ import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -579,6 +580,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<Integer>    updateList =   TaskMethod.getSuperiorIdList(vcMember1);
 
         for(Integer memberId :updateList){  //挨个遍历更新 英雄活力 和联盟活力值
+            Integer    memberIdLevel = 0 ;
 //            VcMemberResource  updateMyResource1 = TaskMethod.getUqdateTeamActive(memberId,uVitalityValueList.getActiveValue());
             VcMember     updateVcMember   =  TaskMethod.getMember(memberId);
             VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
@@ -586,15 +588,16 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             ComponentUtil.transactionalService.updataActiveValue(rsVcMemberResource,updateVcMember);
 
             VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
-
             Integer  level  =  TaskMethod.getLevel(rsVcMemberUpdate); //条件满足等级
 
+            if(level==rsVcMemberUpdate.getDarenLevel()){
+                continue;
+            }else{
+                memberIdLevel = ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
+            }
 
-            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,memberId,1);
-
-            ComponentUtil.taskService.checkLevel1(memberId);
-
-
+            VcMemberResource  vcMemberResource = TaskMethod.updateResourceLevel(rsVcMemberUpdate.getMemberId(),memberIdLevel);
+            vcMemberResourceMapper.updateByPrimaryKey(vcMemberResource);
         }
 
 
@@ -670,29 +673,29 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public Integer CheckCondition(Integer level, Integer currentLevel, Integer memberId) {
-        while(level==currentLevel){
+        while(level!=currentLevel){
             if(level==1){
-                boolean  flag = ComponentUtil.taskService.checkLevel1(memberId);
+                boolean  flag = ComponentUtil.taskService.checkLevel1(memberId,currentLevel);
                 if(flag){
                     break;
                 }
             }else if(level==2){
-                boolean  flag = ComponentUtil.taskService.checkLevel2(memberId);
+                boolean  flag = ComponentUtil.taskService.checkLevel2(memberId,currentLevel);
                 if(flag){
                     break;
                 }
             }else  if(level==3){
-                boolean  flag = ComponentUtil.taskService.checkLevel3(memberId);
+                boolean  flag = ComponentUtil.taskService.checkLevel3(memberId,currentLevel);
                 if(flag){
                     break;
                 }
             }else if(level==4){
-                boolean  flag = ComponentUtil.taskService.checkLevel4(memberId);
+                boolean  flag = ComponentUtil.taskService.checkLevel4(memberId,currentLevel);
                 if(flag){
                     break;
                 }
             }else if(level==5){
-                boolean  flag = ComponentUtil.taskService.checkLevel5(memberId);
+                boolean  flag = ComponentUtil.taskService.checkLevel5(memberId,currentLevel);
                 if(flag){
                     break;
                 }
@@ -703,127 +706,151 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     }
 
     @Override
-    public boolean checkLevel1(Integer memberId) {
-        VcMember    vcMember    =  TaskMethod.changvcMemberTOsuperiorId(memberId);
-        VcMember    rsVcMember  =  vcMemberMapper.selectIsLevel(vcMember);
-        if(rsVcMember.getPushPeople()>=20){
-            return true;
-        }
-        return false;
+    public boolean checkLevel1(Integer memberId,Integer currentLevel) {
+//        VcMember    vcMember    =  TaskMethod.changvcMemberTOsuperiorId(memberId);
+//        String  level1=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+memberId);
+//        if(!StringUtils.isBlank(level1)){
+//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"1");
+//        }
+        return true;
     }
 
     @Override
-    public boolean checkLevel2(Integer memberId) {
+    public boolean checkLevel2(Integer memberId,Integer currentLevel) {
+        boolean    rsFlag =  false ;
         VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
-        List<VcMember>    rsVcMember  =  vcMemberMapper.selectLevel2(vcMember);
-        if(rsVcMember.size()!=0){
-            return true;
+        List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
+
+        if(listHero.size()<2){
+            return false ;
         }
-        return false;
+
+        List<VcMember>    listAll = vcMemberMapper.selectByPid(vcMember);
+        List<Integer> idList2 = TaskMethod.removeHeroes(listAll,listHero);
+
+        for(Integer integer: idList2){
+            String  level1=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+integer);
+            if(!StringUtils.isBlank(level1)&&Integer.parseInt(level1)>=1){
+                rsFlag = true;
+                break;
+            }
+        }
+
+//        if(rsFlag){
+////            TaskMethod.deleteRedisLevel(memberId,currentLevel);
+//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"2");
+//        }
+        return rsFlag;
     }
 
     @Override
-    public boolean checkLevel3(Integer memberId) {
+    public boolean checkLevel3(Integer memberId,Integer currentLevel) {
+        boolean    rsFlag =  false ;
         VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
-        List<VcMember>  list    = vcMemberMapper.selectLevel2(vcMember);
-        List<VcMember>  lmList  = vcMemberMapper.selectAlliance(vcMember);//没有联盟值
-        if(lmList.size()<2){
-            return false;
-        }
-        List<Integer>   idList = new ArrayList<>();
-        for(VcMember vcMember1:list){
-            if(lmList.get(0).getMemberId()==vcMember1.getMemberId()){
-                continue;
-            }
-            if(lmList.get(1).getMemberId()==vcMember1.getMemberId()){
-                continue;
-            }
-            idList.add(vcMember1.getMemberId());
+        List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
+        List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
+
+        if(listHero.size()<2){
+            return false ;
         }
 
-        VcMember   vcMember1 =  TaskMethod.getVcMemberLevel2(idList,2);
+        List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
 
-        List<VcMember>   vcMemberList  =vcMemberMapper.selectLevel2Above(vcMember1);
-        if(vcMemberList.size()!=0){
-            return true;
+        VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
+        List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
+
+        for(VcMember vcMember1: twoList){
+            String  level2=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
+            if(!StringUtils.isBlank(level2)&&Integer.parseInt(level2)>=2){
+                rsFlag = true;
+                break;
+            }
         }
+
+//        if(rsFlag){
+//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
+//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"3");
+//        }
+
+        return rsFlag;
+    }
+
+    @Override
+    public boolean checkLevel4(Integer memberId,Integer currentLevel) {
+        boolean    rsFlag =  false ;
+        VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
+        List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
+        List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
+
+        if(listHero.size()<2){
+            return false ;
+        }
+
+        List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
+        VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
+        List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
+
+        List<Integer>   idListThree = new ArrayList<>();
+        for(VcMember  vcMember1 :twoList){
+            idListThree.add(vcMember1.getMemberId());
+        }
+        VcMember    vcMemberThree    =TaskMethod.toIdList(idList);
+        List<VcMember>    ThreeList  =  vcMemberMapper.selectLevel2Above(vcMemberThree);
+
+        for(VcMember vcMember1: ThreeList){
+            String  level3=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
+            if(!StringUtils.isBlank(level3)&&Integer.parseInt(level3)>=3){
+                rsFlag = true;
+                break;
+            }
+        }
+
+//        if(rsFlag){
+//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
+//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"4");
+//        }
 
         return false;
     }
 
-    @Override
-    public boolean checkLevel4(Integer memberId) {
-        VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
-        List<VcMember>  list    = vcMemberMapper.selectLevel2(vcMember);//直推列表
-
-        List<Integer>   idList = new ArrayList<>();
-        for(VcMember vcMember1:list){
-            idList.add(vcMember1.getMemberId());
-        }
-
-        VcMember   vcMember1 =  TaskMethod.getVcMemberLevel2(idList,2);
-        List<VcMember>  lmList  = vcMemberMapper.selectAlliance(vcMember1);//二代列表
-
-        if(lmList.size()<2){
-            return false;
-        }
-
-        List<Integer>   idList2 = new ArrayList<>();
-        for(VcMember vcMember2:lmList){
-           if(lmList.get(0).getMemberId()==vcMember2.getMemberId()){
-               continue;
-           }
-           if(lmList.get(1).getMemberId()==vcMember2.getMemberId()){
-                continue;
-           }
-            idList2.add(vcMember2.getMemberId());
-        }
-
-
-        VcMember   vcMember3 =  TaskMethod.getVcMemberLevel2(idList2,3);
-        List<VcMember>   vcMemberList  =  vcMemberMapper.selectLevel2Above(vcMember3);// 3级列表信息
-        if(vcMemberList.size()!=0){
-            return true;
-        }
-        return false;
-    }
-
 
     @Override
-    public boolean checkLevel5(Integer memberId) {
+    public boolean checkLevel5(Integer memberId,Integer currentLevel) {
+        boolean    rsFlag =  false ;
         VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
-        List<VcMember>  list    = vcMemberMapper.selectLevel2(vcMember);//直推列表
+        List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
+        List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
 
-        List<Integer>   idList = new ArrayList<>();
-        for(VcMember vcMember1:list){
-            idList.add(vcMember1.getMemberId());
+        if(listHero.size()<2){
+            return false ;
         }
 
-        VcMember   vcMember1 =  TaskMethod.getVcMemberLevel2(idList,4);
-        List<VcMember>  lmList  = vcMemberMapper.selectAlliance(vcMember1);//二代列表
+        List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
 
-        if(lmList.size()<2){
-            return false;
+        VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
+        List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
+
+
+        List<Integer>   idListThree = new ArrayList<>();
+        for(VcMember  vcMember1 :twoList){
+            idListThree.add(vcMember1.getMemberId());
         }
+        VcMember    vcMemberThree    =TaskMethod.toIdList(idList);
+        List<VcMember>    ThreeList  =  vcMemberMapper.selectLevel2Above(vcMemberThree);
 
-        List<Integer>   idList2 = new ArrayList<>();
-        for(VcMember vcMember2:lmList){
-            if(lmList.get(0).getMemberId()==vcMember2.getMemberId()){
-                continue;
+        for(VcMember vcMember1: ThreeList){
+            String  level4=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
+            if(!StringUtils.isBlank(level4)&&Integer.parseInt(level4)>=4){
+                rsFlag = true;
+                break;
             }
-            if(lmList.get(1).getMemberId()==vcMember2.getMemberId()){
-                continue;
-            }
-            idList2.add(vcMember2.getMemberId());
         }
+//        if(rsFlag){
+//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
+//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"5");
+//        }
 
-
-        VcMember   vcMember3 =  TaskMethod.getVcMemberLevel2(idList2,4);
-        List<VcMember>   vcMemberList  =  vcMemberMapper.selectLevel2Above(vcMember3);// 3级列表信息
-        if(vcMemberList.size()!=0){
-            return true;
-        }
-        return false;
+        return rsFlag;
     }
 
 //    @Override

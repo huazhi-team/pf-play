@@ -44,7 +44,7 @@ public class LoginMethod {
      * @author long
      * @date 2019/11/30 19:11
      */
-    public  static String  getToken()throws  Exception{
+    public  static String  getToken(Integer memberId)throws  Exception{
         String  token  = "" ;
         token= ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
         boolean  flag  = false ;
@@ -53,9 +53,8 @@ public class LoginMethod {
             token= ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
             flag  = ComponentUtil.userInfoSevrice.isToken(token);
         }
-
-        String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-        ComponentUtil.redisService.onlyData(tokenstr, "1");
+//        String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+        ComponentUtil.redisService.set(token, memberId+"");
         return  token;
     }
 

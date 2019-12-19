@@ -10,6 +10,7 @@ import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.mapper.UserInfoMapper;
 import com.pf.play.rule.core.mapper.VcThirdPartyMapper;
@@ -46,7 +47,7 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
         /************参数是否正确*************/
         boolean  flag = ComponentUtil.loginService.checkDateNormal(loginReq);
         if(!flag){
-            throw  new ServiceException(ErrorCode.ENUM_ERROR.U000001.geteCode(),ErrorCode.ENUM_ERROR.U000001.geteDesc());
+            throw  new ServiceException(ErrorCode.ENUM_ERROR.U000000.geteCode(),ErrorCode.ENUM_ERROR.U000001.geteDesc());
         }
         VcThirdParty  vcThirdParty1  =  LoginMethod.changvxOpenId(loginReq.getWxOpenId());
         vcThirdParty1 = vcThirdPartyMapper.selectByPrimaryKey(vcThirdParty1);//该用户是否注册
@@ -54,7 +55,10 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
         if(vcThirdParty1==null){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.U000000.geteCode(),ErrorCode.ENUM_ERROR.U000000.geteDesc());
         }
-        VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenId(),LoginMethod.getToken());
+
+        ComponentUtil.redisService.remove(vcThirdParty1.getToken()); //删除该用户直接的缓存token
+
+        VcThirdParty  vcThirdParty  = LoginMethod.changVcThirdParty(loginReq.getWxOpenId(),LoginMethod.getToken(vcThirdParty1.getMemberId()));
 
 
         vcThirdPartyMapper.updateByWxOpenId(vcThirdParty);
@@ -68,7 +72,6 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
         }
         BeanUtils.copy(userInfoModel,userInfoResp);
         ComponentUtil.userInfoSevrice.userSynchronousQhr(userInfoModel.getMemberId(),userInfoModel.getToken());
-
 
         return userInfoResp;
     }

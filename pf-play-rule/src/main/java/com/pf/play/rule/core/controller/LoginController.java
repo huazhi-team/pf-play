@@ -71,8 +71,8 @@ public class LoginController {
             }else{
                 return JsonResult.successResult(null);
             }
-            String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, updateUserReq.getToken());
-            ComponentUtil.redisService.remove(tokenstr);
+//            String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, updateUserReq.getToken());
+            ComponentUtil.redisService.remove(updateUserReq.getToken());
             VcThirdParty  vcThirdParty = LoginMethod.changLoginReqToVcThirdParty(updateUserReq);
             ComponentUtil.loginService.signOut(vcThirdParty);
             ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,"");

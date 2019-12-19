@@ -56,6 +56,9 @@ public interface VcMemberMapper<T> extends BaseDao<T> {
     List<VcMember> selectAlliance(VcMember vcMember);
 
 
+    List<VcMember> selectIsLevel2Where(VcMember vcMember);
+
+
 
 
 }

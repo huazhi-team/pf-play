@@ -15,7 +15,15 @@ import java.util.Map;
  * @Version 1.0
  */
 public class ExceptionMethod {
-    public  static Map<String,String> getException(Exception e){
+    /**
+     * @Description: TODO
+     * @param e  异常信息，包括自定义异常，未捕捉异常等
+    * @param type  1、显示自定义异常code 码  2、显示系统状态码
+     * @return java.util.Map<java.lang.String,java.lang.String>
+     * @author long
+     * @date 2019/12/19 15:08
+     */
+    public  static Map<String,String> getException(Exception e,Integer type){
         Map<String,String>  map   =  new HashMap<>();
         String code = ""; // 返回给客户端的状态码
         String message = ""; // 返回给客户端的错误信息
@@ -33,6 +41,12 @@ public class ExceptionMethod {
         }else {
             code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
             message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
+        }
+
+
+        if(type==1){
+            dbCode = ((ServiceException) e).getCode();
+            code = e.getMessage();
         }
         // 获取录入数据库的错误信息
         if (!StringUtils.isBlank(dbCode)){

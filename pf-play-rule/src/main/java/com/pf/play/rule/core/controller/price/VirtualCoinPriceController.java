@@ -130,6 +130,8 @@ public class VirtualCoinPriceController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getType(),
                     ServerConstant.InterfaceEnum.VIRTUAL_GETDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this VirtualCoinPriceController.getData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

@@ -131,6 +131,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.getActiveData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -208,6 +210,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.getPassiveData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -284,6 +288,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.upActive() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -359,6 +365,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.upPassive() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -459,6 +467,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.addData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -535,6 +545,8 @@ public class AppealController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this AppealController.getInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

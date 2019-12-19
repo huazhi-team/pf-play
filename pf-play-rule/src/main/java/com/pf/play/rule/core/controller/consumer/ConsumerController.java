@@ -129,6 +129,8 @@ public class ConsumerController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.upFirstPayCode() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -202,6 +204,8 @@ public class ConsumerController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.upPayCode() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -216,14 +220,14 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/getData
+     * local:http://localhost:8082/play/csm/getFixed
      * 请求的属性类:RequestConsumer
      * 必填字段:{"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:ctime+cctime+token+秘钥=sign
      * 服务端加密字段（用户固定账号不为空）:fixedType+fixedNum+stime+token+秘钥=sign
      * 服务端加密字段（用户固定账号为空）:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/getData", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> getFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
@@ -267,17 +271,19 @@ public class ConsumerController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_GETDATA.getDesc(), null, data, strData, null);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getDesc(), null, data, strData, null);
             ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
             // 添加异常
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_GETDATA.getDesc(), null, data, null, map);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.getFixed() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -293,13 +299,13 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/addData
+     * local:http://localhost:8082/play/csm/addFixed
      * 请求的属性类:RequestConsumer
      * 必填字段:{"fullName":"小五哥","idCard":"435202111111111111","fixedType":2,"fixedNum":13717505292,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fullName+idCard+fixedType+fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/addData", method = {RequestMethod.POST})
+    @RequestMapping(value = "/addFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> addFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> addFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
@@ -344,17 +350,19 @@ public class ConsumerController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_ADDDATA.getDesc(), null, data, strData, null);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, strData, null);
             ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
             // 添加异常
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_ADDDATA.getDesc(), null, data, null, map);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.addFixed() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -374,13 +382,13 @@ public class ConsumerController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/7 16:58
-     * local:http://localhost:8082/play/csm/upData
+     * local:http://localhost:8082/play/csm/upFixed
      * 请求的属性类:RequestConsumer
      * 必填字段:{"fixedNum":13717505293,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:fixedNum+ctime+cctime+token+秘钥=sign
      * 服务端加密字段:stime+token+秘钥=sign
      */
-    @RequestMapping(value = "/upData", method = {RequestMethod.POST})
+    @RequestMapping(value = "/upFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> upFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
@@ -427,17 +435,19 @@ public class ConsumerController {
             // 用户注册完毕则直接让用户处于登录状态
             ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_UPDATA.getDesc(), null, data, strData, null);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getDesc(), null, data, strData, null);
             ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e);
             // 添加异常
-            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPDATA.getType(),
-                    ServerConstant.InterfaceEnum.CONSUMER_UPDATA.getDesc(), null, data, null, map);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getType(),
+                    ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.upFixed() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -457,8 +467,8 @@ public class ConsumerController {
      * 服务端加密字段:empiricalLevel+ratio+stime+token+秘钥=sign
      */
     @RequestMapping(value = "/getRatio", method = {RequestMethod.POST})
-//    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
-    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
+//    public JsonResult<Object> getRatio(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> getRatio(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;
@@ -505,6 +515,8 @@ public class ConsumerController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.getRatio() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -573,6 +585,8 @@ public class ConsumerController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this ConsumerController.getBasic() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

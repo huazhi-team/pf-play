@@ -132,6 +132,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -205,6 +207,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_ADDDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.addData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -271,6 +275,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -339,6 +345,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getBuyData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -406,6 +414,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getCancelData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -484,6 +494,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.upCancelData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -565,6 +577,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getUnpaidInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -648,6 +662,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getUnpaidData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -730,6 +746,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getReceivableInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -813,6 +831,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getReceivableData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -889,6 +909,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getFinishInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -966,6 +988,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getFinishData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -1041,6 +1065,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getOverTimeInfoData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -1117,6 +1143,8 @@ public class OrderController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this OrderController.getOverTimeData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

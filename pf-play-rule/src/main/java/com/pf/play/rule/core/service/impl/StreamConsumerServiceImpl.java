@@ -32,7 +32,7 @@ public class StreamConsumerServiceImpl<T> extends BaseServiceImpl<T> implements 
 
     @Override
     public int addVisit(StreamConsumerModel model) {
-        return streamConsumerMapper.add(model);
+        return streamConsumerMapper.addVisit(model);
     }
 
     @Override

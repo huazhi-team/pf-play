@@ -219,9 +219,9 @@ public class ServerConstant {
 
         CONSUMER_UPFIRSTPAYCODE(8, "ConsumerController.upFirstPayCode", "用户更新设置支付密码-第一次设置密码"),
         CONSUMER_UPPAYCODE(9, "ConsumerController.upPayCode", "用户更新设置支付密码"),
-        CONSUMER_GETDATA(10, "ConsumerController.getData", "查询用户固定账号/支付宝信息"),
-        CONSUMER_ADDDATA(11, "ConsumerController.addData", "用户添加固定账号/支付宝信息"),
-        CONSUMER_UPDATA(12, "ConsumerController.upData", "更新添加固定账号/支付宝信息"),
+        CONSUMER_GETFIXED(10, "ConsumerController.getFixed", "查询用户固定账号/支付宝信息"),
+        CONSUMER_ADDFIXED(11, "ConsumerController.addFixed", "用户添加固定账号/支付宝信息"),
+        CONSUMER_UPFIXED(12, "ConsumerController.upFixed", "更新添加固定账号/支付宝信息"),
         CONSUMER_GETRATIO(13, "ConsumerController.getRatio", "获取用户手续费百分比的信息"),
         CONSUMER_GETBASIC(14, "ConsumerController.getBasic", "获取用户的基本信息"),
 

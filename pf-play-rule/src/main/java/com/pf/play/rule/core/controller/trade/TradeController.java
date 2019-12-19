@@ -156,6 +156,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.getTradeRule() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -225,6 +227,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.getTradeTime() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -305,6 +309,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.getTradeData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -412,6 +418,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.TRADE_ADDDATA.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.addData() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -496,6 +504,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getType(),
                     ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.confirmPay() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
@@ -588,6 +598,8 @@ public class TradeController {
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getType(),
                     ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+            log.error(String.format("this TradeController.confirmRpt() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }

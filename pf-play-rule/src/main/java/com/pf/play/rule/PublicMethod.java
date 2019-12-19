@@ -125,8 +125,8 @@ public class PublicMethod {
     */
     public static long checkIsLogin(String token) throws Exception{
         Long memberId;
-        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-        String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+//        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+        String strCache = (String) ComponentUtil.redisService.get(token);
         if (!StringUtils.isBlank(strCache)) {
             // 登录存储在缓存中的用户id
             memberId = Long.parseLong(strCache);

@@ -32,6 +32,7 @@ dependencies {
     compile group: 'cn.jpush.api', name: 'jpush-client', version: '3.3.10'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
     compile group: 'com.arronlong.httpclientutil', name: 'httpclientutil', version: '1.0'
+    compile group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '4.8.73.ALL'
 }
 
 test {

@@ -124,7 +124,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getDesc(), null, data, null, map);
@@ -199,7 +199,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getDesc(), null, data, null, map);
@@ -277,7 +277,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getDesc(), null, data, null, map);
@@ -356,7 +356,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, null, map);
@@ -441,7 +441,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getDesc(), null, data, null, map);
@@ -510,7 +510,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getDesc(), null, data, null, map);
@@ -580,7 +580,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getDesc(), null, data, null, map);
@@ -590,5 +590,92 @@ public class ConsumerController {
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }
     }
+
+
+
+
+//    /**
+//     * @Description: 旷视实名认证
+//     * <p>
+//     *     这里只是整个流程的一部分，整体流程说明如下：
+//     *     1.客户端提交用户的真实姓名、身份证、支付宝账号
+//     *     2.服务端把用户的信息存储到缓存中
+//     *     3.服务端把用户真实姓名、身份证组装数据访问旷视提供的接口
+//     *     4.把旷视返回的biz_token字段值返回给客户端
+//     *     5.把biz_token值返回给客户端
+//     *     6.提供实名认证回调结果的接口
+//     * </p>
+//     * @param request
+//     * @param response
+//     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+//     * @author yoko
+//     * @date 2019/11/7 16:58
+//     * local:http://localhost:8082/play/csm/certification
+//     * 请求的属性类:RequestConsumer
+//     * 必填字段:{"fullName":"小五哥","idCard":"435202111111111111","fixedType":2,"fixedNum":13717505292,"agtVer":1,"clientVer":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
+//     * 客户端加密字段:fullName+idCard+fixedType+fixedNum+ctime+cctime+token+秘钥=sign
+//     * 服务端加密字段:stime+token+秘钥=sign
+//     */
+//    @RequestMapping(value = "/certification", method = {RequestMethod.POST})
+////    public JsonResult<Object> certification(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+//    public JsonResult<Object> certification(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
+//        String sgid = ComponentUtil.redisIdService.getSgid();
+//        String cgid = "";
+//        String token;
+//        String ip = StringUtil.getIpAddress(request);
+//        String data = "";
+//        long memberId = 0;
+//        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+//        RequestConsumer requestConsumer = new RequestConsumer();
+//        try{
+////            String tempToken = "111111";
+////            ComponentUtil.redisService.set(tempToken, "3");
+//            // 解密
+//            data = StringUtil.decoderBase64(jsonData);
+//            requestConsumer  = JSON.parseObject(data, RequestConsumer.class);
+//            // check校验数据、校验用户是否登录、获得用户ID
+//            memberId = PublicMethod.checkAddFixedData(requestConsumer);
+//            token = requestConsumer.getToken();
+//            // 校验ctime
+//            // 校验sign
+//            // 查询用户固定数据
+//            ConsumerFixedModel consumerFixedQuery = PublicMethod.assembleConsumerFixedQuery(memberId);
+//            ConsumerFixedModel consumerFixedModel = ComponentUtil.consumerFixedService.getConsumerFixed(consumerFixedQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+//            if (consumerFixedModel != null){
+//                throw new ServiceException(PfErrorCode.ENUM_ERROR.C00012.geteCode(), PfErrorCode.ENUM_ERROR.C00012.geteDesc());
+//            }
+//            // 添加固定账号数据
+//            ConsumerFixedModel addDataModel = PublicMethod.assembleConsumerFixedAdd(requestConsumer, memberId);
+//            ComponentUtil.consumerFixedService.add(addDataModel);
+//
+//            ComponentUtil.userInfoSevrice.toRealName(Integer.parseInt(memberId + ""));
+//            // 组装返回客户端的数据
+//            long stime = System.currentTimeMillis();
+////            String tokon = SignUtil.getSgin(memberId, stime, secretKeySign); // 用户did+用户账号+秘钥=token
+//            String sign = SignUtil.getSgin(stime, token, secretKeySign); //服务器时间+token+秘钥=sign
+//            String strData = PublicMethod.assembleResult(stime, token, sign);
+//            // 数据加密
+//            String encryptionData = StringUtil.mergeCodeBase64(strData);
+//            ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
+//            resultDataModel.jsonData = encryptionData;
+//            // 用户注册完毕则直接让用户处于登录状态
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            // 添加流水
+//            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
+//                    ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, strData, null);
+//            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
+//            // 返回数据给客户端
+//            return JsonResult.successResult(resultDataModel, cgid, sgid);
+//        }catch (Exception e){
+//            Map<String,String> map = ExceptionMethod.getException(e);
+//            // 添加异常
+//            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
+//                    ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, null, map);
+//            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+//            log.error(String.format("this ConsumerController.addFixed() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+//            e.printStackTrace();
+//            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+//        }
+//    }
 
 }

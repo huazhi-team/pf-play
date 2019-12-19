@@ -34,7 +34,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 /**
- * @ClassName: HttpUtils
+ * @ClassName: HttpSendUtils
  * @Description:Http协议
  * @author df
  * @date 2014-9-23 上午10:26:41

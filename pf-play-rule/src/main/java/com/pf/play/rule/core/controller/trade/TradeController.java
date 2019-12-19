@@ -151,7 +151,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADERULE.getDesc(), null, data, null, map);
@@ -222,7 +222,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADETIME.getDesc(), null, data, null, map);
@@ -304,7 +304,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getType(),
                     ServerConstant.InterfaceEnum.TRADE_GETTRADEDATA.getDesc(), null, data, null, map);
@@ -413,7 +413,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.TRADE_ADDDATA.getDesc(), null, data, null, map);
@@ -499,7 +499,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getType(),
                     ServerConstant.InterfaceEnum.TRADE_CONFIRMPAY.getDesc(), null, data, null, map);
@@ -593,7 +593,7 @@ public class TradeController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestTrade, ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getType(),
                     ServerConstant.InterfaceEnum.TRADE_CONFIRMRPT.getDesc(), null, data, null, map);

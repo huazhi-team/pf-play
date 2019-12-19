@@ -45,8 +45,9 @@ public class ExceptionMethod {
 
 
         if(type==1){
-            dbCode = ((ServiceException) e).getCode();
-            code = e.getMessage();
+//            dbCode = ((ServiceException) e).getCode();
+            code = ((ServiceException) e).getCode();
+            message = e.getMessage();
         }
         // 获取录入数据库的错误信息
         if (!StringUtils.isBlank(dbCode)){

@@ -14,6 +14,7 @@ import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.CachedKeyUtils;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.VcThirdParty;
 import com.pf.play.rule.util.ComponentUtil;
@@ -44,14 +45,14 @@ public class LoginController {
         try{
             log.info("----------:进来啦!");
             UserInfoResp userInfoResp= ComponentUtil.loginService.login(loginReq);
-            if(userInfoResp==null){
-                return JsonResult.failedResult("wrong for data!",1+"");
-            }
+//            if(userInfoResp==null){
+//                return JsonResult.failedResult("wrong for data!",1+"");
+//            }
 
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             return JsonResult.successResult(loginResp);
         }catch (Exception e){
-            Map<String,String> map= ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -77,8 +78,8 @@ public class LoginController {
             ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,"");
             return JsonResult.successResult(null);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE2);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 }

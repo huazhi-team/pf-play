@@ -8,6 +8,7 @@ import com.pf.play.model.protocol.response.task.*;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.DisTaskType;
 import com.pf.play.rule.core.model.DisWisemanInfo;
@@ -172,7 +173,7 @@ public class TaskController {
             return JsonResult.successResult(insertFlag);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map= ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e,1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -207,8 +208,8 @@ public class TaskController {
             List<GiveTaskResp>  giveTaskRespsList=TaskMethod.changGiveTask(list);
             return JsonResult.successResult(giveTaskRespsList);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e,1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -244,7 +245,7 @@ public class TaskController {
             giveTaskResultResp.setResult(flag);
             return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
-            Map<String,String> map= ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -259,7 +260,7 @@ public class TaskController {
 
             return JsonResult.successResult(null);
         }catch (Exception e){
-            Map<String,String> map= ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }

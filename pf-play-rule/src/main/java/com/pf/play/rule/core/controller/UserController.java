@@ -19,6 +19,7 @@ import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
+import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.util.ComponentUtil;
@@ -87,8 +88,8 @@ public class UserController {
             MyMasonryResp  myMasonryResp = MyMethod.toMyMasonryResp(list,vcMemberResource1,uMasonrySummary);
             return JsonResult.successResult(myMasonryResp);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -124,7 +125,7 @@ public class UserController {
             MyFriendsResp myFriendsResp   =  ComponentUtil.userInfoSevrice.toMyFriensResp(memberId,superiorId);
             return JsonResult.successResult(myFriendsResp);
         }catch (Exception e){
-            Map<String,String> map= ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -165,7 +166,7 @@ public class UserController {
             }
             return JsonResult.successResult(myEmpiricalResp);
         }catch (Exception e){
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -213,7 +214,7 @@ public class UserController {
             return JsonResult.successResult(myVitalityResp);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -256,7 +257,7 @@ public class UserController {
             return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember,vcMemberResource));
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -308,7 +309,7 @@ public class UserController {
             ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,updateUserReq.getToken());
             return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -326,7 +327,7 @@ public class UserController {
 //            }
             return JsonResult.successResult(null);
         }catch (Exception e){
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -373,7 +374,7 @@ public class UserController {
 
             return JsonResult.successResult(todayTaskResp);
         }catch (Exception e){
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -417,7 +418,7 @@ public class UserController {
             exeTodayTaskResp.setMasonry(masonry);
             return JsonResult.successResult(exeTodayTaskResp);
         }catch (Exception e){
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -427,17 +428,17 @@ public class UserController {
     public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         JsonResult<Object>     result  = null;
         try{
-            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,2,1);
-            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,2));
+            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,"1","1");
+            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,"1"));
 
-            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL0,2);
-            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,2));
+//            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL0,"1");
+//            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,"1"));
 //            ComponentUtil.userInfoSevrice.toRealName(2);
 
             return JsonResult.successResult(null);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }

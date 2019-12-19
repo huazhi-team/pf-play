@@ -60,4 +60,8 @@ public class Constant {
     public  static  int  REWARD_TASK1    =  1 ; //实名制
     public  static  int  REWARD_TASK2    =  2 ; //下级购买任务
 
+    /*********** code 错误码 **********/
+    public  static  int  CODE_ERROR_TYPE1    =  1 ; //显示给前端
+    public  static  int  CODE_ERROR_TYPE2    =  2 ; //不显示显示给前端
+
 }

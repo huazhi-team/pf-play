@@ -68,7 +68,7 @@ public class RegisterController {
 
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -94,7 +94,7 @@ public class RegisterController {
             return JsonResult.successResult(registerResp);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String,String> map=ExceptionMethod.getException(e);
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -107,8 +107,8 @@ public class RegisterController {
             ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
             return JsonResult.successResult(null);
         }catch (Exception e){
-            e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 

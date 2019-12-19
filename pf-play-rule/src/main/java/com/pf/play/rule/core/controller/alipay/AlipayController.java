@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.controller.alipay;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.pf.play.common.alipay.Alipay;
 import com.pf.play.common.alipay.model.AlipayModel;
 import com.pf.play.common.utils.JsonResult;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -139,6 +142,56 @@ public class AlipayController {
                     ServerConstant.InterfaceEnum.ALIPAY_SENDALI.getDesc(), null, data, null, map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             log.error(String.format("this AlipayController.sendAli() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
+            return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
+        }
+    }
+
+
+
+    /**
+     * @Description: 接收阿里支付宝的数据
+     * @param request
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8082/play/ali/notify
+     */
+    @RequestMapping(value = "/notify", method = {RequestMethod.POST})
+//    public JsonResult<Object> notify(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
+    public JsonResult<Object> notify(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String ip = StringUtil.getIpAddress(request);
+        RequestAlipay requestAlipay = new RequestAlipay();
+        try{
+            //获取支付宝POST过来反馈信息
+            Map<String,String> params = new HashMap<String,String>();
+            Map requestParams = request.getParameterMap();
+            for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+                String name = (String) iter.next();
+                String[] values = (String[]) requestParams.get(name);
+                String valueStr = "";
+                for (int i = 0; i < values.length; i++) {
+                    valueStr = (i == values.length - 1) ? valueStr + values[i]
+                            : valueStr + values[i] + ",";
+                }
+                //乱码解决，这段代码在出现乱码时使用。
+                //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+                params.put(name, valueStr);
+            }
+            //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
+            //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
+            String resultData = JSON.toJSONString(params);// 阿里返回的数据
+            log.info(String.format("the AlipayController.sendAli() , the resultData=%s ", resultData));
+            boolean flag = AlipaySignature.rsaCheckV1(params, Alipay.ALIPAY_PUBLIC_KEY, "UTF-8","RSA2");
+            log.info(String.format("the AlipayController.sendAli() , the flag=%s ", flag));
+            // 返回数据给客户端
+            return JsonResult.successResult(null, cgid, sgid);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            log.error(String.format("this AlipayController.sendAli() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, request.getQueryString()));
             e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }

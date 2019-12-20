@@ -44,8 +44,8 @@ public class ExceptionMethod {
         }
 
 
-        if(type==1){
-//            dbCode = ((ServiceException) e).getCode();
+        if(!StringUtils.isBlank(((ServiceException) e).getCode()) && type==1){
+//            db&&Code = ((ServiceException) e).getCode();
             code = ((ServiceException) e).getCode();
             message = e.getMessage();
         }

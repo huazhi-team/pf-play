@@ -84,8 +84,6 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             UserInfoModel userInfoModel= new UserInfoModel();
             userInfoModel.setWxOpenid(wxOpenid);
             model = userInfoMapper.selectByUserInfo(userInfoModel);
-
-
         }
 
 

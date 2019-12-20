@@ -17,12 +17,14 @@ import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.RegisterService;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.util.ComponentUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,6 +65,9 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
     @Autowired
     private UserInfoMapper  userInfoMapper ;
 
+    @Autowired
+    private VcPhoneDeployMapper  vcPhoneDeployMapper ;
+
 
     @Override
     public BaseDao<T> getDao() {
@@ -84,11 +89,32 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         if(!flag){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.R000001.geteCode(),ErrorCode.ENUM_ERROR.R000001.geteDesc());
         }
+
+        VcMember  vcMember = null;
         /**************邀请码是否正确*****************/
-        VcMember  vcMember = ComponentUtil.registerService.checkInviteCode(registerReq);
+
+        String  inviteCode ="";
+        VcPhoneDeploy  vcPhoneDeploy =RegisterMethod.queryPhoneDeploy(registerReq.getPhone());
+        List<VcPhoneDeploy> list =vcPhoneDeployMapper.selectByPrimaryKey(vcPhoneDeploy);
+        for(VcPhoneDeploy  deploy :list){
+            inviteCode = deploy.getInviteCode();
+        }
+
+        if(!inviteCode.equals("")){
+            vcMember = ComponentUtil.registerService.checkInviteCode(inviteCode);
+        }
+
+        if(vcMember==null){
+            vcMember = ComponentUtil.registerService.checkInviteCode(registerReq.getInviteCode());
+        }
+
+//        }else{
+
+//        }
         if(null==vcMember){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.R000002.geteCode(),ErrorCode.ENUM_ERROR.R000002.geteDesc());
         }
+
         /**************申请新的邀请码*****************/
         String   strName  = ComponentUtil.registerService.createInviteCode(registerReq.getPhone());
         String[]   InviteAdd  = strName.split(",");
@@ -141,10 +167,7 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         //验证码的组合方式   电话号 + 时间戳；
         String  verKey  = registerReq.getPhone() + registerReq.getTimeStamp();
         System.out.println("==================="+verKey);
-        String  smsVerification = (String) ComponentUtil.redisService.get(verKey);
-        if(!smsVerification.equals(registerReq.getSmsVerification())){ //验证码错误！
-            return false;
-        }
+
 
         /*********   手机号码 是否被注册   ********/
         VcAccountRelation vcAccountRelation = new VcAccountRelation();
@@ -219,15 +242,14 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
 
     /**
      * @Description: 检查邀请码是否正确
-     * @param registerReq
      * @return boolean
      * @author long
      * @date 2019/11/12 23:32
      */
     @Override
-    public VcMember   checkInviteCode(RegisterReq registerReq)throws  Exception {
+    public VcMember   checkInviteCode(String  inviteCode)throws  Exception {
         VcMember vcMember  = new VcMember();
-        vcMember.setInviteCode(registerReq.getInviteCode());
+        vcMember.setInviteCode(inviteCode);
         VcMember  rsVcMember = vcMemberMapper.selectByPrimaryKey(vcMember);
         return rsVcMember;
     }
@@ -244,6 +266,13 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         String  time = DateUtil.timeStamp()  ;
         RegisterResp    registerResp =new RegisterResp();
         registerResp.setTimeStamp(time);
+        VcPhoneDeploy    vcPhoneDeploy =RegisterMethod.queryPhoneDeploy(phone);
+        List<VcPhoneDeploy>  list = vcPhoneDeployMapper.selectByPrimaryKey(vcPhoneDeploy);
+        if(list.size()!=0){
+            registerResp.setIsLogin(1);
+        }else{
+            registerResp.setIsLogin(2);
+        }
         String  amsVerification = RandomUtil.getRandom(6);
         ComponentUtil.redisService.set((phone+time),amsVerification,Constant.EFFECTIVE_IDENT_CODE_TIME, TimeUnit.MINUTES);
         boolean  flag = SendSms.aliSendSms(phone,amsVerification);
@@ -301,14 +330,12 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         String phoneKeyCache = CachedKeyUtils.getCacheKey(CacheKey.PHONE_INFO, registerReq.getPhone());
         String wxOpenidKeyCache = CachedKeyUtils.getCacheKey(CacheKey.WX_INFO, registerReq.getWxOpenid());
         String deviceidKeyCache = CachedKeyUtils.getCacheKey(CacheKey.DEVICE_INFO, registerReq.getDeviceId());
-        String token = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, InviteAdd[2]);
         String inviteCode= CachedKeyUtils.getCacheKey(CacheKey.TRADING_ADDRESS_INFO, InviteAdd[0]);
         String tradingAddress = CachedKeyUtils.getCacheKey(CacheKey.TRADING_ADDRESS_INFO, InviteAdd[1]);
 
         ComponentUtil.redisService.onlyData(phoneKeyCache, "1");
         ComponentUtil.redisService.onlyData(wxOpenidKeyCache, "1");
         ComponentUtil.redisService.onlyData(deviceidKeyCache, "1");
-        ComponentUtil.redisService.onlyData(token, "1");
         ComponentUtil.redisService.onlyData(inviteCode, "1");
         ComponentUtil.redisService.onlyData(tradingAddress, "1");
     }
@@ -337,5 +364,36 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         if(null!=vcMemberGive){
             RegisterSingleton.getInstance().setVcMemberGive(vcMemberGive);
         }
+    }
+
+    @Override
+    public boolean isPhoneExist(String phone) {
+        boolean  flag =  false;
+        if(StringUtils.isBlank(phone)){
+            return flag ;
+        }
+        VcPhoneDeploy  vcPhoneDeploy=RegisterMethod.queryVcPhoneDeploy(phone);
+        List<VcPhoneDeploy> list =vcPhoneDeployMapper.selectByPrimaryKey(vcPhoneDeploy);
+        if(list.size()!=0){
+            return true ;
+        }
+
+        VcMember   vcMember =RegisterMethod.queryPhoneVcMember(phone);
+        VcMember   vcMember1 = vcMemberMapper.selectByPrimaryKey(vcMember);
+        if(vcMember1!=null){
+            return flag ;
+        }
+        return true;
+    }
+
+    @Override
+    public void addRegisterPhoneDisplay(String phone, String invite_code) {
+        VcPhoneDeploy  vcPhoneDeploy = RegisterMethod.insertPhoneVcMember(phone,invite_code);
+        vcPhoneDeployMapper.insertSelective(vcPhoneDeploy);
+    }
+
+    @Override
+    public VcPhoneDeploy queryRegister(String phone) {
+        return null;
     }
 }

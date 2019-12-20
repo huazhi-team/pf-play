@@ -1,11 +1,14 @@
 package com.pf.play.rule;
 
+import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
+import com.pf.play.model.protocol.request.register.PhoneRegister;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -185,7 +188,83 @@ public class RegisterMethod {
         return   vcMemberResourceModel;
     }
 
+    /**
+     * @Description: 查询电话号码是否被注册
+     * @param phone
+     * @return com.pf.play.rule.core.model.VcPhoneDeploy
+     * @author long
+     * @date 2019/12/20 10:37
+     */
+    public  static VcPhoneDeploy  queryVcPhoneDeploy(String  phone){
+        VcPhoneDeploy  vcPhoneDeploy = new  VcPhoneDeploy();
+        vcPhoneDeploy.setPhone(phone);
+        return   vcPhoneDeploy;
+    }
 
 
+    /**
+     * @Description: 查询电话号码是否被注册
+     * @param phone
+     * @return com.pf.play.rule.core.model.VcPhoneDeploy
+     * @author long
+     * @date 2019/12/20 10:37
+     */
+    public  static VcMember  queryPhoneVcMember(String  phone){
+        VcMember  vcMember = new  VcMember();
+        vcMember.setMemberCode("C"+phone);
+        return   vcMember;
+    }
+
+    /**
+     * @Description: 添加 vcPhoneDeploy 信息
+     * @param phone
+    * @param inviteCode
+     * @return com.pf.play.rule.core.model.VcPhoneDeploy
+     * @author long
+     * @date 2019/12/20 10:56
+     */
+    public  static VcPhoneDeploy  insertPhoneVcMember(String  phone,String inviteCode ){
+        VcPhoneDeploy  vcPhoneDeploy = new  VcPhoneDeploy();
+        DateModel dateModel =TaskMethod.getDate();
+        BeanUtils.copy(dateModel,vcPhoneDeploy);
+        vcPhoneDeploy.setPhone(phone);
+        vcPhoneDeploy.setInviteCode(inviteCode);
+        return   vcPhoneDeploy;
+    }
+    /**
+     * @Description: 参数不正确
+     * @param phoneRegister
+     * @return boolean
+     * @author long
+     * @date 2019/12/20 11:38
+     */
+    public  static boolean  cheackPhoneDeployOk(PhoneRegister phoneRegister){
+        boolean  flag = false ;
+        if(StringUtils.isBlank(phoneRegister.getInviteCode())){
+            return flag;
+        }else  if(StringUtils.isBlank(phoneRegister.getPhone())){
+            return flag;
+        }else  if(StringUtils.isBlank(phoneRegister.getTimeStamp())){
+            return flag;
+        }else  if(StringUtils.isBlank(phoneRegister.getSmsVerification())){
+            return flag;
+        }
+        return   true;
+    }
+
+    /**
+     * @Description: 添加 vcPhoneDeploy 信息
+     * @param phone
+    * @param inviteCode
+     * @return com.pf.play.rule.core.model.VcPhoneDeploy
+     * @author long
+     * @date 2019/12/20 10:56
+     */
+    public  static VcPhoneDeploy  queryPhoneDeploy(String  phone){
+        VcPhoneDeploy  vcPhoneDeploy = new  VcPhoneDeploy();
+        vcPhoneDeploy.setPhone(phone);
+        vcPhoneDeploy.setIsValid(1);
+        return   vcPhoneDeploy;
+    }
 
 }

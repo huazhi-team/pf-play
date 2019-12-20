@@ -393,27 +393,27 @@ public class TaskMethod {
     public static  boolean   cheakCondition(VcMemberResource   vcMemberResource,VcRewardReceive  rewardReceive,Integer  taskId){
         boolean  flag = true ;
         if(vcMemberResource.getDarenLevel()>=taskId){
-            if(taskId==0){
+            if(taskId==1){
                 if(rewardReceive.getIsLevel0()==2){
                     return false;
                 }
-            }else if(taskId==1){
+            }else if(taskId==2){
                 if(rewardReceive.getIsLevel1()==2){
                     return false;
                 }
-            }else if(taskId==2){
+            }else if(taskId==3){
                 if(rewardReceive.getIsLevel2()==2){
                     return false;
                 }
-            }else if(taskId==3){
+            }else if(taskId==4){
                 if(rewardReceive.getIsLevel3()==2){
                     return false;
                 }
-            }else if(taskId==4){
+            }else if(taskId==5){
                 if(rewardReceive.getIsLevel4()==2){
                     return false;
                 }
-            }else if(taskId==5){
+            }else if(taskId==6){
                 if(rewardReceive.getIsLevel5()==2){
                     return false;
                 }
@@ -439,17 +439,15 @@ public class TaskMethod {
         VcRewardReceive vcRewardReceive = new VcRewardReceive();
         vcRewardReceive.setMemberId(memberId);
         vcRewardReceive.setUpdateTime(new Date());
-        if(level==0){
-            vcRewardReceive.setIsLevel0(2);
-        }else if(level==1){
+        if(level==2){
             vcRewardReceive.setIsLevel1(2);
-        }else if(level==2){
-            vcRewardReceive.setIsLevel2(2);
         }else if(level==3){
-            vcRewardReceive.setIsLevel3(2);
+            vcRewardReceive.setIsLevel2(2);
         }else if(level==4){
-            vcRewardReceive.setIsLevel4(2);
+            vcRewardReceive.setIsLevel3(2);
         }else if(level==5){
+            vcRewardReceive.setIsLevel4(2);
+        }else if(level==6){
             vcRewardReceive.setIsLevel5(2);
         }
         return vcRewardReceive;
@@ -657,7 +655,10 @@ public class TaskMethod {
         for(DisTaskType disTaskType:list){
             ReceiveTaskResp  receiveTaskResp = new ReceiveTaskResp();
             BeanUtils.copy(disTaskType,receiveTaskResp);
-            list1.add(receiveTaskResp);
+            if(disTaskType.getTaskId()!=1){
+                list1.add(receiveTaskResp);
+            }
+
         }
         return   list1;
     }
@@ -1388,6 +1389,21 @@ public class TaskMethod {
         VcMember  vcMember = new VcMember();
         vcMember.setIdList(idList);
         return  vcMember;
+    }
+
+    /**
+     * @Description: 查询当天 用户是否有领取记录的信息
+     * @param memberId
+     * @return com.pf.play.rule.core.model.UMasonryListLog
+     * @author long
+     * @date 2019/12/20 21:02
+     */
+    public static UMasonryListLog  queryUMasonryListLog(Integer  memberId){
+        UMasonryListLog  uMasonryListLog = new UMasonryListLog();
+        uMasonryListLog.setMemberId(memberId);
+        uMasonryListLog.setCurday(DateUtil.getDayNumber(new Date()));
+        uMasonryListLog.setType(1);
+        return uMasonryListLog;
     }
 
 

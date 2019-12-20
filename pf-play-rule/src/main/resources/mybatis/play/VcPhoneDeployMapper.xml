@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.play.rule.core.mapper.VcPhoneDeployMapper" >
+  <sql id="Base_Column_List" >
+    id, phone, invite_code, curday, curhour, curminute, create_time, update_time, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcPhoneDeploy"  >
+    select 
+    <include refid="Base_Column_List" />
+    from vc_phone_deploy
+    where 1=1
+    <if test="phone != null and phone != '' " >
+      and phone = #{phone}
+    </if>
+    <if test="isValid != null and isValid != '' " >
+      and is_valid = #{isValid}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from vc_phone_deploy
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pf.play.rule.core.model.VcPhoneDeploy" >
+    insert into vc_phone_deploy (id, phone, invite_code, 
+      curday, curhour, curminute, 
+      create_time, update_time, is_valid
+      )
+    values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, 
+      #{curday,jdbcType=INTEGER}, #{curhour,jdbcType=BIT}, #{curminute,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pf.play.rule.core.model.VcPhoneDeploy" >
+    insert into vc_phone_deploy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="inviteCode != null" >
+        invite_code,
+      </if>
+      <if test="curday != null" >
+        curday,
+      </if>
+      <if test="curhour != null" >
+        curhour,
+      </if>
+      <if test="curminute != null" >
+        curminute,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteCode != null" >
+        #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="curday != null" >
+        #{curday,jdbcType=INTEGER},
+      </if>
+      <if test="curhour != null" >
+        #{curhour,jdbcType=BIT},
+      </if>
+      <if test="curminute != null" >
+        #{curminute,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pf.play.rule.core.model.VcPhoneDeploy" >
+    update vc_phone_deploy
+    <set >
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteCode != null" >
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="curday != null" >
+        curday = #{curday,jdbcType=INTEGER},
+      </if>
+      <if test="curhour != null" >
+        curhour = #{curhour,jdbcType=BIT},
+      </if>
+      <if test="curminute != null" >
+        curminute = #{curminute,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pf.play.rule.core.model.VcPhoneDeploy" >
+    update vc_phone_deploy
+    set phone = #{phone,jdbcType=VARCHAR},
+      invite_code = #{inviteCode,jdbcType=VARCHAR},
+      curday = #{curday,jdbcType=INTEGER},
+      curhour = #{curhour,jdbcType=BIT},
+      curminute = #{curminute,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

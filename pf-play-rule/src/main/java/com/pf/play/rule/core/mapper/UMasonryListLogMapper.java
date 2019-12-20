@@ -14,7 +14,7 @@ public interface UMasonryListLogMapper<T> extends BaseDao<T> {
 
     int insertSelective(UMasonryListLog record);
 
-    UMasonryListLog selectByPrimaryKey(Long id);
+    List<UMasonryListLog> selectByPrimaryKey(UMasonryListLog uMasonryListLog);
 
     List<UMasonryListLog> selectByInfo(UMasonryListLog record);
 

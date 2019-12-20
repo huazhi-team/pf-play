@@ -7,7 +7,7 @@ package com.pf.play.model.protocol.request.uesr;
  * @Version 1.0
  */
 public class UserCommonReq {
-
+    private Integer memberId;
     private String  wxOpenId;
     private String  token;
 
@@ -25,5 +25,13 @@ public class UserCommonReq {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 }

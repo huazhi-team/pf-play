@@ -76,7 +76,13 @@ public class DisTaskType {
      *
      * @mbggenerated
      */
-    private Double CharmValue;
+    private Double charmValue;
+    /**
+     * 需要消耗魅力值
+     *
+     * @mbggenerated
+     */
+    private Double myCharmValue;
 
     /**
      * 创建时间
@@ -281,10 +287,18 @@ public class DisTaskType {
     }
 
     public Double getCharmValue() {
-        return CharmValue;
+        return charmValue;
     }
 
-    public void setCharmValue(Double CharmValue) {
-        this.CharmValue = CharmValue;
+    public void setCharmValue(Double charmValue) {
+        this.charmValue = charmValue;
+    }
+
+    public Double getMyCharmValue() {
+        return myCharmValue;
+    }
+
+    public void setMyCharmValue(Double myCharmValue) {
+        this.myCharmValue = myCharmValue;
     }
 }

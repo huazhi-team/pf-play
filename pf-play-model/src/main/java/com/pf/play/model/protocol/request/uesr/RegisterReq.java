@@ -79,6 +79,11 @@ public class RegisterReq{
      */
     private  String  timeStamp;
 
+    /**
+     * 是否启用预判端
+     */
+    private  Integer  isLogin;
+
     public Integer getRegisterType() {
         return registerType;
     }
@@ -196,5 +201,13 @@ public class RegisterReq{
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public Integer getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(Integer isLogin) {
+        this.isLogin = isLogin;
     }
 }

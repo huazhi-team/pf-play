@@ -52,6 +52,7 @@ public class LoginController {
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             return JsonResult.successResult(loginResp);
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

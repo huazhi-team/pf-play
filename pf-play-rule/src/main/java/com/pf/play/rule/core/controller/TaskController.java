@@ -57,14 +57,20 @@ public class TaskController {
 
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             Integer     memberId =  0 ;
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+
+            if (memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
             List<DisTaskType> list = ComponentUtil.taskService.queryReceiveTask(memberId);
             List<ReceiveTaskResp>  receiveTaskRespList = TaskMethod.changReceiveTaskResp(list);
             return JsonResult.successResult(receiveTaskRespList);
         }catch (Exception e){
-            return JsonResult.failedResult("wrong for data!",1+"");
+            e.printStackTrace();
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -85,8 +91,10 @@ public class TaskController {
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
-            }else {
-                return JsonResult.successResult(null);
+            }
+
+            if (memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
 
             List<UTaskHave> list = ComponentUtil.taskService.getMyTask(memberId);
@@ -97,7 +105,8 @@ public class TaskController {
             return JsonResult.successResult(rslist);
         }catch (Exception e){
             e.printStackTrace();
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -118,19 +127,18 @@ public class TaskController {
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(!flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
-            }else{
-                return JsonResult.successResult(null);
             }
 
-            if(memberId==0){
-                return JsonResult.successResult(null);
+            if (memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
             List<UTaskHave> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
             List<UserHistoryTaskResp>    userHistoryTaskList =TaskMethod.changUserHistoryTask(list);
             return JsonResult.successResult(userHistoryTaskList);
         }catch (Exception e){
-            return JsonResult.failedResult("wrong for data!",1+"");
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
@@ -147,16 +155,20 @@ public class TaskController {
     public JsonResult<Object> exeReceiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq){
         try{
             log.info("----------:exeReceiveTask!");
+            //验证参数是否通过
             boolean   cheakFlag  = TaskMethod.checkUserTaskIsEffective(taskReq);
             if (!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
+
+            //获取到那个用户id
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
             if (memberId==0){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
             }
-            cheakFlag  = ComponentUtil.userInfoSevrice.isCharmValueOk(memberId,taskReq.getTaskId());
 
+            //查看魅力值是否ok
+            cheakFlag  = ComponentUtil.userInfoSevrice.isCharmValueOk(memberId,taskReq.getTaskId());
             if(!cheakFlag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR12.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR12.geteDesc());
             }
@@ -195,7 +207,7 @@ public class TaskController {
             log.info("----------:giveTaskList!");
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
 
@@ -234,7 +246,7 @@ public class TaskController {
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(taskReq.getToken(), taskReq.getWxOpenId());
             boolean       flag   =   ComponentUtil.taskService.checkExeTaskIdReward(memberId, taskReq.getTaskId());
             if(!flag){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR8.geteDesc());
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR13.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR13.geteDesc());
             }
             flag  = ComponentUtil.taskService.addRewardTaskLog(memberId,taskReq.getTaskId());
             if(!flag){

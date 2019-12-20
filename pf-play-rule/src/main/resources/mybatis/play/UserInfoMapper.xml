@@ -73,7 +73,10 @@
       <if test="wxOpenid != null and wxOpenid != '' " >
           and b.wx_openid = #{wxOpenid}
       </if>
-      and a.is_certification = 1
+      <!--<if test="wxOpenid != null and wxOpenid != '' " >-->
+          <!--and b.wx_openid = #{wxOpenid}-->
+      <!--</if>-->
+
   </sql>
 
 

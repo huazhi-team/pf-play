@@ -36,11 +36,13 @@ public class SynchronousController {
     public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
         try{
             log.info("----------:clickFabulous!");
-            boolean   cheakFlag  = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if (!cheakFlag){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
-            }
-            Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+//          boolean   cheakFlag  = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+//          if (!cheakFlag){
+//              throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+//          }
+
+//          userCommonReq.getMemberId();
+            Integer   memberId   = userCommonReq.getMemberId();
             if(memberId!=0){
                 ComponentUtil.synchroService.addGive(memberId);
             }

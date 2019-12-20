@@ -9,6 +9,7 @@ package com.pf.play.model.protocol.response.uesr;
 public class RegisterResp {
     private  String  token ;
     private  Integer stateCode;
+    private  Integer isLogin;
     private  String timeStamp;
 
     public String getTimeStamp() {
@@ -33,5 +34,13 @@ public class RegisterResp {
 
     public void setStateCode(Integer stateCode) {
         this.stateCode = stateCode;
+    }
+
+    public Integer getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(Integer isLogin) {
+        this.isLogin = isLogin;
     }
 }

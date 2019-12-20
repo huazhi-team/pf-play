@@ -374,6 +374,7 @@ public class UserController {
 
             return JsonResult.successResult(todayTaskResp);
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -405,7 +406,12 @@ public class UserController {
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
 
+            //该用户今天是否领取过奖励
 
+            flag = ComponentUtil.taskService.isReceiveAwards(memberId);
+            if(!flag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR13.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR13.geteDesc());
+            }
             //差一个验证是否领取狗  也差一个砖石更新，更新时记得加锁
             VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
             List<UTaskHave>  list  = ComponentUtil.taskService.getMyTask(memberId);

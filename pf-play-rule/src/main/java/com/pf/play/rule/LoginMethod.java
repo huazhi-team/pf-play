@@ -54,7 +54,7 @@ public class LoginMethod {
             flag  = ComponentUtil.userInfoSevrice.isToken(token);
         }
 //        String tokenstr = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-        ComponentUtil.redisService.set(token, memberId+"");
+        ComponentUtil.redisService.set(token, memberId+"",Constant.TOKEN_EXPIRE_S);
         return  token;
     }
 

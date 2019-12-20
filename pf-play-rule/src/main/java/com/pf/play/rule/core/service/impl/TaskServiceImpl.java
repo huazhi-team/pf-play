@@ -266,17 +266,27 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
      */
     @Override
     public List<DisTaskType> queryReceiveTask(Integer memberid) {
-
-        List<UTaskHave>  haveList =uTaskHaveMapper.selectValidTask(memberid);
-
         List<DisTaskType>  list  = TaskSingleton.getInstance().getDisTaskTypeList();
+        List<UTaskHave>  haveList =uTaskHaveMapper.selectValidTask(memberid);
+        VcMemberResource vc =TaskMethod.changvcMemberResource(memberid);
+        VcMemberResource rsVc =vcMemberResourceMapper.selectByPrimaryKey(vc);
+        if(rsVc==null){
+            return  list;
+        }
+
         List<DisTaskAttribute>  listDisTaskAttribute  = TaskSingleton.getInstance().getAttributeTypeList2();
         for(DisTaskType disTaskType1:list){
+//            if(disTaskType1.getTaskId()==1){
+//                list.remove(disTaskType1);
+//                continue;
+//            }
+            disTaskType1.setMyCharmValue(rsVc.getCharmValue());
             List<DisTaskAttribute>  attributeList = TaskSingleton.getInstance().getAttributeTypeList1();
             for(DisTaskAttribute disTaskAttribute1:attributeList){
                 if(disTaskAttribute1.getTaskId()==disTaskType1.getTaskId()){
                     disTaskType1.setWhere1(disTaskAttribute1.getKey1());
                     disTaskType1.setWhere2(disTaskAttribute1.getKey2());
+                    break;
                 }
             }
 
@@ -286,6 +296,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
                 for(UTaskHave uTaskHave1:haveList){
                     if(uTaskHave1.getTaskId()==disTaskType1.getTaskId()){
                         disTaskType1.setHavaCount(uTaskHave1.getTaskCount());
+                        break;
                     }else{
                         disTaskType1.setHavaCount(0);
                     }
@@ -295,6 +306,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             for (DisTaskAttribute disTaskAttribute:listDisTaskAttribute){
                 if(disTaskAttribute.getTaskId()==disTaskType1.getTaskId()){
                     disTaskType1.setActiveValue(disTaskAttribute.getKey1());
+                    break;
                 }
             }
         }
@@ -930,4 +942,13 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     }
 
 
+    @Override
+    public boolean isReceiveAwards(Integer memberId) {
+        UMasonryListLog uMasonryListLog=TaskMethod.queryUMasonryListLog(memberId);
+        List<UMasonryListLog>   list = uMasonryListLogMapper.selectByPrimaryKey(uMasonryListLog);
+        if(list.size()!=0){
+            return false;
+        }
+        return true;
+    }
 }

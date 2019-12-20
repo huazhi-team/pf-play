@@ -153,9 +153,9 @@ public class UserMasonryServiceImpl<T> extends BaseServiceImpl<T> implements Use
     public UserInfoModel queryTokenSuperiorId(String token,String wxOpenId) {
         UserInfoModel  model =null;
         try{
-            String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
-            String rsTokens =(String) ComponentUtil.redisService.get(tokens);
-            if(rsTokens==null||!rsTokens.equals("1")){
+//            String tokens = CachedKeyUtils.getCacheKey(CacheKey.TOKEN_INFO, token);
+            String rsTokens =(String) ComponentUtil.redisService.get(token);
+            if(rsTokens==null){
                 return  null ;
             }
 

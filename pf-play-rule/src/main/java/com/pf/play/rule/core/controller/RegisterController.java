@@ -1,17 +1,21 @@
 package com.pf.play.rule.core.controller;
 
 import com.pf.play.common.utils.JsonResult;
+import com.pf.play.model.protocol.request.register.PhoneRegister;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
+import com.pf.play.model.protocol.response.register.PhoneRegisterResp;
 import com.pf.play.model.protocol.response.uesr.LoginResp;
 import com.pf.play.model.protocol.response.uesr.RegisterResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.LoginMethod;
+import com.pf.play.rule.RegisterMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
+import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,27 +46,27 @@ public class RegisterController {
             log.info("----------:进来啦!");
 //            JsonResult.successResult(null);
 
-            RegisterReq registerReq1  = new RegisterReq();
+
+
+//            RegisterReq registerReq1  = new RegisterReq();
             boolean  flag  = TaskMethod.checkRegisterParameter(registerReq);
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
-//            registerReq1.setDeviceId("kjasdqlkwqejjwqlJ2");
-//            registerReq1.setVersion("1.1.2");
-//            registerReq1.setSmsVerification("775326");
-//            registerReq1.setPhone("13606706366");
-//            registerReq1.setWxName("小飞龙");
-//            registerReq1.setMemberAdd("http://192.168.1.1/asdasd");
-//            registerReq1.setOwner(0);
-//            registerReq1.setMemberType(1);
-//            registerReq1.setRegisterType(2);
-//            registerReq1.setWxRefresh("Hsakshdeq1");
-//            registerReq1.setWxUnionid("Kkshajdhhsa3");
-//            registerReq1.setWxOpenid("slllsdjdjsa2");
-//            registerReq1.setInviteCode("Sjadgsade");
-//            registerReq1.setTimeStamp("1574651926");
+
+
+            String  verKey =registerReq.getPhone()+registerReq.getTimeStamp();
+            String  smsVerification = (String) ComponentUtil.redisService.get(verKey);
+            if(smsVerification==null){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000007.geteCode(),ErrorCode.ENUM_ERROR.R000007.geteDesc());
+            }
+            if(!smsVerification.equals(registerReq.getSmsVerification())){ //验证码错误！
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000006.geteCode(),ErrorCode.ENUM_ERROR.R000006.geteDesc());
+            }
+
             UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq);
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
+            ComponentUtil.redisService.set(userInfoResp.getToken(),userInfoResp.getMemberId()+"");
             return JsonResult.successResult(loginResp);
 
 
@@ -75,6 +79,49 @@ public class RegisterController {
 
 
 
+    @PostMapping("/phoneRegister")
+    public JsonResult<Object> phoneRegister(HttpServletRequest request, HttpServletResponse response, PhoneRegister phoneRegister ){
+        try{
+            log.info("----------:phoneRegister");
+            boolean  chechFlag = RegisterMethod.cheackPhoneDeployOk(phoneRegister);
+            if(!chechFlag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
+
+            String  key =phoneRegister.getPhone()+phoneRegister.getTimeStamp();
+            String  smsVerification = (String) ComponentUtil.redisService.get(key);
+
+            if(smsVerification==null){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000007.geteCode(),ErrorCode.ENUM_ERROR.R000007.geteDesc());
+            }
+
+            if(!smsVerification.equals(phoneRegister.getSmsVerification())){ //验证码错误！
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
+
+            boolean  flag = ComponentUtil.registerService.isPhoneExist(phoneRegister.getPhone());
+            if(!flag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000004.geteCode(),ErrorCode.ENUM_ERROR.R000004.geteDesc());
+            }
+            VcMember vcMember = ComponentUtil.registerService.checkInviteCode(phoneRegister.getInviteCode());
+            if(vcMember==null){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000002.geteCode(),ErrorCode.ENUM_ERROR.R000002.geteDesc());
+            }
+
+            ComponentUtil.registerService.addRegisterPhoneDisplay(phoneRegister.getPhone(),phoneRegister.getInviteCode());
+//            UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq);
+//            LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
+            PhoneRegisterResp registerResp = new PhoneRegisterResp();
+            registerResp.setState(1);
+            return JsonResult.successResult(registerResp);
+        }catch (Exception e){
+            e.printStackTrace();
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
+
+
 
     @PostMapping("/getPhoneVerification")
     public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, PhoneVerificationReq req){
@@ -84,6 +131,11 @@ public class RegisterController {
             boolean  flag  = TaskMethod.checkPhoneVerification(req);
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
+
+            flag = ComponentUtil.registerService.isPhoneExist(req.getPhone());
+            if(!flag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.R000005.geteCode(),ErrorCode.ENUM_ERROR.R000005.geteDesc());
             }
             RegisterResp registerResp = ComponentUtil.registerService.getSmsVerification(req.getPhone());
 
@@ -100,11 +152,10 @@ public class RegisterController {
     }
 
     @GetMapping("/test")
-    public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq){
+    public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, PhoneRegister phoneRegister){
         JsonResult<Object>     result  = null;
         try{
-            log.info("----------:进来啦!");
-            ComponentUtil.generateService.getNonexistentInformation(Constant.TOKEN);
+
             return JsonResult.successResult(null);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);

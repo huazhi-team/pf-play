@@ -39,12 +39,12 @@ public class RegisTerRunner implements ApplicationRunner {
         log.debug("活力值以及奖励！");
         ComponentUtil.initService.initEmpiricalVitalityAttribute();
 
-        new Thread() {
-            public void run() {
-                log.debug("发送上下级关系！");
-//                ComponentUtil.userInfoSevrice.executeSuperior();
-            }
-        }.start();
+//        new Thread() {
+//            public void run() {
+//                log.debug("发送上下级关系！");
+////                ComponentUtil.userInfoSevrice.executeSuperior();
+//            }
+//        }.start();
 
 //        new Thread() {
 //            public void run() {

@@ -101,6 +101,20 @@ public class ReceiveTaskResp {
      */
     private String  activeValue;
 
+    /**
+     * 需要魅力值
+     *
+     * @mbggenerated
+     */
+    private Double charmValue;
+
+    /**
+     * 我的魅力值
+     *
+     * @mbggenerated
+     */
+    private Double myCharmValue;
+
 
     public Integer getTaskId() {
         return taskId;
@@ -204,5 +218,21 @@ public class ReceiveTaskResp {
 
     public void setActiveValue(String activeValue) {
         this.activeValue = activeValue;
+    }
+
+    public Double getCharmValue() {
+        return charmValue;
+    }
+
+    public void setCharmValue(Double charmValue) {
+        this.charmValue = charmValue;
+    }
+
+    public Double getMyCharmValue() {
+        return myCharmValue;
+    }
+
+    public void setMyCharmValue(Double myCharmValue) {
+        this.myCharmValue = myCharmValue;
     }
 }

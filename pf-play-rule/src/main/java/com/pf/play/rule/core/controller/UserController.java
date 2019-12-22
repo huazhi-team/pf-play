@@ -344,8 +344,6 @@ public class UserController {
      */
     @PostMapping("/myTodayTask")
     public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-
-
         try{
             log.info("----------:myTodayTask!");
             TodayTaskResp   todayTaskResp  = new TodayTaskResp();
@@ -359,6 +357,7 @@ public class UserController {
                 return JsonResult.successResult(todayTaskResp);
             }
 
+
             //最大的信息
             UTaskHave             uTaskHaveMax  = ComponentUtil.taskService.getMaxUTaskHave(memberId);
 
@@ -367,7 +366,6 @@ public class UserController {
             UMasonryListLog  uMasonryListLog = ComponentUtil.taskService.getUMasonryListLog(memberId);
             //用户剩余信息
 //            UTaskHave   uTaskHave  = ComponentUtil.taskService.getMemberUDailyTaskStat(memberId);
-
             UdailyTaskStat udailyTaskStat =  ComponentUtil.taskService.getMemberUDailyTaskStat(memberId);
 
             todayTaskResp = TaskMethod.changTodayTaskResp(uTaskHaveMax,uMasonryListLog,udailyTaskStat,uTaskHave);
@@ -416,6 +414,10 @@ public class UserController {
             VcMemberResource  vcMemberResource  = ComponentUtil.userInfoSevrice.getMyResourceInfo(memberId);
             List<UTaskHave>  list  = ComponentUtil.taskService.getMyTask(memberId);
 
+            if (list.size()==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR14.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR14.geteDesc());
+            }
+
             Double  masonry=ComponentUtil.taskService.grantReward(vcMemberResource,list);
             if(masonry==0){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR11.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR11.geteDesc());
@@ -424,6 +426,7 @@ public class UserController {
             exeTodayTaskResp.setMasonry(masonry);
             return JsonResult.successResult(exeTodayTaskResp);
         }catch (Exception e){
+            e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

@@ -190,6 +190,18 @@ public class VcMemberResource {
      * @mbggenerated
      */
     private Double activeValueAdd;
+    /**
+     * 全部直推总人数
+     *
+     * @mbggenerated
+     */
+    private Double allPushPeople;
+    /**
+     * 全部直推总人数
+     *
+     * @mbggenerated
+     */
+    private Double allTeamPeople;
 
     /**
      * 是否实名制
@@ -440,5 +452,21 @@ public class VcMemberResource {
 
     public void setSuperiorId(Integer superiorId) {
         this.superiorId = superiorId;
+    }
+
+    public Double getAllPushPeople() {
+        return allPushPeople;
+    }
+
+    public void setAllPushPeople(Double allPushPeople) {
+        this.allPushPeople = allPushPeople;
+    }
+
+    public Double getAllTeamPeople() {
+        return allTeamPeople;
+    }
+
+    public void setAllTeamPeople(Double allTeamPeople) {
+        this.allTeamPeople = allTeamPeople;
     }
 }

@@ -89,8 +89,13 @@ public interface TaskService  <T> extends BaseService<T> {
     boolean  isReceiveAwards(Integer  memberId);
 
 
+    List<Integer>   getLevelMemberId(List<Integer> memberList, Integer generationNum);
+
+
+    void       exeExpireTask(List<UTaskHave>   updateUTaskHave,Integer  memberId);
+
+    int        myActiveValueUpdateResource(VcMemberResource updateMyResource,Integer type,Double masonry);
+
 //    void   vitalitySettlement();
-
-
 
 }

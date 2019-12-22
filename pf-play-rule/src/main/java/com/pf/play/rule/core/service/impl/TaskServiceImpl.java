@@ -248,6 +248,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         uTaskHave.setTaskLevel(1);
         uTaskHave.setCreateTime(date);
         uTaskHave.setUpdateTime(date);
+        uTaskHave.setEveryNum(taskList.get(0).getEveryNum());
+        uTaskHave.setSurplusCount(taskList.get(0).getTaskCircleDay());
         uTaskHaveMapper.insertSelective(uTaskHave);
         VcRewardReceive  vcRewardReceive = new VcRewardReceive();
         vcRewardReceive.setMemberId(memberId);
@@ -383,7 +385,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             return false;
         }
 
-        UTaskHave   uTaskHave = TaskMethod.changeAddUTaskHave(memberId,taskId,taskType.getTaskValidityDay(),taskType.getTotalNum(),taskType.getTaskLevel());
+        UTaskHave   uTaskHave = TaskMethod.changeAddUTaskHave(memberId,taskId,taskType.getTaskValidityDay(),taskType.getTotalNum(),
+                        taskType.getTaskLevel(),taskType.getTaskCircleDay(),taskType.getEveryNum());
+
 
         DisTaskAttribute disTaskAttribute = TaskMethod.taskIdChangeDisTaskAttribute(taskId);
 
@@ -392,6 +396,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMember record =new VcMember();
         record.setMemberId(memberId);
 
+        //该任务需要的魅力值
+        Double charmValue =  TaskMethod.getNeedCharmValue(taskId);
 
         VcMemberResource  resourceRs = vcMemberResourceMapper.selectByPrimaryKey(vcMemberResource);
         VcMember record1 = vcMemberMapper.selectByPrimaryKey(record);
@@ -407,7 +413,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         UMasonryListLog   uMasonryListLog = TaskMethod.changeUMasonryListLog(memberId,taskId, Constant.TASK_TYPE9,Constant.TASK_SYMBOL_TYPE2,Double.valueOf(taskType.getNeedResource()));
         UvitalityValueList myUvitalityValueList = TaskMethod.pottingVitalityValue(memberId,Constant.REWARD_TYPE2,Constant.TASK_SYMBOL_TYPE1,myActiveValue);
         UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(record1.getSuperiorId(),Constant.REWARD_TYPE1,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
-        VcMemberResource insertResource = TaskMethod.changeUpdateResource(memberId,masonry);
+        VcMemberResource insertResource = TaskMethod.changeUpdateResource(memberId,masonry,charmValue);
         UMasonrySummary uMasonrySummary = TaskMethod.updateUMasonrySummary(memberId,Constant.TASK_SYMBOL_TYPE2,masonry);
         try{
             ComponentUtil.transactionalService.buyTaskUpdateInfo(uTaskHave,insertResource,uMasonryListLog,myUvitalityValueList,uqUvitalityValueList,uMasonrySummary);
@@ -424,7 +430,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     }
 
     /**
-     * @Description: 用户未处理的活力值明细，跟新用户明细表。
+     * @Description: 用户未处理的活力值明细，更新用户明细表。
      * @param
      * @return void
      * @author long
@@ -566,7 +572,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             return false;
         }
 
-        UTaskHave        uTaskHave         = TaskMethod.changeAddUTaskHave(memberId,taskId,taskType.getTaskValidityDay(),taskType.getTotalNum(),taskType.getTaskLevel());
+        UTaskHave        uTaskHave         = TaskMethod.changeAddUTaskHave(memberId,taskId,taskType.getTaskValidityDay(),taskType.getTotalNum(),
+                                                                                taskType.getTaskLevel(),taskType.getTaskCircleDay(),taskType.getEveryNum());
         VcRewardReceive  vcRewardReceive   = TaskMethod.changeUpdateRewardReceive(memberId,taskId);
         ComponentUtil.transactionalService.receiveTaskUpdateInfo(uTaskHave,vcRewardReceive);
         return true;
@@ -583,6 +590,14 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 //        List<VcMemberResource>     list    =   vcMemberResourceMapper.selectByTeamActive(updateMyResource);//查询英雄值
 //        VcMemberResource   vcMemberResource =  TaskMethod.updateHeroActive(uVitalityValueList.getMemberId(),list);
         int   uqdateCount  =  vcMemberResourceMapper.updateByActiveValue(updateMyResource);
+
+
+        if(uVitalityValueList.getRewardType()==1){
+            uqdateCount = ComponentUtil.taskService.myActiveValueUpdateResource(updateMyResource,Constant.TASK_TYPE12,uVitalityValueList.getActiveValue());
+        }else{
+            uqdateCount = ComponentUtil.taskService.myActiveValueUpdateResource(updateMyResource,Constant.TASK_TYPE13,uVitalityValueList.getActiveValue());
+        }
+
 //        ComponentUtil.transactionalService.updateMyActiveValue(updateMyResource,vcMember);
         if(uqdateCount==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
@@ -597,6 +612,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             VcMember     updateVcMember   =  TaskMethod.getMember(memberId);
             VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
             VcMemberResource   rsVcMemberResource      =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource); //查询等级信息
+
             ComponentUtil.transactionalService.updataActiveValue(rsVcMemberResource,updateVcMember);
 
             VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
@@ -607,7 +623,6 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             }else{
                 memberIdLevel = ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
             }
-
             VcMemberResource  vcMemberResource = TaskMethod.updateResourceLevel(rsVcMemberUpdate.getMemberId(),memberIdLevel);
             vcMemberResourceMapper.updateByPrimaryKey(vcMemberResource);
         }
@@ -733,25 +748,17 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMember    vcMember    =  TaskMethod.getVcMemberLevel2(memberId);
         List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
 
-        if(listHero.size()<2){
+        if(listHero.size()<1){
             return false ;
         }
-
         List<VcMember>    listAll = vcMemberMapper.selectByPid(vcMember);
         List<Integer> idList2 = TaskMethod.removeHeroes(listAll,listHero);
 
-        for(Integer integer: idList2){
-            String  level1=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+integer);
-            if(!StringUtils.isBlank(level1)&&Integer.parseInt(level1)>=1){
-                rsFlag = true;
-                break;
-            }
+        VcMemberResource  resource =TaskMethod.quertLevel(idList2,1);
+        List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
+        if(listRs.size()!=0){
+            rsFlag=true;
         }
-
-//        if(rsFlag){
-////            TaskMethod.deleteRedisLevel(memberId,currentLevel);
-//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"2");
-//        }
         return rsFlag;
     }
 
@@ -762,28 +769,22 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
         List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
 
-        if(listHero.size()<2){
+        if(listHero.size()<1){
             return false ;
         }
 
         List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
-
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
         List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
 
-        for(VcMember vcMember1: twoList){
-            String  level2=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
-            if(!StringUtils.isBlank(level2)&&Integer.parseInt(level2)>=2){
-                rsFlag = true;
-                break;
-            }
+        List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
+        List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,1);
+
+        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,2);
+        List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
+        if(listRs.size()!=0){
+            rsFlag=true;
         }
-
-//        if(rsFlag){
-//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
-//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"3");
-//        }
-
         return rsFlag;
     }
 
@@ -794,7 +795,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
         List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
 
-        if(listHero.size()<2){
+        if(listHero.size()<1){
             return false ;
         }
 
@@ -802,27 +803,16 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
         List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
 
-        List<Integer>   idListThree = new ArrayList<>();
-        for(VcMember  vcMember1 :twoList){
-            idListThree.add(vcMember1.getMemberId());
-        }
-        VcMember    vcMemberThree    =TaskMethod.toIdList(idList);
-        List<VcMember>    ThreeList  =  vcMemberMapper.selectLevel2Above(vcMemberThree);
+        List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
+        List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,2);
 
-        for(VcMember vcMember1: ThreeList){
-            String  level3=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
-            if(!StringUtils.isBlank(level3)&&Integer.parseInt(level3)>=3){
-                rsFlag = true;
-                break;
-            }
+        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,3);
+        List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
+        if(listRs.size()!=0){
+            rsFlag=true;
         }
 
-//        if(rsFlag){
-//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
-//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"4");
-//        }
-
-        return false;
+        return rsFlag;
     }
 
 
@@ -833,34 +823,22 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<VcMember>    listHero  =  vcMemberMapper.selectIsLevel2Where(vcMember);
         List<VcMember>    listAll   =  vcMemberMapper.selectByPid(vcMember);
 
-        if(listHero.size()<2){
+        if(listHero.size()<1){
             return false ;
         }
-
         List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
 
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
         List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
 
+        List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
+        List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,3);
 
-        List<Integer>   idListThree = new ArrayList<>();
-        for(VcMember  vcMember1 :twoList){
-            idListThree.add(vcMember1.getMemberId());
+        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,4);
+        List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
+        if(listRs.size()!=0){
+            rsFlag=true;
         }
-        VcMember    vcMemberThree    =TaskMethod.toIdList(idList);
-        List<VcMember>    ThreeList  =  vcMemberMapper.selectLevel2Above(vcMemberThree);
-
-        for(VcMember vcMember1: ThreeList){
-            String  level4=(String )ComponentUtil.redisService.get(CacheKey.LEVEL+vcMember1.getMemberId());
-            if(!StringUtils.isBlank(level4)&&Integer.parseInt(level4)>=4){
-                rsFlag = true;
-                break;
-            }
-        }
-//        if(rsFlag){
-//            TaskMethod.deleteRedisLevel(memberId,currentLevel);
-//            ComponentUtil.redisService.set(CacheKey.LEVEL+memberId,"5");
-//        }
 
         return rsFlag;
     }
@@ -906,17 +884,29 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         UTaskHave  uTaskHave = TaskMethod.toUTaskHave(memberId);
         UTaskHave  uTaskHave1  = uTaskHaveMapper.selectAlreadyNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
         UTaskHave  uTaskHave2  = uTaskHaveMapper.selectSurplusNumCount(uTaskHave); //查询用户的奖励金额已经未领取的
-        uTaskHave.setAlreadyNumCount(uTaskHave1.getAlreadyNumCount());
-        uTaskHave.setSurplusNumCount(uTaskHave2.getSurplusNumCount());
+        if(uTaskHave1==null ||uTaskHave2==null){
+            uTaskHave.setAlreadyNumCount(0D);
+            uTaskHave.setSurplusNumCount(0D);
+        }else{
+            uTaskHave.setAlreadyNumCount(uTaskHave1.getAlreadyNumCount());
+            uTaskHave.setSurplusNumCount(uTaskHave2.getSurplusNumCount());
+        }
+
         return uTaskHave;
     }
 
     @Override
     public Double grantReward(VcMemberResource  vcMemberResource,List<UTaskHave>  list) {
         Double  rewardMasonry = 0D;
+
         Double  activeValue=vcMemberResource.getActiveValue()*Constant.ACTIVE_VALUE_MASONRY;
         Double  taskTask = TaskMethod.statTaskMasonry(list);
-        UMasonryListLog  uMasonryListLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE2,Constant.TASK_SYMBOL_TYPE1,activeValue);
+
+        UMasonryListLog  uMasonryListLog= null;
+        if(activeValue!=0){
+            uMasonryListLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE2,Constant.TASK_SYMBOL_TYPE1,activeValue);
+        }
+
         UMasonryListLog  taskTaskLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE1,Constant.TASK_SYMBOL_TYPE1,taskTask);
         if(activeValue==0&&taskTask==0){
             return rewardMasonry;
@@ -925,7 +915,10 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         USubReward   uSubReward =  TaskMethod.toUsubReward(vcMemberResource.getMemberId());
         List<USubReward>   listUSubReward  = uSubRewardMapper.selectByValid(uSubReward);
         Double      uSubReward1  = TaskMethod.countUSubReward(listUSubReward);
-        UMasonryListLog  uSubLog=TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE11,Constant.TASK_SYMBOL_TYPE1,uSubReward1);
+        UMasonryListLog  uSubLog  = null;
+        if(uSubReward1!=0){
+            uSubLog = TaskMethod.changeUMasonryListLog(vcMemberResource.getMemberId(),null, Constant.TASK_TYPE11,Constant.TASK_SYMBOL_TYPE1,uSubReward1);
+        }
 
 //        if(taskTask!=0){
 //            uMasonryListLogMapper.insertSelective(taskTaskLog);
@@ -934,10 +927,20 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         String lockKey_send = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_CONSUMER, vcMemberResource.getMemberId());
         boolean send = ComponentUtil.redisIdService.lock(lockKey_send);
         rewardMasonry = activeValue + taskTask + uSubReward1;
-        VcMemberResource updateResource = TaskMethod.changeUpdateResource(vcMemberResource.getMemberId(),rewardMasonry);
+        VcMemberResource updateResource = TaskMethod.changeUpdateResource(vcMemberResource.getMemberId(),rewardMasonry,0D);
+
+        //生成修改的list 信息
+        UTaskHave    uTaskHave =  TaskMethod.updateUTaskHaveEventDay(list);
+
         if(send){
-            ComponentUtil.transactionalService.gratitudeupdateMyActiveValue(uMasonryListLog,taskTaskLog,uSubLog,updateResource);
+            ComponentUtil.transactionalService.gratitudeupdateMyActiveValue(uMasonryListLog,taskTaskLog,uSubLog,updateResource,uTaskHave);
         }
+        // 解锁
+        ComponentUtil.redisIdService.delLock(lockKey_send);
+
+        //修改那些过时任务更新！
+        List<UTaskHave>   updateUTaskHave  =   TaskMethod.updateUTaskHaveStat(list);
+        ComponentUtil.taskService.exeExpireTask(updateUTaskHave,vcMemberResource.getMemberId());
         return rewardMasonry;
     }
 
@@ -950,5 +953,77 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             return false;
         }
         return true;
+    }
+
+
+    @Override
+    public List<Integer> getLevelMemberId(List<Integer> memberList, Integer generationNum) {
+        List<Integer>  list =  memberList;
+        for(int  i=1;i<generationNum;i++){
+            VcMember    vcMemberThree    =TaskMethod.toIdList(list);
+            List<VcMember>    threeList  =  vcMemberMapper.selectIdListAll(vcMemberThree);
+            list = TaskMethod.toQueryMemberList(threeList);
+        }
+        return list;
+    }
+
+    /**
+     * @Description: 执行修改过期的task 信息
+     * @param updateUTaskHave   需要更新task 信息
+    * @param memberId          会员id
+     * @return void
+     * @author long
+     * @date 2019/12/22 16:55
+     */
+    @Override
+    public void exeExpireTask(List<UTaskHave> updateUTaskHave, Integer memberId) {
+        if(updateUTaskHave.size()==0){
+            return;
+        }
+        if(updateUTaskHave.size()!=0){
+            for(UTaskHave uTaskHave1:updateUTaskHave){
+                UvitalityValueList uVitalityValueList =TaskMethod.pottingVitalityValue(memberId,Constant.REWARD_TASK3,Constant.TASK_SYMBOL_TYPE2,uTaskHave1.getTotalNum());
+                ComponentUtil.transactionalService.taskExpireUpdateInfo(uTaskHave1,uVitalityValueList);
+            }
+        }
+
+    }
+
+
+
+    /**
+     * @Description: 活力值变更需要更新 资源表的砖石，
+     *                  同时也需要添加一条砖石变动的记录
+     * @param updateMyResource
+     * @return void
+     * @author long
+     * @date 2019/12/22 17:45
+     */
+    @Override
+    public int myActiveValueUpdateResource(VcMemberResource updateMyResource,Integer type,Double masonry) {
+        //砖石明细表添加记录
+        UMasonryListLog   uMasonryListLog = null;
+
+        //汇总表修改记录
+        UMasonrySummary   uMasonrySummary = null;
+        if (type==Constant.TASK_TYPE12){
+            uMasonryListLog = TaskMethod.changeUMasonryListLog(updateMyResource.getMemberId(),null, type,Constant.TASK_SYMBOL_TYPE1,masonry);
+            uMasonrySummary = TaskMethod.updateUMasonrySummary(updateMyResource.getMemberId(),Constant.TASK_SYMBOL_TYPE1,masonry);
+        }else{
+            uMasonryListLog =  TaskMethod.changeUMasonryListLog(updateMyResource.getMemberId(),null, type,Constant.TASK_SYMBOL_TYPE2,masonry);
+            uMasonrySummary = TaskMethod.updateUMasonrySummary(updateMyResource.getMemberId(),Constant.TASK_SYMBOL_TYPE2,masonry);
+        }
+
+        String lockKey_send = CachedKeyUtils.getPfCacheKey(PfCacheKey.LOCK_CONSUMER, updateMyResource.getMemberId());
+        boolean send = ComponentUtil.redisIdService.lock(lockKey_send);
+        if(send){
+            ComponentUtil.transactionalService.myActiveValueUpdate(uMasonryListLog,uMasonrySummary,updateMyResource);
+        }else{
+            return 0;
+        }
+
+        // 解锁
+        ComponentUtil.redisIdService.delLock(lockKey_send);
+        return  1;
     }
 }

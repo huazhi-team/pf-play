@@ -8,8 +8,10 @@ import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.task.*;
+import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.Constant;
+import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
@@ -122,7 +124,8 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 17:19
      */
-    public static UTaskHave   changeAddUTaskHave(Integer memberId,Integer taskId,Integer validityDay,Double totalNum,Integer taskLevel){
+    public static UTaskHave   changeAddUTaskHave(Integer memberId,Integer taskId,Integer validityDay,
+                                                    Double totalNum,Integer taskLevel,Integer taskCirleDay,Double eventDay){
         UTaskHave uTaskHave = new UTaskHave();
         DateModel dateModel= TaskMethod.getDate();
         Date endTime = DateUtil.getDateBetween(dateModel.getCreateTime(),validityDay);
@@ -135,6 +138,8 @@ public class TaskMethod {
         uTaskHave.setTaskLevel(taskLevel);
         uTaskHave.setStartTime(dateModel.getCreateTime());
         uTaskHave.setEndTime(endTime);
+        uTaskHave.setSurplusCount(taskCirleDay);
+        uTaskHave.setEveryNum(eventDay);
         return  uTaskHave;
     }
 
@@ -188,11 +193,12 @@ public class TaskMethod {
      * @author long
      * @date 2019/11/21 18:01
      */
-    public   static VcMemberResource  changeUpdateResource(Integer memberId,Double masonry){
+    public   static VcMemberResource  changeUpdateResource(Integer memberId,Double masonry,Double charmValue){
         VcMemberResource vcMemberResource = new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
         vcMemberResource.setUpdateTime(new Date());
         vcMemberResource.setDayMasonry(masonry);
+        vcMemberResource.setCharmValue(charmValue);
         return vcMemberResource;
     }
 
@@ -308,53 +314,57 @@ public class TaskMethod {
      */
     public  static Map<String,Object> changCurrentAndMaxMap(VcMemberResource vcMemberResource, VcRewardReceive  rs,VcMember vcMember ){
         Map<String,Object> map = new HashMap<>();
-        if(vcMember.getIsCertification()==1){
-            for(int i=0; i<6;i++){
-                map.put("size"+i,3);
-            }
-        }else{
-            for(int  i=0;i<6;i++){
-                if(i<=vcMemberResource.getDarenLevel()){
-                    if(i==0){
-                        if(rs.getIsLevel0()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
-                    }else if(i==1){
-                        if(rs.getIsLevel1()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
-                    }else if(i==2){
-                        if(rs.getIsLevel2()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
-                    }else if(i==3){
-                        if(rs.getIsLevel3()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
-                    }else if(i==4){
-                        if(rs.getIsLevel4()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
-                    }else if(i==5){
-                        if(rs.getIsLevel5()==1){
-                            map.put("size"+i,2);
-                        }else{
-                            map.put("size"+i,1);
-                        }
+        for(int  i=0;i<6;i++){
+            if(i<=vcMemberResource.getDarenLevel()){
+                if(i==0){
+                    if(rs.getIsLevel0()==1){
+                        map.put("size"+i,2);
+                    }else{
+                        map.put("size"+i,1);
                     }
-                }else{
-                    map.put("size"+i,3);
+                }else if(i==1){
+                    if(vcMember.getIsCertification()==1){
+                        map.put("size"+i,3);
+                    }else if(rs.getIsLevel1()==1){
+                        map.put("size"+i,2);
+                    } else{
+                        map.put("size"+i,1);
+                    }
+                }else if(i==2){
+                    if(vcMember.getIsCertification()==1){
+                        map.put("size"+i,3);
+                    }else if(rs.getIsLevel2()==1){
+                        map.put("size"+i,2);
+                    } else{
+                        map.put("size"+i,1);
+                    }
+                }else if(i==3){
+                    if(vcMember.getIsCertification()==1){
+                        map.put("size"+i,3);
+                    }else if(rs.getIsLevel3()==1){
+                        map.put("size"+i,2);
+                    } else{
+                        map.put("size"+i,1);
+                    }
+                }else if(i==4){
+                    if(vcMember.getIsCertification()==1){
+                        map.put("size"+i,3);
+                    }else if(rs.getIsLevel4()==1){
+                        map.put("size"+i,2);
+                    } else{
+                        map.put("size"+i,1);
+                    }
+                }else if(i==5){
+                    if(vcMember.getIsCertification()==1){
+                        map.put("size"+i,3);
+                    }else if(rs.getIsLevel5()==1){
+                        map.put("size"+i,2);
+                    } else{
+                        map.put("size"+i,1);
+                    }
                 }
+            }else{
+                map.put("size"+i,3);
             }
         }
         return  map;
@@ -737,6 +747,7 @@ public class TaskMethod {
         for(UTaskHave uTaskHave :list){
             UserHistoryTaskResp  userHistoryTaskResp  = new  UserHistoryTaskResp();
             userHistoryTaskResp.setTaskId(uTaskHave.getTaskId());
+            userHistoryTaskResp.setCurrentState(uTaskHave.getCurrentState());
             userHistoryTaskResp.setTaskLevel(uTaskHave.getTaskLevel());
             userHistoryTaskResp.setEndTimeStr(uTaskHave.getEndTimeStr());
             userHistoryTaskResp.setAlreadyNum(uTaskHave.getAlreadyNum());
@@ -1138,7 +1149,8 @@ public class TaskMethod {
         todayTaskResp.setAcceptNumber(udailyTaskStat.getAcceptNumber());
         todayTaskResp.setLookCommodityNum(udailyTaskStat.getLookCommodityNum());
         todayTaskResp.setIsComplete(1);
-
+        todayTaskResp.setLookCommodityNumCount(0);
+        todayTaskResp.setAcceptNumberCount(0);
         List<DisTaskAttribute>  list = TaskSingleton.getInstance().getAttributeTypeList1();
         for(DisTaskAttribute  disTaskAttribute  : list){
             if(uTaskHave.getTaskId()==disTaskAttribute.getTaskId()){
@@ -1151,6 +1163,11 @@ public class TaskMethod {
             }
         }
 
+        //是否已领取
+        boolean flag = ComponentUtil.taskService.isReceiveAwards(uTaskHave.getMemberId());
+        if(!flag){
+            todayTaskResp.setIsComplete(3);
+        }
 
         todayTaskResp.setAlreadyNum(uTaskHave1.getAlreadyNumCount());
         todayTaskResp.setSurplusNum(uTaskHave1.getSurplusNumCount());
@@ -1306,6 +1323,27 @@ public class TaskMethod {
 
 
     /**
+     * @Description: 需要消耗砖石数
+     * @param taskId
+     * @return java.lang.Double
+     * @author long
+     * @date 2019/12/21 20:36
+     */
+    public static  Double   getNeedCharmValue(Integer  taskId){
+        Double     charmValue  = 0D;
+        List<DisTaskType>   list  =   TaskSingleton.getInstance().getDisTaskTypeList();
+        for(DisTaskType  disTaskType:list){
+            if(disTaskType.getTaskId()==taskId){
+                charmValue = disTaskType.getCharmValue();
+                break;
+            }
+        }
+        return   charmValue;
+    }
+
+
+
+    /**
      * @Description: TODO
      * @param list
      * @return java.lang.Double
@@ -1406,6 +1444,102 @@ public class TaskMethod {
         return uMasonryListLog;
     }
 
+
+    /**
+     * @Description: 修改信息
+     * @param list
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/21 15:02
+     */
+    public static UTaskHave  updateUTaskHaveEventDay(List<UTaskHave> list){
+        UTaskHave  uTaskHave = new UTaskHave();
+        List<Long>  idList =  new ArrayList<>();
+        for (UTaskHave  uTaskHave1:list){
+            idList.add(uTaskHave1.getId());
+        }
+        uTaskHave.setIdList(idList);
+        return uTaskHave;
+    }
+
+
+    /**
+     * @Description: 修改状态信息
+     * @param list
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/21 15:02
+     */
+    public static List<UTaskHave>  updateUTaskHaveStat(List<UTaskHave> list){
+        List<UTaskHave>  list1 = new ArrayList<>();
+        for(UTaskHave uTaskHave:list){
+            UTaskHave  uTaskHave1 = new UTaskHave();
+            uTaskHave1.setId(uTaskHave.getId());
+            if(uTaskHave.getSurplusCount()==1){
+                uTaskHave1.setCurrentState(2);
+                uTaskHave1.setUpdateTime(new Date());
+                uTaskHave1.setIsValid(2);
+                list1.add(uTaskHave1);
+                continue;
+            }else if(uTaskHave.getEndTime().compareTo(new Date())==-1){
+                uTaskHave1.setCurrentState(3);
+                uTaskHave1.setUpdateTime(new Date());
+                uTaskHave1.setIsValid(2);
+                list1.add(uTaskHave1);
+                continue;
+            }
+        }
+        return list1;
+    }
+
+    /**
+     * @Description: 转换成查询list
+     * @param list
+     * @return java.util.List<java.lang.Integer>
+     * @author long
+     * @date 2019/12/21 21:53
+     */
+    public static List<Integer>  toQueryMemberList(List<VcMember> list){
+        List<Integer>   queryList = new ArrayList<>();
+        for(VcMember  vcMember:list){
+            queryList.add(vcMember.getMemberId());
+        }
+        return  queryList;
+    }
+
+
+
+
+    /**
+     * @Description: 根据等级memeberId 和 level  是否有信息
+     * @param list
+    * @param level
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/22 15:42
+     */
+    public static VcMemberResource  quertLevel(List<Integer> list,Integer  level){
+        VcMemberResource   resourceArrayList = new VcMemberResource();
+        resourceArrayList.setIdList(list);
+        resourceArrayList.setDarenLevel(level);
+        return  resourceArrayList;
+    }
+
+    /**
+     * @Description: 组装查询的条件
+     * @param memberId
+    * @param masonry
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/22 17:04
+     */
+    public static VcMemberResource  updateTaskExpire(Integer memberId,Double  masonry){
+        VcMemberResource   resource = new VcMemberResource();
+        resource.setMemberId(memberId);
+        resource.setUpdateTime(new Date());
+        resource.setDayMasonry(masonry);
+        return  resource;
+    }
 
 
 

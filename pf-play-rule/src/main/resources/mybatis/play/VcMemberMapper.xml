@@ -330,7 +330,7 @@
 		where   1=1
 		and  a.superior_id  =#{superiorId}
 		order by  team_active  DESC
-		limit  2
+		limit  1
   </select>
 
 
@@ -404,6 +404,22 @@
           </foreach>
         </if>
   </select>
+
+
+  <select id="selectIdListAll" resultType="com.pf.play.rule.core.model.VcMember"  parameterType="Object" >
+          select
+            <include refid="Base_Column_List" />
+                from  vc_member
+                where  1=1
+                <if test="idList != null and idList.size()>0">
+                  superior_id   in
+                  <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+  </select>
+
+
 
 
   <select id="selectAlliance" resultType="com.pf.play.rule.core.model.VcMember"  parameterType="Object" >

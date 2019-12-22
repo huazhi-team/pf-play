@@ -12,7 +12,7 @@ import com.pf.play.rule.core.model.*;
 
 public interface TransactionalService<T> extends BaseService<T> {
     void registerAdd(VcMember memberModel, VcAccountRelation accountRelationModel, VcThirdParty vcThirdPartyModel,
-                     VcRewardReceive rewardReceiveModel , VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,UTaskHave  uTaskHave) throws  Exception;
+                     VcRewardReceive rewardReceiveModel , VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,UTaskHave  uTaskHave,VcMemberResource resourcePeople) throws  Exception;
 
     void  updateTask(UDayTaskReward record,UTaskHave uTaskHave);
 
@@ -37,8 +37,12 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  updateMyActiveValue(VcMemberResource resource,VcMember vcMember);
 
-    void  gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource);
+    void  gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource,UTaskHave uTaskHave);
 
-    void  realNameInfo( USubReward  uSubReward,VcMember  updateVcMember,VcMemberResource  vcMemberResource);
+    void  realNameInfo( USubReward  uSubReward,VcMember  updateVcMember,VcMemberResource  vcMemberResource,VcMemberResource  uqResource);
+
+    void  taskExpireUpdateInfo(UTaskHave uTaskHave,UvitalityValueList uVitalityValueList);
+
+    void  myActiveValueUpdate(UMasonryListLog   masonryLog,UMasonrySummary   uMasonrySummary,VcMemberResource resource);
 
 }

@@ -16,7 +16,6 @@ import com.pf.play.rule.core.model.UTaskHave;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -125,13 +124,13 @@ public class TaskController {
             log.info("----------:userTaskHistory!");
             Integer     memberId =  0 ;
             boolean  flag =TaskMethod.checkTokenAndWxOpenid(userCommonReq);
-            if(!flag){
+            if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
 
-            if (memberId==0){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
-            }
+//            if (memberId==0){
+//                throw  new ServiceException(ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.IS_USER_ERROR.geteDesc());
+//            }
             List<UTaskHave> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
 //            List<DisTaskType> list = ComponentUtil.taskService.queryInvalidHaveTask(memberId);
             List<UserHistoryTaskResp>    userHistoryTaskList =TaskMethod.changUserHistoryTask(list);

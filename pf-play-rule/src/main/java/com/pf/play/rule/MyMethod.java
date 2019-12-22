@@ -344,16 +344,16 @@ public class MyMethod {
         myVitalityResp.setTeamActive(vcMemberResource.getTeamActive());
 
         List<DisEmpiricalVitalityAttribute>  list1 = TaskSingleton.getInstance().getDisVitalityAttribute1();
-        boolean  flag = false;
-        Integer  taskId= 1;
-        List<DisVitalityValue>  list =EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
-        for(int  i = 0;i<list.size();i++){
+//        boolean  flag = false;
+//        Integer  taskId= 1;
+//        List<DisVitalityValue>  list =EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
+        /*for(int  i = 0;i<list.size();i++){
             if(null!=myVitalityResp.getAllianceActiveNum()){
                 break;
             }
             if(flag||i==list.size()-1){
                 for(DisEmpiricalVitalityAttribute dis:list1){
-                   if(taskId==dis.getTypeId()){
+                   if(vcMemberResource.getDarenLevel()+1==dis.getTypeId()){
                        myVitalityResp.setAllianceActiveNum(Double.valueOf(dis.getKey3()));
                        myVitalityResp.setPushPeopleNum(Double.valueOf(dis.getKey1()));
                        myVitalityResp.setTeamActiveNum(Double.valueOf(dis.getKey2()));
@@ -366,6 +366,15 @@ public class MyMethod {
             }
             taskId++;
 
+        }*/
+
+        for(DisEmpiricalVitalityAttribute dis:list1){
+            if(vcMemberResource.getDarenLevel()+1==dis.getTypeId()){
+                myVitalityResp.setAllianceActiveNum(Double.valueOf(dis.getKey3()));
+                myVitalityResp.setPushPeopleNum(Double.valueOf(dis.getKey1()));
+                myVitalityResp.setTeamActiveNum(Double.valueOf(dis.getKey2()));
+                break;
+            }
         }
         myVitalityResp.setList(vitalityList);
 

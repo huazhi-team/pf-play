@@ -68,9 +68,12 @@ public class SynchronousController {
             log.info("----------:goods!");
             boolean   cheakFlag  = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if (!cheakFlag){
-                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+                return JsonResult.successResult(null);
             }
             Integer   memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            if(memberId==0){
+                return JsonResult.successResult(null);
+            }
             if(memberId!=0){
                 ComponentUtil.synchroService.addGoods(memberId);
             }

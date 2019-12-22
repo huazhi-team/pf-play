@@ -26,4 +26,10 @@ public interface UTaskHaveMapper<T> extends BaseDao<T> {
     UTaskHave selectAlreadyNumCount(UTaskHave record);
 
     UTaskHave selectSurplusNumCount(UTaskHave record);
+
+    //每个任务领取的时候，修改该用户详细信息
+    int updateTaskCount(UTaskHave record);
+
+    //每次用户修改完，是否需要到期或者完成
+    int updateCurrentState(UTaskHave record);
 }

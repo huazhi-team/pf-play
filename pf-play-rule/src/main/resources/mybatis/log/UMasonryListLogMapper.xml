@@ -217,6 +217,7 @@
     <include refid="Base_Column_List" />
     from u_masonry_list_log
     where member_id = #{memberId}
+    and   symbol_type = 1
     order by  create_time  desc
     limit 1
   </select>

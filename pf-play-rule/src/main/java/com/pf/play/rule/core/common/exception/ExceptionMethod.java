@@ -38,17 +38,19 @@ public class ExceptionMethod {
                 code = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_CODE;
                 message = ErrorCode.ERROR_CONSTANT.DEFAULT_SERVICE_EXCEPTION_ERROR_MESSAGE;
             }
+
+            if(!StringUtils.isBlank(((ServiceException) e).getCode()) && type==1){
+//            db&&Code = ((ServiceException) e).getCode();
+                code = ((ServiceException) e).getCode();
+                message = e.getMessage();
+            }
         }else {
             code = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_CODE;
             message = ErrorCode.ERROR_CONSTANT.DEFAULT_EXCEPTION_ERROR_MESSAGE;
         }
 
 
-        if(!StringUtils.isBlank(((ServiceException) e).getCode()) && type==1){
-//            db&&Code = ((ServiceException) e).getCode();
-            code = ((ServiceException) e).getCode();
-            message = e.getMessage();
-        }
+
         // 获取录入数据库的错误信息
         if (!StringUtils.isBlank(dbCode)){
             dbMessage = getErrorDbDesc(dbCode);

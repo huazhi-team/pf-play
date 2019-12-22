@@ -1,6 +1,7 @@
 package com.pf.play.rule.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class UTaskHave {
     /**
@@ -68,6 +69,15 @@ public class UTaskHave {
      * @mbggenerated
      */
     private Double surplusNum;
+
+
+    /**
+     * 每次产数
+     *
+     * @mbggenerated
+     */
+    private Double everyNum;
+
     /**
      * 总产数
      *
@@ -138,6 +148,13 @@ public class UTaskHave {
     private Integer taskCount;
 
     /**
+     * 剩余次数
+     *
+     * @mbggenerated
+     */
+    private Integer surplusCount;
+
+    /**
      * 更新时间
      *
      * @mbggenerated
@@ -150,6 +167,11 @@ public class UTaskHave {
      * @mbggenerated
      */
     private Integer isValid;
+
+    /**
+     * 批量更新的状态
+     */
+    private List<Long> idList ;
 
     private DisTaskAttribute  disTaskAttribute;
 
@@ -365,5 +387,29 @@ public class UTaskHave {
 
     public void setGiveActiveNum(Double giveActiveNum) {
         this.giveActiveNum = giveActiveNum;
+    }
+
+    public Integer getSurplusCount() {
+        return surplusCount;
+    }
+
+    public void setSurplusCount(Integer surplusCount) {
+        this.surplusCount = surplusCount;
+    }
+
+    public List<Long> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Long> idList) {
+        this.idList = idList;
+    }
+
+    public Double getEveryNum() {
+        return everyNum;
+    }
+
+    public void setEveryNum(Double everyNum) {
+        this.everyNum = everyNum;
     }
 }

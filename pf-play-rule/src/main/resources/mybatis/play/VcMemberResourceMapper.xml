@@ -8,7 +8,7 @@
     empirical_level,daren_level,is_vitality_value,team_people,team_active,hero_active,alliance_active,
     DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%s") uqdate_time_str,
     DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%s") create_time_str,
-    charm_value,
+    charm_value,all_push_people,all_team_people,
     is_valid
   </sql>
 
@@ -199,6 +199,9 @@
       <if test="allianceActive != null" >
         alliance_active = #{allianceActive},
       </if>
+      <if test="charmValue != null" >
+        charm_value = charm_value -#{charmValue},
+      </if>
     </set>
     where member_id = #{memberId}
   </update>
@@ -306,12 +309,12 @@
 
     <!-- 修改英雄活力值 -->
     <update id="updateHeroActive" parameterType="com.pf.play.rule.core.model.VcMember" >
-        update vc_member_resource v,( select   IFNULL(sum(b.active_value),0) as  active_value
+        update vc_member_resource v,( select   IFNULL(max(b.active_value),0) as  active_value
                 from  vc_member a  inner JOIN   vc_member_resource b
                 on    a.member_id=  b.member_id
                 where  a.superior_id=#{memberId}
                 order  by   b.active_value desc
-                limit  2) d   set    v.hero_active = d.active_value
+                ) d   set    v.hero_active = d.active_value
                 where  v.member_id = #{memberId}
     </update>
 
@@ -379,8 +382,6 @@
                 limit  2
   </select>
 
-
-
   <update id="updateByMasonry" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
     update vc_member_resource
     <set >
@@ -407,4 +408,64 @@
     </set>
     where member_id = #{memberId}
   </update>
+
+
+
+  <select id="selectMemberIdLevel" resultType="com.pf.play.rule.core.model.VcMemberResource"  >
+           select
+             <include refid="Base_Column_List" />
+                from  vc_member_resource
+                where 1=1
+            <if test="darenLevel != null" >
+              and  daren_level >= #{darenLevel},
+            </if>
+
+            <if test="idList != null and idList.size()>0">
+              member_id   in
+              <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+                #{item}
+              </foreach>
+            </if>
+  </select>
+
+  <update id="updateTaskExpire" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="dayMasonry != null" >
+        day_masonry = day_masonry-#{dayMasonry},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where member_id = #{memberId}
+  </update>
+
+
+  <update id="updateAllPeople" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    set  all_push_people =all_push_people+1,
+    all_team_people=all_team_people+1
+    where 1=1
+    <if test="idList != null and idList.size()>0">
+      member_id   in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+  <update id="updateUqPeople" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    set push_people = push_people+1,
+    team_people = team_people+1,
+    where 1=1
+    <if test="idList != null and idList.size()>0">
+      member_id   in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
 </mapper>

@@ -78,6 +78,8 @@ public class UserHistoryTaskResp {
      */
     private Double  activeValue;
 
+    private Integer  currentState;
+
     public Integer getTaskId() {
         return taskId;
     }
@@ -156,5 +158,13 @@ public class UserHistoryTaskResp {
 
     public void setActiveValue(Double activeValue) {
         this.activeValue = activeValue;
+    }
+
+    public Integer getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(Integer currentState) {
+        this.currentState = currentState;
     }
 }

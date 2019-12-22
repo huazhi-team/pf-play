@@ -42,7 +42,7 @@ public class RegisTerRunner implements ApplicationRunner {
 //        new Thread() {
 //            public void run() {
 //                log.debug("发送上下级关系！");
-////                ComponentUtil.userInfoSevrice.executeSuperior();
+//                ComponentUtil.userInfoSevrice.executeSuperior();
 //            }
 //        }.start();
 

@@ -8,10 +8,7 @@ import com.pf.play.model.protocol.request.uesr.SynchronousReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
 import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
-import com.pf.play.rule.LoginMethod;
-import com.pf.play.rule.MyMethod;
-import com.pf.play.rule.SynchroMethod;
-import com.pf.play.rule.TaskMethod;
+import com.pf.play.rule.*;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
@@ -338,11 +335,15 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         Double    activeValue =RegisterSingleton.getInstance().getRealNameReward();
         Integer   totalNum =RegisterSingleton.getInstance().getRealNameCycle();
 
-        USubReward  uSubReward = TaskMethod.changUSubReward(rsVcMember.getSuperiorId(),memberId,Constant.REWARD_TASK1,activeValue,totalNum);
+        USubReward  uSubReward    =  TaskMethod.changUSubReward(rsVcMember.getSuperiorId(),memberId,Constant.REWARD_TASK1,activeValue,totalNum);
 
-        VcMember  updateVcMember  = TaskMethod.changRealnameMember(memberId);
+        VcMember  updateVcMember  =  TaskMethod.changRealnameMember(memberId);
+
+        String      extensionMemberId   =    rsVcMember.getExtensionMemberId().replace(","+memberId,"");
+        VcMemberResource   uqResource   =    RegisterMethod.updatePeople(extensionMemberId);
+
         VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
-        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource);
+        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource);
     }
 
     @Override

@@ -22,8 +22,10 @@ public class Constant {
     public static  int   TASK_TYPE7 = 7;//交易所转入
     public static  int   TASK_TYPE8 = 8;//转出砖石
     public static  int   TASK_TYPE9 = 9;//购买任务消耗
-    public static  int   TASK_TYPE10 = 10;//购买任务消耗
+    public static  int   TASK_TYPE10 = 10;//赠送礼物手续费
     public static  int   TASK_TYPE11 = 11;//实名制获取奖励
+    public static  int   TASK_TYPE12 = 12;//活力值增加
+    public static  int   TASK_TYPE13= 13; //活力值到期
 
     /*****************符号类型********************/
     public static  int   TASK_SYMBOL_TYPE1 = 1;//加
@@ -59,6 +61,7 @@ public class Constant {
     /*********** 下级奖励表的类型信息 **********/
     public  static  int  REWARD_TASK1    =  1 ; //实名制
     public  static  int  REWARD_TASK2    =  2 ; //下级购买任务
+    public  static  int  REWARD_TASK3    =  3 ; //任务到期
 
     /*********** code 错误码 **********/
     public  static  int  CODE_ERROR_TYPE1    =  1 ; //显示给前端

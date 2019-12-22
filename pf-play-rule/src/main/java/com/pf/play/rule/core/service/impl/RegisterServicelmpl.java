@@ -225,13 +225,12 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
 
         VcMemberResource   vcMemberResourceModel  =  RegisterMethod.insertVcMemberResource(memberId);
 
+        VcMemberResource  vcMemberResource  =  RegisterMethod.updatePeople(extensionMemberId);
 
         UTaskHave  uTaskHave =RegisterMethod.insertUTaskHave(memberId);//会员资源
-
-
         UMasonrySummary  uMasonrySummary = RegisterMethod.insertUMasonrySummary(memberId);
         try{
-            ComponentUtil.transactionalService.registerAdd(vcMember,accountRelationModel,vcThirdPartyModel,rewardReceiveModel,vcMemberResourceModel,uMasonrySummary,uTaskHave);
+            ComponentUtil.transactionalService.registerAdd(vcMember,accountRelationModel,vcThirdPartyModel,rewardReceiveModel,vcMemberResourceModel,uMasonrySummary,uTaskHave,vcMemberResource);
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.getMessage());

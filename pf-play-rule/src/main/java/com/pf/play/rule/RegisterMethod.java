@@ -10,6 +10,7 @@ import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -120,6 +121,8 @@ public class RegisterMethod {
         uTaskHave.setTaskLevel(1);
         uTaskHave.setCreateTime(date);
         uTaskHave.setUpdateTime(date);
+        uTaskHave.setSurplusCount(taskList.get(0).getTaskCircleDay());
+        uTaskHave.setEveryNum(taskList.get(0).getEveryNum());
         return  uTaskHave ;
     }
 
@@ -265,6 +268,26 @@ public class RegisterMethod {
         vcPhoneDeploy.setPhone(phone);
         vcPhoneDeploy.setIsValid(1);
         return   vcPhoneDeploy;
+    }
+
+
+    /**
+     * @Description: 修改该会员的memberId  团队总人数
+     * @param extensionMemberId
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/11/25 10:27
+     */
+    public  static VcMemberResource  updatePeople(String  extensionMemberId){
+        String  []  memberIdList =  extensionMemberId.split(",");
+        VcMemberResource   vcMemberResourceModel  =  new  VcMemberResource();
+        List<Integer>  list =  new ArrayList<>();
+        list.add(0);
+        for (String  memberId:memberIdList){
+            list.add(Integer.parseInt(memberId));
+        }
+        vcMemberResourceModel.setIdList(list);
+        return   vcMemberResourceModel;
     }
 
 }

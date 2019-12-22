@@ -3021,8 +3021,8 @@ public class DateUtil {
 //			DateUtil.getHour(new  Date());
 //		}catch (Exception e){
 //		}
-		String dds ="1573739849"+"000";
-		System.out.println(getSecordsFromString(sdfLongTimePlus.format(addDay(new Date(),10))));
+//		String dds ="1573739849"+"000";
+//		System.out.println(getSecordsFromString(sdfLongTimePlus.format(addDay(new Date(),10))));
 //		long  dd =1573739849000L;
 //		System.out.println(timeDifference(	Long.parseLong(dds)));
 //		String start = "17:24:31";
@@ -3030,5 +3030,11 @@ public class DateUtil {
 //		boolean flag = isBeLongSfm(start, end);
 //		System.out.println("flag:" + flag);
 
+		Date   date = new Date();
+
+		Thread.sleep(5000);
+		Date   date2 = new Date();
+
+		System.out.println(date2.compareTo(date));
 	}
 }

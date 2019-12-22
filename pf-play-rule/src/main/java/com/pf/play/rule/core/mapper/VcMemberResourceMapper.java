@@ -47,6 +47,13 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
     int updateRealName(VcMemberResource record);
 
 
+    List<VcMemberResource>  selectMemberIdLevel(VcMemberResource resource);
 
+    int updateTaskExpire(VcMemberResource resource);
+
+
+    int updateAllPeople(VcMemberResource resource);
+
+    int updateUqPeople(VcMemberResource resource);
 
 }

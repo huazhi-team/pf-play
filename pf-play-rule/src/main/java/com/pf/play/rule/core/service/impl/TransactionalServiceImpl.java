@@ -78,7 +78,8 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
      */
     @Override
     public void registerAdd(VcMember memberModel, VcAccountRelation accountRelationModel, VcThirdParty vcThirdPartyModel,
-                            VcRewardReceive rewardReceiveModel, VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,UTaskHave  uTaskHave)throws  Exception {
+                            VcRewardReceive rewardReceiveModel, VcMemberResource vcMemberResourceModel,UMasonrySummary uMasonrySummary,
+                                UTaskHave  uTaskHave,VcMemberResource  vcMemberResource)throws  Exception {
 
         vcMemberMapper.insertSelective(memberModel);
         vcAccountRelationMapper.insertSelective(accountRelationModel);
@@ -88,6 +89,7 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
         ComponentUtil.registerService.userRegisterReward(memberModel.getMemberId());
         uMasonrySummaryMapper.insertSelective(uMasonrySummary);
         uTaskHaveMapper.insertSelective(uTaskHave);
+        vcMemberResourceMapper.updateAllPeople(vcMemberResource);
     }
 
     /**
@@ -162,19 +164,38 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     }
 
     @Override
-    public void gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource) {
+    public void gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource,UTaskHave uTaskHave) {
         if(uMasonryListLog!=null){
             uMasonryListLogMapper.insertSelective(uMasonryListLog);
         }
+        if(realNameLog!=null){
+            uMasonryListLogMapper.insertSelective(realNameLog);
+        }
         uMasonryListLogMapper.insertSelective(taskTaskLog);
-        uMasonryListLogMapper.insertSelective(realNameLog);
         vcMemberResourceMapper.updateByMasonry(resource);
+        uTaskHaveMapper.updateTaskCount(uTaskHave);
     }
 
     @Override
-    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource) {
-        uSubRewardMapper.insertSelective(uSubReward);
-        vcMemberResourceMapper.updateRealName(vcMemberResource);
-        vcMemberMapper.updateByPrimaryKeySelective(updateVcMember);
+    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource,VcMemberResource uqResource) {
+        uSubRewardMapper.insertSelective(uSubReward); //上级奖励表
+        vcMemberResourceMapper.updateRealName(vcMemberResource); //修改本会员的信息
+        vcMemberMapper.updateByPrimaryKeySelective(updateVcMember); //修改是否实名制了
+        vcMemberResourceMapper.updateUqPeople(uqResource);
+    }
+
+    @Override
+    public void taskExpireUpdateInfo(UTaskHave uTaskHave,UvitalityValueList uVitalityValueList) {
+        //修改拥有的状态
+        uTaskHaveMapper.updateCurrentState(uTaskHave);
+        //添加一条减去的历史
+        uVitalityValueListMapper.insertSelective(uVitalityValueList);
+    }
+
+    @Override
+    public void myActiveValueUpdate(UMasonryListLog masonryLog, UMasonrySummary uMasonrySummary, VcMemberResource resource) {
+        uMasonryListLogMapper.insertSelective(masonryLog); //砖石明细表
+        uMasonrySummaryMapper.updateByPrimaryKeySelective(uMasonrySummary); //砖石汇总表修改
+        vcMemberResourceMapper.updateByActiveValue(resource);//用戶信息的更新
     }
 }

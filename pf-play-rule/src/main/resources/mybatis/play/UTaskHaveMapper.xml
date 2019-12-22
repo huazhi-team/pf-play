@@ -4,7 +4,7 @@
   <sql id="Base_Column_List" >
     id, member_id, task_id, surplus_time, surplus_day, start_time, end_time, already_num, 
     surplus_num, curday, current_state, curhour, curminute, DATE_FORMAT(start_time, '%Y-%m-%d %k:%i:%s') start_time_str, task_level,
-    give_type,  DATE_FORMAT(end_time, '%Y-%m-%d %k:%i:%s') end_time_str , is_valid
+    give_type,  DATE_FORMAT(end_time, '%Y-%m-%d %k:%i:%s') end_time_str , is_valid,every_num,surplus_count
   </sql>
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.UTaskHave"  >
     select 
@@ -103,6 +103,13 @@
       <if test="totalNum != null" >
         total_num,
       </if>
+      <if test="surplusCount != null" >
+        surplus_count,
+      </if>
+      <if test="everyNum != null" >
+        every_num,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -164,6 +171,12 @@
       </if>
       <if test="giveActiveNum != null" >
         #{giveActiveNum},
+      </if>
+      <if test="surplusCount != null" >
+        #{surplusCount},
+      </if>
+      <if test="everyNum != null" >
+        #{everyNum},
       </if>
     </trim>
   </insert>
@@ -227,6 +240,9 @@
       <if test="giveActiveNum != null" >
         give_active_num = #{giveActiveNum},
       </if>
+      <if test="surplusCount != null" >
+        surplus_count = #{surplusCount},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -267,7 +283,7 @@
       and member_id = #{memberId}
     </if>
     <if test="currentState != null and currentState != '' " >
-      and current_state = #{currentState}
+      and current_state != #{currentState}
     </if>
     order by task_level desc
   </select>
@@ -286,6 +302,28 @@
   </select>
 
 
+  <update id="updateTaskCount" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    update u_task_have
+    set  surplus_count = surplus_count-1,
+    surplus_num =surplus_num-every_num,
+    already_num =already_num+every_num
+    where 1=1
+    <if test="idList != null and idList.size()>0">
+      and id in
+      <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+
+  <update id="updateCurrentState" parameterType="com.pf.play.rule.core.model.UTaskHave" >
+    update u_task_have
+    set  current_state = #{currentState},
+    update_time = #{updateTime},
+    is_valid = #{isValid}
+    where id = #{id}
+  </update>
 
 
 

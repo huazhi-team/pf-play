@@ -67,6 +67,8 @@ public class RegisterController {
             UserInfoResp userInfoResp = ComponentUtil.registerService.savaRegisterInfo(registerReq);
             LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             ComponentUtil.redisService.set(userInfoResp.getToken(),userInfoResp.getMemberId()+"");
+
+            ComponentUtil.userInfoSevrice.userSynchronousQhr(userInfoResp.getMemberId(),userInfoResp.getToken());
             return JsonResult.successResult(loginResp);
 
 

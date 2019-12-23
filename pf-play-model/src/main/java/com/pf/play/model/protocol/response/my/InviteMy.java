@@ -11,6 +11,11 @@ public class InviteMy {
      * 昵称
      */
     private  String  nickname;
+
+    /**
+     * 昵称
+     */
+    private  String  memberAdd;
     /**
      * 团队总人数
      */
@@ -104,5 +109,13 @@ public class InviteMy {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getMemberAdd() {
+        return memberAdd;
+    }
+
+    public void setMemberAdd(String memberAdd) {
+        this.memberAdd = memberAdd;
     }
 }

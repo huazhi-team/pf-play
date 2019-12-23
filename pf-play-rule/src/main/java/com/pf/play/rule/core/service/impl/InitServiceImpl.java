@@ -4,10 +4,7 @@ import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.*;
-import com.pf.play.rule.core.model.DisEmpiricalVitalityAttribute;
-import com.pf.play.rule.core.model.DisTaskAttribute;
-import com.pf.play.rule.core.model.DisTaskType;
-import com.pf.play.rule.core.model.DisVitalityValue;
+import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.InitService;
 import com.pf.play.rule.core.service.UserInfoSevrice;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
@@ -35,6 +32,9 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
 
     @Autowired
     private DisTaskAttributeMapper disTaskAttributeMapper;
+
+    @Autowired
+    private DisEmpiricalValueLevelMapper disEmpiricalValueLevelMapper;
 
     @Autowired
     private DisEmpiricalVitalityAttributeMapper disEmpiricalVitalityAttributeMapper;
@@ -83,6 +83,9 @@ public class InitServiceImpl<T> extends BaseServiceImpl<T> implements InitServic
     public void initVitalityInfo() {
         List<DisVitalityValue> list =  disVitalityValueMapper.selectByPrimaryKey();
         EmpiricalVitalitySingleton.getInstance().setDisVitalityValue(list);
+
+        List<DisEmpiricalValueLevel> listEmpirical =disEmpiricalValueLevelMapper.selectByPrimaryKey();
+        EmpiricalVitalitySingleton.getInstance().setDisEmpiricalValueLevel(listEmpirical);
     }
 
     @Override

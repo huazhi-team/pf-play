@@ -55,6 +55,8 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
 
     @Autowired
     private USubRewardMapper  uSubRewardMapper ;
+    @Autowired
+    private UEmpiricalValueListMapper  uEmpiricalValueListMapper ;
 
 
 
@@ -109,13 +111,16 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
 
     @Override
     public void buyTaskUpdateInfo(UTaskHave uTaskHave, VcMemberResource resource,
-                                        UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary) {
+                                        UMasonryListLog uMasonryLog,UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary,VcMemberResource uqEmpirical,UEmpiricalValueList uEmpiricalValueList) {
         uTaskHaveMapper.insertSelective(uTaskHave);         //任务拥有表添加
         uMasonryListLogMapper.insertSelective(uMasonryLog); //砖石明细表
         uVitalityValueListMapper.insertSelective(my);       //自己加活力值明细
         uVitalityValueListMapper.insertSelective(uq);       //上级加活力值明细
         vcMemberResourceMapper.updateByPrimaryKeySelective(resource);   // 修改资源表信息
         uMasonrySummaryMapper.updateByPrimaryKeySelective(uMasonrySummary);  //更新砖石汇总表
+        uEmpiricalValueListMapper.insertSelective(uEmpiricalValueList); //添加任务经验值明细表
+        vcMemberResourceMapper.updateEmpiricalValue(uqEmpirical); //更新会员等级以及经验值
+
     }
 
 
@@ -177,11 +182,13 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     }
 
     @Override
-    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource,VcMemberResource uqResource) {
+    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource,VcMemberResource uqResource,UEmpiricalValueList uEmpiricalValueList,VcMemberResource uqEmpirical) {
         uSubRewardMapper.insertSelective(uSubReward); //上级奖励表
         vcMemberResourceMapper.updateRealName(vcMemberResource); //修改本会员的信息
         vcMemberMapper.updateByPrimaryKeySelective(updateVcMember); //修改是否实名制了
-        vcMemberResourceMapper.updateUqPeople(uqResource);
+        vcMemberResourceMapper.updateUqPeople(uqResource);//上级所有的人信息
+        uEmpiricalValueListMapper.insertSelective(uEmpiricalValueList); //添加实名制明细表
+        vcMemberResourceMapper.updateEmpiricalValue(uqEmpirical); //更新会员等级以及经验值
     }
 
     @Override

@@ -36,7 +36,7 @@ public class UEmpiricalValueList {
      *
      * @mbggenerated
      */
-    private Float empiricValue;
+    private Double empiricValue;
 
     /**
      * 创建日期：存的日期格式20160530
@@ -112,11 +112,11 @@ public class UEmpiricalValueList {
         this.rewardType = rewardType;
     }
 
-    public Float getEmpiricValue() {
+    public Double getEmpiricValue() {
         return empiricValue;
     }
 
-    public void setEmpiricValue(Float empiricValue) {
+    public void setEmpiricValue(Double empiricValue) {
         this.empiricValue = empiricValue;
     }
 

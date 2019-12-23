@@ -130,6 +130,7 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             vcMember1 =null;
             return vcMember1;
         }
+        vcMember1.setMemberAdd(vcMemberResource.getMemberAdd());
         vcMember1.setInviteCode(vcMemberResource.getPhone());
         vcMember1.setNickname(vcMemberResource.getNickName());
         vcMember1.setIsCertification(vcMemberResource.getIsCertification());
@@ -181,6 +182,7 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
             return  null;
         }
         vcMemberResource1.setNickName(vcMember.getNickname());
+        vcMemberResource1.setMemberAdd(vcMember.getMemberAdd());
         vcMemberResource1.setIsCertification(vcMember.getIsCertification());
         vcMemberResource1.setPhone(vcMember.getInviteCode());
         return vcMemberResource1;
@@ -332,18 +334,25 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     public void toRealName(Integer memberId) {
         VcMember   vcMember  = TaskMethod.getMember(memberId);
         VcMember   rsVcMember = vcMemberMapper.selectByMemberId(vcMember);
+
+        VcMemberResource  resource = TaskMethod.changvcMemberResource(rsVcMember.getSuperiorId());
+        VcMemberResource resource1 = vcMemberResourceMapper.selectByPrimaryKey(resource);
+
+        Double    empiricalValue    =  RegisterSingleton.getInstance().getInitEmpiricalValue();
+        VcMemberResource  vcMemberResourceId  = TaskMethod.changSuperiorId(resource1,empiricalValue);
+
         Double    activeValue =RegisterSingleton.getInstance().getRealNameReward();
         Integer   totalNum =RegisterSingleton.getInstance().getRealNameCycle();
 
         USubReward  uSubReward    =  TaskMethod.changUSubReward(rsVcMember.getSuperiorId(),memberId,Constant.REWARD_TASK1,activeValue,totalNum);
-
         VcMember  updateVcMember  =  TaskMethod.changRealnameMember(memberId);
 
         String      extensionMemberId   =    rsVcMember.getExtensionMemberId().replace(","+memberId,"");
         VcMemberResource   uqResource   =    RegisterMethod.updatePeople(extensionMemberId);
 
+        UEmpiricalValueList  uEmpiricalValueList =  MyMethod.insertUEmpiricalValueList(memberId,rsVcMember.getSuperiorId(),Constant.EMPIRIC_TYPE1,RegisterSingleton.getInstance().getInitEmpiricalValue());
         VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
-        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource);
+        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource,uEmpiricalValueList,vcMemberResourceId);
     }
 
     @Override

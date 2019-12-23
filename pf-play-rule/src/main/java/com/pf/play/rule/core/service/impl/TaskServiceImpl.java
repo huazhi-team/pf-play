@@ -2,6 +2,7 @@ package com.pf.play.rule.core.service.impl;
 
 import com.pf.play.common.utils.BeanUtils;
 import com.pf.play.common.utils.DateUtil;
+import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.SynchroMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.dao.BaseDao;
@@ -415,8 +416,11 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(record1.getSuperiorId(),Constant.REWARD_TYPE1,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
         VcMemberResource insertResource = TaskMethod.changeUpdateResource(memberId,masonry,charmValue);
         UMasonrySummary uMasonrySummary = TaskMethod.updateUMasonrySummary(memberId,Constant.TASK_SYMBOL_TYPE2,masonry);
+
+        UEmpiricalValueList    empiricalValueList=MyMethod.insertUEmpiricalValueList(memberId,memberId,taskId,taskType.getNeedResource());
+        VcMemberResource uqEmpirical =TaskMethod.changSuperiorId(resourceRs,taskType.getNeedResource());
         try{
-            ComponentUtil.transactionalService.buyTaskUpdateInfo(uTaskHave,insertResource,uMasonryListLog,myUvitalityValueList,uqUvitalityValueList,uMasonrySummary);
+            ComponentUtil.transactionalService.buyTaskUpdateInfo(uTaskHave,insertResource,uMasonryListLog,myUvitalityValueList,uqUvitalityValueList,uMasonrySummary,uqEmpirical,empiricalValueList);
         }catch (Exception e){
             e.printStackTrace();
             throw  new ServiceException(ErrorCode.ENUM_ERROR.TASK_ERRPR6.geteCode(),ErrorCode.ENUM_ERROR.TASK_ERRPR6.geteDesc());
@@ -589,7 +593,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
 //        List<VcMemberResource>     list    =   vcMemberResourceMapper.selectByTeamActive(updateMyResource);//查询英雄值
 //        VcMemberResource   vcMemberResource =  TaskMethod.updateHeroActive(uVitalityValueList.getMemberId(),list);
-        int   uqdateCount  =  vcMemberResourceMapper.updateByActiveValue(updateMyResource);
+        int   uqdateCount  =  0;
 
 
         if(uVitalityValueList.getRewardType()==1){
@@ -1025,5 +1029,10 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         // 解锁
         ComponentUtil.redisIdService.delLock(lockKey_send);
         return  1;
+    }
+
+    @Override
+    public int insertUMasonryListLog(UMasonryListLog listLog) {
+        return uMasonryListLogMapper.insertSelective(listLog);
     }
 }

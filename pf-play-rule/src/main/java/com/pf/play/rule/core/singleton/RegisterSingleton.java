@@ -35,6 +35,7 @@ public class RegisterSingleton {
 
     public Integer realNameCycle ;
     public Double realNameReward ;
+    public Double initEmpiricalValue ;
 
     public List<SysTypeDictionary> commenType ;
     public List<SysTypeDictionary> masonryType ;
@@ -42,6 +43,8 @@ public class RegisterSingleton {
     public List<SysTypeDictionary> vitalityType ;
     public List<SysTypeDictionary> taskType ;
     public List<SysTypeDictionary> procedType ;
+
+
 
     public VcMemberGive getVcMemberGive() {
         return vcMemberGive;
@@ -113,5 +116,13 @@ public class RegisterSingleton {
 
     public void setRealNameReward(Double realNameReward) {
         this.realNameReward = realNameReward;
+    }
+
+    public Double getInitEmpiricalValue() {
+        return initEmpiricalValue;
+    }
+
+    public void setInitEmpiricalValue(Double initEmpiricalValue) {
+        this.initEmpiricalValue = initEmpiricalValue;
     }
 }

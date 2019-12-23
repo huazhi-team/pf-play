@@ -70,5 +70,15 @@ public class Constant {
     public  static  long  TOKEN_EXPIRE_S    =  1296000L ;
 
 
+    /*********** 经验值类型 **********/
+    public  static  int  EMPIRIC_TYPE1    =  1 ; //实名制
+    public  static  int  EMPIRIC_TYPE2    =  2 ; //初级任务
+    public  static  int  EMPIRIC_TYPE3    =  3 ; //中级任务
+    public  static  int  EMPIRIC_TYPE4    =  4 ; //高级任务
+    public  static  int  EMPIRIC_TYPE5    =  5 ; //超级任务
+    public  static  int  EMPIRIC_TYPE6    =  6 ; //王者任务
+    public  static  int  EMPIRIC_TYPE7    =  7 ; //至尊任务
+
+
 
 }

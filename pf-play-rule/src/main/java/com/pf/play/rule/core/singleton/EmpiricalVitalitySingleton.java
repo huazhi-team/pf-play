@@ -1,5 +1,6 @@
 package com.pf.play.rule.core.singleton;
 
+import com.pf.play.rule.core.model.DisEmpiricalValueLevel;
 import com.pf.play.rule.core.model.DisVitalityValue;
 import com.pf.play.rule.core.model.SysTypeDictionary;
 
@@ -18,6 +19,11 @@ public class EmpiricalVitalitySingleton {
     private static ReentrantLock lock = new ReentrantLock();
 
     public List<DisVitalityValue> disVitalityValue ;
+
+
+    public List<DisEmpiricalValueLevel> disEmpiricalValueLevel ;
+
+//
 
     private EmpiricalVitalitySingleton() {
 
@@ -40,5 +46,13 @@ public class EmpiricalVitalitySingleton {
 
     public void setDisVitalityValue(List<DisVitalityValue> disVitalityValue) {
         this.disVitalityValue = disVitalityValue;
+    }
+
+    public List<DisEmpiricalValueLevel> getDisEmpiricalValueLevel() {
+        return disEmpiricalValueLevel;
+    }
+
+    public void setDisEmpiricalValueLevel(List<DisEmpiricalValueLevel> disEmpiricalValueLevel) {
+        this.disEmpiricalValueLevel = disEmpiricalValueLevel;
     }
 }

@@ -521,7 +521,7 @@ public class TaskMethod {
     public  static  UMasonrySummary  updateUMasonrySummary(Integer memberId,Integer type,Double masonry ){
         UMasonrySummary  uMasonrySummary = new UMasonrySummary();
         uMasonrySummary.setMemberId(memberId);
-        if(type==1){
+        if(type==Constant.TASK_SYMBOL_TYPE1){
             uMasonrySummary.setInMasonry(masonry);
         }else{
             uMasonrySummary.setOutMasonry(masonry);
@@ -1541,6 +1541,38 @@ public class TaskMethod {
         return  resource;
     }
 
+
+    /**
+     * @Description: 添加修改经验值的信息
+     * @param vcMemberResource1
+    * @param empiricalValue
+     * @return com.pf.play.rule.core.model.VcMemberResource
+     * @author long
+     * @date 2019/12/23 17:15
+     */
+    public static   VcMemberResource   changSuperiorId(VcMemberResource  vcMemberResource1,Double  empiricalValue){
+        VcMemberResource  vcMemberResource = new  VcMemberResource();
+        List<DisEmpiricalValueLevel>  list  = EmpiricalVitalitySingleton.getInstance().getDisEmpiricalValueLevel();
+        Integer  count = 0;
+        Integer  level = 0;
+        for(DisEmpiricalValueLevel  disEmpiricalValueLevel : list){
+            if(count==0){
+                count++;
+                continue;
+            }else{
+                if((vcMemberResource1.getEmpiricalValue()+empiricalValue)<disEmpiricalValueLevel.getUpgradeNum()){
+                    break;
+                }else{
+                    level++;
+                }
+            }
+        }
+
+        vcMemberResource.setEmpiricalLevel(level);
+        vcMemberResource.setMemberId(vcMemberResource1.getMemberId());
+        vcMemberResource.setEmpiricalValue(empiricalValue);
+        return   vcMemberResource;
+    }
 
 
 }

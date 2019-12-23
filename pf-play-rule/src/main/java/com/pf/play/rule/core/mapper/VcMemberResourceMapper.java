@@ -56,4 +56,6 @@ public interface VcMemberResourceMapper<T> extends BaseDao<T> {
 
     int updateUqPeople(VcMemberResource resource);
 
+    int updateEmpiricalValue(VcMemberResource resource);
+
 }

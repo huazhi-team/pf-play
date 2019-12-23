@@ -96,6 +96,8 @@ public interface TaskService  <T> extends BaseService<T> {
 
     int        myActiveValueUpdateResource(VcMemberResource updateMyResource,Integer type,Double masonry);
 
+    int        insertUMasonryListLog(UMasonryListLog listLog);
+
 //    void   vitalitySettlement();
 
 }

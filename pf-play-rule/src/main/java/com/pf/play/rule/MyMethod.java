@@ -38,6 +38,7 @@ public class MyMethod {
          MyFriendsResp   myFriendsResp  =  new MyFriendsResp();
          BeanUtils.copy(vcMemberResource,myFriendsResp);
          InviteMy inviteMy = new InviteMy();
+         inviteMy.setMemberAdd(vcMember.getMemberAdd());
          inviteMy.setUpdateTime(vcMember.getUpdateTimeStr());
          inviteMy.setDarenLevel(vcMember.getDarenLevel());
          inviteMy.setNickname(vcMember.getNickname());
@@ -54,6 +55,7 @@ public class MyMethod {
          List<InviteMy>  list1 = new ArrayList<>();
          for(VcMember vcMember1:list){
              InviteMy inviteMy1 = new InviteMy();
+             inviteMy1.setMemberAdd(vcMember1.getMemberAdd());
              inviteMy1.setCreateTime(vcMember1.getCreateTimeStr());
              inviteMy1.setUpdateTime(vcMember1.getUpdateTimeStr());
              inviteMy1.setDarenLevel(vcMember1.getDarenLevel());
@@ -379,6 +381,27 @@ public class MyMethod {
         myVitalityResp.setList(vitalityList);
 
         return   myVitalityResp ;
+    }
+
+    /**
+     * @Description: 经验值明细表
+     * @param memberId   会员id
+    * @param proMemberId   产生会员id
+    * @param type    类型:  1、实名制奖励 2、初级任务  3、中级任务  4、高级任务  5、超级任务 6、王者任务 7、至尊任务
+    * @param empiricValue   经验值
+     * @return com.pf.play.rule.core.model.UEmpiricalValueList
+     * @author long
+     * @date 2019/12/23 14:12
+     */
+    public  static  UEmpiricalValueList   insertUEmpiricalValueList(Integer memberId ,Integer proMemberId,Integer type,Double empiricValue){
+        UEmpiricalValueList   uEmpiricalValueList = new UEmpiricalValueList();
+        DateModel dateModel= TaskMethod.getDate();
+        BeanUtils.copy(dateModel,uEmpiricalValueList);
+        uEmpiricalValueList.setMemberId(proMemberId);
+        uEmpiricalValueList.setProMemberId(memberId);
+        uEmpiricalValueList.setRewardType(type);
+        uEmpiricalValueList.setEmpiricValue(empiricValue);
+        return   uEmpiricalValueList ;
     }
 
 

@@ -17,7 +17,8 @@ public interface TransactionalService<T> extends BaseService<T> {
     void  updateTask(UDayTaskReward record,UTaskHave uTaskHave);
 
     void  buyTaskUpdateInfo(UTaskHave uTaskHave,VcMemberResource resource,UMasonryListLog   uMasonryLog,
-                              UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary);
+                              UvitalityValueList my,UvitalityValueList uq,UMasonrySummary uMasonrySummary,
+                                VcMemberResource uqEmpirical,UEmpiricalValueList uEmpiricalValueList);
 
 
     void  receiveTaskUpdateInfo(UTaskHave uTaskHave,VcRewardReceive resource);
@@ -39,7 +40,7 @@ public interface TransactionalService<T> extends BaseService<T> {
 
     void  gratitudeupdateMyActiveValue(UMasonryListLog uMasonryListLog, UMasonryListLog taskTaskLog,UMasonryListLog realNameLog,VcMemberResource resource,UTaskHave uTaskHave);
 
-    void  realNameInfo( USubReward  uSubReward,VcMember  updateVcMember,VcMemberResource  vcMemberResource,VcMemberResource  uqResource);
+    void  realNameInfo( USubReward  uSubReward,VcMember  updateVcMember,VcMemberResource  vcMemberResource,VcMemberResource  uqResource,UEmpiricalValueList uEmpiricalValueList,VcMemberResource uqEmpirical);
 
     void  taskExpireUpdateInfo(UTaskHave uTaskHave,UvitalityValueList uVitalityValueList);
 

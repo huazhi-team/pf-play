@@ -210,6 +210,13 @@ public class VcMemberResource {
      */
     private Integer isCertification;
 
+    /**
+     * 头像地址
+     *
+     * @mbggenerated
+     */
+    private String memberAdd;
+
     public Long getId() {
         return id;
     }
@@ -468,5 +475,13 @@ public class VcMemberResource {
 
     public void setAllTeamPeople(Double allTeamPeople) {
         this.allTeamPeople = allTeamPeople;
+    }
+
+    public String getMemberAdd() {
+        return memberAdd;
+    }
+
+    public void setMemberAdd(String memberAdd) {
+        this.memberAdd = memberAdd;
     }
 }

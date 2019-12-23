@@ -468,4 +468,17 @@
     </if>
   </update>
 
+  <update id="updateEmpiricalValue" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
+    update vc_member_resource
+    <set >
+      <if test="empiricalValue != null" >
+        empirical_value = empirical_value + #{empiricalValue},
+      </if>
+      <if test="empiricalLevel != null" >
+        empirical_level = #{empiricalLevel},
+      </if>
+    </set>
+    where member_id=#{memberId}
+  </update>
+
 </mapper>

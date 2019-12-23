@@ -127,7 +127,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETDATA.getDesc(), null, data, null, map);
@@ -202,7 +202,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_ADDDATA.getDesc(), null, data, null, map);
@@ -270,7 +270,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getDesc(), null, data, null, map);
@@ -340,7 +340,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getDesc(), null, data, null, map);
@@ -409,7 +409,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getDesc(), null, data, null, map);
@@ -489,7 +489,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getDesc(), null, data, null, map);
@@ -572,7 +572,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getDesc(), null, data, null, map);
@@ -657,7 +657,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getDesc(), null, data, null, map);
@@ -741,7 +741,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getDesc(), null, data, null, map);
@@ -826,7 +826,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getDesc(), null, data, null, map);
@@ -904,7 +904,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getDesc(), null, data, null, map);
@@ -983,7 +983,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getDesc(), null, data, null, map);
@@ -1060,7 +1060,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getDesc(), null, data, null, map);
@@ -1138,7 +1138,7 @@ public class OrderController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getDesc(), null, data, null, map);

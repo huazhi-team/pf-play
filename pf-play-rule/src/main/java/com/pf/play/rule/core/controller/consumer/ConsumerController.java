@@ -124,7 +124,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPFIRSTPAYCODE.getDesc(), null, data, null, map);
@@ -199,7 +199,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPPAYCODE.getDesc(), null, data, null, map);
@@ -277,7 +277,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETFIXED.getDesc(), null, data, null, map);
@@ -356,7 +356,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, null, map);
@@ -441,7 +441,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_UPFIXED.getDesc(), null, data, null, map);
@@ -510,7 +510,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETRATIO.getDesc(), null, data, null, map);
@@ -580,7 +580,7 @@ public class ConsumerController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getType(),
                     ServerConstant.InterfaceEnum.CONSUMER_GETBASIC.getDesc(), null, data, null, map);
@@ -667,7 +667,7 @@ public class ConsumerController {
 //            // 返回数据给客户端
 //            return JsonResult.successResult(resultDataModel, cgid, sgid);
 //        }catch (Exception e){
-//            Map<String,String> map = ExceptionMethod.getException(e);
+//            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
 //            // 添加异常
 //            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestConsumer, ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getType(),
 //                    ServerConstant.InterfaceEnum.CONSUMER_ADDFIXED.getDesc(), null, data, null, map);

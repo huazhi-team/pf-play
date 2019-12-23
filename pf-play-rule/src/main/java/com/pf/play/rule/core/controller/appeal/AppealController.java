@@ -126,7 +126,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getDesc(), null, data, null, map);
@@ -205,7 +205,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getDesc(), null, data, null, map);
@@ -283,7 +283,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getDesc(), null, data, null, map);
@@ -360,7 +360,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getDesc(), null, data, null, map);
@@ -462,7 +462,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getDesc(), null, data, null, map);
@@ -540,7 +540,7 @@ public class AppealController {
             // 返回数据给客户端
             return JsonResult.successResult(resultDataModel, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // 添加异常
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getDesc(), null, data, null, map);

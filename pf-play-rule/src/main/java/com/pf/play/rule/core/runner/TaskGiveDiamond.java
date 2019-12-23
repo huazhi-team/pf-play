@@ -40,46 +40,49 @@ public class TaskGiveDiamond {
     private final static Logger log = LoggerFactory.getLogger(TaskGiveDiamond.class);
 
 //    @Scheduled(cron = "0 0 1 * * ?")
-    @Scheduled(cron = "1 * * * * ?")
-    public void giveDiamond() throws Exception{
-        // 昨天
-        int yesterDay = DateUtil.getIntYesterday();
-        String oneDayServiceCharge = ComponentUtil.tradeService.getOneDayServiceCharge(yesterDay);
-        log.info("oneDayServiceCharge:" + oneDayServiceCharge);
-        if (Double.parseDouble(oneDayServiceCharge) > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-            // 手续费分出给用户的比例
-            StrategyModel strategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SERVICE_CHARGE_RATIO.getStgType());
-            StrategyModel strategyModel = ComponentUtil.strategyService.getStrategyModel(strategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
-            // 具体要分的钻石=手续费X手续费分出给用户的比例
-            String stgRatio = StringUtil.getBigDecimalDivide(strategyModel.getStgValue(), String.valueOf(100));
-            String giveServiceChargeNum = StringUtil.getMultiply(oneDayServiceCharge, stgRatio);
-            // 等级达人分配的奖励比例
-            List<DisVitalityValue> disVitalityValueList = EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
-            for (DisVitalityValue disVitalityValue : disVitalityValueList){
-                if (disVitalityValue.getDarenLevel() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-                    // 具体每个等级总共要分的钻石=具体要分的钻石X达人等级分出的占比
-                    String everyLevelNum = StringUtil.getMultiply(giveServiceChargeNum, String.valueOf(disVitalityValue.getRewardNum()/100));
-                    List<ConsumerModel> consumerList = ComponentUtil.consumerFixedService.getConsumerByDarenLevel(disVitalityValue.getDarenLevel());
-                    if (consumerList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-                        // 每个人分得的钻石个数 = 具体每个等级总共要分的钻石/这个等级下总共多少人
-                        String everyConsumerNum = StringUtil.getBigDecimalDivide(everyLevelNum, String.valueOf(consumerList.size()));
-                        for (ConsumerModel consumerModel : consumerList){
-                            // 给用户添加钻石
-                            ConsumerModel addConsumerDiamond = PublicMethod.assembleConsumerAddMasonry(consumerModel.getMemberId(), everyConsumerNum);
-                            ComponentUtil.consumerFixedService.updateConsumerAddMasonry(addConsumerDiamond);
-                            // 添加用户赠送的流水
-                            int taskType = TaskMethod.gettaskType(disVitalityValue.getDarenLevel());
-                            UMasonryListLog uMasonryListLog = TaskMethod.changeUMasonryListLog(consumerModel.getMemberId().intValue(),null, taskType,Constant.TASK_SYMBOL_TYPE1,Double.valueOf(everyConsumerNum));
-                            ComponentUtil.taskService.insertUMasonryListLog(uMasonryListLog);
+    @Scheduled(cron = "9 * * * * ?")
+    public void giveDiamond(){
+        try{
+            // 昨天
+            int yesterDay = DateUtil.getIntYesterday();
+            String oneDayServiceCharge = ComponentUtil.tradeService.getOneDayServiceCharge(yesterDay);
+            log.info("-----------------oneDayServiceCharge:" + oneDayServiceCharge);
+            if (Double.parseDouble(oneDayServiceCharge) > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+                // 手续费分出给用户的比例
+                StrategyModel strategyQuery = PublicMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.STG_SERVICE_CHARGE_RATIO.getStgType());
+                StrategyModel strategyModel = ComponentUtil.strategyService.getStrategyModel(strategyQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+                // 具体要分的钻石=手续费X手续费分出给用户的比例
+                String stgRatio = StringUtil.getBigDecimalDivide(strategyModel.getStgValue(), String.valueOf(100));
+                String giveServiceChargeNum = StringUtil.getMultiply(oneDayServiceCharge, stgRatio);
+                // 等级达人分配的奖励比例
+                List<DisVitalityValue> disVitalityValueList = EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
+                for (DisVitalityValue disVitalityValue : disVitalityValueList){
+                    if (disVitalityValue.getDarenLevel() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+                        // 具体每个等级总共要分的钻石=具体要分的钻石X达人等级分出的占比
+                        String everyLevelNum = StringUtil.getMultiply(giveServiceChargeNum, String.valueOf(disVitalityValue.getRewardNum()/100));
+                        List<ConsumerModel> consumerList = ComponentUtil.consumerFixedService.getConsumerByDarenLevel(disVitalityValue.getDarenLevel());
+                        if (consumerList.size() > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+                            // 每个人分得的钻石个数 = 具体每个等级总共要分的钻石/这个等级下总共多少人
+                            String everyConsumerNum = StringUtil.getBigDecimalDivide(everyLevelNum, String.valueOf(consumerList.size()));
+                            for (ConsumerModel consumerModel : consumerList){
+                                // 给用户添加钻石
+                                ConsumerModel addConsumerDiamond = PublicMethod.assembleConsumerAddMasonry(consumerModel.getMemberId(), everyConsumerNum);
+                                ComponentUtil.consumerFixedService.updateConsumerAddMasonry(addConsumerDiamond);
+                                // 添加用户赠送的流水
+                                int taskType = TaskMethod.gettaskType(disVitalityValue.getDarenLevel());
+                                UMasonryListLog uMasonryListLog = TaskMethod.changeUMasonryListLog(consumerModel.getMemberId().intValue(),null, taskType,Constant.TASK_SYMBOL_TYPE1,Double.valueOf(everyConsumerNum));
+                                ComponentUtil.taskService.insertUMasonryListLog(uMasonryListLog);
+                            }
+
                         }
 
                     }
-
-
-
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
 
     }
 }

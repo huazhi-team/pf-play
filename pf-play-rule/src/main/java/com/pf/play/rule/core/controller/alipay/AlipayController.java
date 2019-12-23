@@ -190,7 +190,7 @@ public class AlipayController {
             // 返回数据给客户端
             return JsonResult.successResult(null, cgid, sgid);
         }catch (Exception e){
-            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             log.error(String.format("this AlipayController.sendAli() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, request.getQueryString()));
             e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);

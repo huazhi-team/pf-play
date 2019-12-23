@@ -167,7 +167,7 @@
     <select id="getConsumer" parameterType="Object" resultType="com.pf.play.rule.core.model.consumer.ConsumerModel">
         select a.member_id,a.nickname,a.invite_code as phone_num,a.is_certification,a.pay_password,a.is_active,
         b.fixed_type,b.fixed_num,
-        c.day_masonry,c.frozen_masonry,c.empirical_level,
+        c.day_masonry,c.frozen_masonry,c.empirical_level,c.is_business,
         d.transaction_fee as ratio
         from vc_member a left join tb_pf_consumer_fixed b on a.member_id = b.member_id and b.yn = 0
         left join vc_member_resource c on a.member_id = c.member_id and c.is_valid = 1

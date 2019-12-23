@@ -57,6 +57,11 @@ public class ConsumerModel implements Serializable {
     private Integer empiricalLevel;
 
     /**
+     * 是否能交易  1、不能交易 2 是能交易
+     */
+    private Integer isBusiness;
+
+    /**
      * 手续费
      */
     private String ratio;
@@ -243,5 +248,13 @@ public class ConsumerModel implements Serializable {
 
     public void setAddReduceNum(String addReduceNum) {
         this.addReduceNum = addReduceNum;
+    }
+
+    public Integer getIsBusiness() {
+        return isBusiness;
+    }
+
+    public void setIsBusiness(Integer isBusiness) {
+        this.isBusiness = isBusiness;
     }
 }

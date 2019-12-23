@@ -1487,6 +1487,11 @@ public class PublicMethod {
             throw new ServiceException(PfErrorCode.ENUM_ERROR.T00011.geteCode(), PfErrorCode.ENUM_ERROR.T00011.geteDesc());
         }
 
+        // 卖家是否能交易  1、不能交易 2 是能交易；用户必须得打赏过,才能进行交易!
+        if(consumerModel.getIsBusiness() == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00030.geteCode(), PfErrorCode.ENUM_ERROR.T00030.geteDesc());
+        }
+
     }
 
 

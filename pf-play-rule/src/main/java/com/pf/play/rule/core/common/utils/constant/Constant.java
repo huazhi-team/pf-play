@@ -26,6 +26,11 @@ public class Constant {
     public static  int   TASK_TYPE11 = 11;//实名制获取奖励
     public static  int   TASK_TYPE12 = 12;//活力值增加
     public static  int   TASK_TYPE13= 13; //活力值到期
+    public static  int   TASK_TYPE14= 14; //平台等级分红-1级
+    public static  int   TASK_TYPE15= 15; //平台等级分红-2级
+    public static  int   TASK_TYPE16= 16; //平台等级分红-3级
+    public static  int   TASK_TYPE17= 17; //平台等级分红-4级
+    public static  int   TASK_TYPE18= 18; //平台等级分红-5级
 
     /*****************符号类型********************/
     public static  int   TASK_SYMBOL_TYPE1 = 1;//加

@@ -469,6 +469,19 @@
     </update>
 
 
+    <!-- 根据id查询信息-->
+    <select id="getOneDayServiceCharge" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select
+            CAST(
+              SUM(service_charge) AS DECIMAL (19, 2)
+            ) AS service_charge
+        from tb_pf_order_trade a
+        where 1=1
+        and a.curday = #{curday}
+        and a.trade_status = 5 and a.yn = 0
+    </select>
+
+
 
 
 

@@ -3130,6 +3130,22 @@ public class PublicMethod {
     }
 
 
+    /**
+     * @Description: 组装用户要加的钻石数据
+     * @param memberId - 用户ID
+     * @param addReduceNum - 要加的钻石数量
+     * @return ConsumerModel
+     * @author yoko
+     * @date 2019/12/3 22:17
+     */
+    public static ConsumerModel assembleConsumerAddMasonry(long memberId, String addReduceNum){
+        ConsumerModel resBean = new ConsumerModel();
+        resBean.setMemberId(memberId);
+        resBean.setAddReduceNum(addReduceNum);
+        return resBean;
+    }
+
+
 
     public static void main(String [] args){
 

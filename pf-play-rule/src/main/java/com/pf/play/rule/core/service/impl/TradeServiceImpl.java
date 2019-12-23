@@ -147,6 +147,11 @@ public class TradeServiceImpl<T> extends BaseServiceImpl<T> implements TradeServ
         return tradeMapper.updateTradeOverTime(model);
     }
 
+    @Override
+    public String getOneDayServiceCharge(int curday) {
+        return tradeMapper.getOneDayServiceCharge(curday);
+    }
+
     /**
      * @Description: 执行订单交易
      * @param tradeModel - 订单交易流水信息

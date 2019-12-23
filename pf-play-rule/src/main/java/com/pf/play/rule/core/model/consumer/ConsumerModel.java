@@ -106,6 +106,11 @@ public class ConsumerModel implements Serializable {
      */
     private String addReduceNum;
 
+    /**
+     * 达人等级
+     */
+    private Integer darenLevel;
+
     public Long getMemberId() {
         return memberId;
     }
@@ -256,5 +261,13 @@ public class ConsumerModel implements Serializable {
 
     public void setIsBusiness(Integer isBusiness) {
         this.isBusiness = isBusiness;
+    }
+
+    public Integer getDarenLevel() {
+        return darenLevel;
+    }
+
+    public void setDarenLevel(Integer darenLevel) {
+        this.darenLevel = darenLevel;
     }
 }

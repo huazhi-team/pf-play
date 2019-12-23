@@ -56,4 +56,14 @@ public interface TradeMapper<T> extends BaseDao<T> {
      * @date 2019/12/10 10:05
      */
     public int updateTradeOverTime(TradeModel model);
+
+    /**
+     * @Description: 获取一天的订单交易手续费
+     * SUM(service_charge)
+     * @param curday - 日期
+     * @return String
+     * @author yoko
+     * @date 2019/12/23 15:54
+     */
+    public String getOneDayServiceCharge(int curday);
 }

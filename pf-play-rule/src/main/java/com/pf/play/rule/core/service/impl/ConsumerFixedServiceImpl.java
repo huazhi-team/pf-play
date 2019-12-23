@@ -16,6 +16,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * @Description 用户固定账号的Service层的实现层
@@ -80,7 +82,17 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
     }
 
     @Override
+    public int updateConsumerAddMasonry(ConsumerModel model) {
+        return consumerFixedMapper.updateConsumerAddMasonry(model);
+    }
+
+    @Override
     public int updateConsumerMasonryByThaw(ConsumerModel model) throws Exception {
         return consumerFixedMapper.updateConsumerMasonryByThaw(model);
+    }
+
+    @Override
+    public List<ConsumerModel> getConsumerByDarenLevel(int darenLevel) {
+        return consumerFixedMapper.getConsumerByDarenLevel(darenLevel);
     }
 }

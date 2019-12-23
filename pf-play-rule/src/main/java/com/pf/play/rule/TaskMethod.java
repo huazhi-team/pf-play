@@ -1541,6 +1541,29 @@ public class TaskMethod {
         return  resource;
     }
 
+    /**
+     * @Description: 根据达人等级，返回对应的任务类型值
+     * @param darenLevel - 达人等级
+     * @return int
+     * @author yoko
+     * @date 2019/12/23 19:12
+    */
+    public static int gettaskType(int darenLevel){
+        int taskType = 0;
+        if (darenLevel == 1){
+            taskType = Constant.TASK_TYPE14;
+        }else if (darenLevel == 2){
+            taskType = Constant.TASK_TYPE15;
+        }else if (darenLevel == 3){
+            taskType = Constant.TASK_TYPE16;
+        }else if (darenLevel == 4){
+            taskType = Constant.TASK_TYPE17;
+        }else if (darenLevel == 5){
+            taskType = Constant.TASK_TYPE18;
+        }
+        return taskType;
+    }
+
 
     /**
      * @Description: 添加修改经验值的信息

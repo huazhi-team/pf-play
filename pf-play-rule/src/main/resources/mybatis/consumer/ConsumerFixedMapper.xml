@@ -222,6 +222,15 @@
 
 
 
+    <!-- 根据达人等级查询用户-->
+    <select id="getConsumerByDarenLevel" parameterType="java.lang.Integer" resultType="com.pf.play.rule.core.model.consumer.ConsumerModel">
+        select a.id,a.member_id,a.daren_level
+        from vc_member_resource a
+        where a.is_valid = 1 and a.daren_level = #{darenLevel}
+    </select>
+
+
+
 
 
 </mapper>

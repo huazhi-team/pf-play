@@ -629,6 +629,7 @@ public class PublicMethod {
         dto.setGrowthRate(growthRate);
         // 判断是涨了还是跌了
         int growthRateType = getGrowthRateType(dto.getT_exchangePrice(), dto.getY_exchangePrice());
+        dto.setGrowthRateType(growthRateType);
         return dto;
     }
 

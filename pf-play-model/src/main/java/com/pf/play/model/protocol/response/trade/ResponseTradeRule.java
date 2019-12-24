@@ -24,7 +24,7 @@ public class ResponseTradeRule extends BaseResponse implements Serializable {
     public String t_tallestPrice;
     public String y_tallestPrice;
     public String growthRate;
-    public String growthRateType;
+    public Integer growthRateType;
     public String maxPrice;
     public String minPrice;
 
@@ -121,11 +121,11 @@ public class ResponseTradeRule extends BaseResponse implements Serializable {
         this.minPrice = minPrice;
     }
 
-    public String getGrowthRateType() {
+    public Integer getGrowthRateType() {
         return growthRateType;
     }
 
-    public void setGrowthRateType(String growthRateType) {
+    public void setGrowthRateType(Integer growthRateType) {
         this.growthRateType = growthRateType;
     }
 }

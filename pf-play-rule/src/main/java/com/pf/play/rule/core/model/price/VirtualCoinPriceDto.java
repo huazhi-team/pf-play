@@ -42,7 +42,7 @@ public class VirtualCoinPriceDto implements Serializable {
     /**
      * 涨幅类型：1表示涨，2表示跌
      */
-    private String growthRateType;
+    private Integer growthRateType;
 
     /**
      * 当日的推荐的最高价：允许用户填写的最高的价格
@@ -111,11 +111,11 @@ public class VirtualCoinPriceDto implements Serializable {
         this.minPrice = minPrice;
     }
 
-    public String getGrowthRateType() {
+    public Integer getGrowthRateType() {
         return growthRateType;
     }
 
-    public void setGrowthRateType(String growthRateType) {
+    public void setGrowthRateType(Integer growthRateType) {
         this.growthRateType = growthRateType;
     }
 }

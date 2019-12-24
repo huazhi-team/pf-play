@@ -627,7 +627,27 @@ public class PublicMethod {
         }
         String growthRate = StringUtil.getGrowthRate(dto.getT_exchangePrice(), dto.getY_exchangePrice());
         dto.setGrowthRate(growthRate);
+        // 判断是涨了还是跌了
+        int growthRateType = getGrowthRateType(dto.getT_exchangePrice(), dto.getY_exchangePrice());
         return dto;
+    }
+
+    /**
+     * @Description: 判断两个值大小：第一个值大于等于第二个值则返回1；第一个值小于第二个值则返回2
+     * @param t_exchangePrice - 数字1
+     * @param y_exchangePrice - 数字2
+     * @return
+     * @author yoko
+     * @date 2019/12/24 17:40
+    */
+    public static int getGrowthRateType(String t_exchangePrice, String y_exchangePrice){
+        double t = Double.parseDouble(t_exchangePrice);
+        double y = Double.parseDouble(y_exchangePrice);
+        if (t >= y){
+            return 1;
+        }else {
+            return 2;
+        }
     }
 
 

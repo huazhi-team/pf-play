@@ -872,6 +872,18 @@ public class PublicMethod {
         return JSON.toJSONString(dataModel);
     }
 
+    /**
+     * @Description: check校验用户信息的有效性
+     * @param consumerModel - 用户基本信息
+     * @return 
+     * @author yoko
+     * @date 2019/12/25 14:55 
+    */
+    public static void checkConsumerByOrderQuery(ConsumerModel consumerModel) throws Exception{
+        if (consumerModel == null){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.D00026.geteCode(), PfErrorCode.ENUM_ERROR.D00026.geteDesc());
+        }
+    }
 
 
     /**
@@ -916,16 +928,30 @@ public class PublicMethod {
      * @param token - 登录token
      * @param sign - 签名
      * @param orderModel - 订单详情信息
+     * @param consumerModel - 用户信息
      * @return java.lang.String
      * @author yoko
      * @date 2019/11/25 22:45
      */
-    public static String assembleOrderInfoResult(long stime, String token, String sign, OrderModel orderModel){
+    public static String assembleOrderInfoResult(long stime, String token, String sign, OrderModel orderModel, ConsumerModel consumerModel){
         ResponseOrder dataModel = new ResponseOrder();
         if (orderModel != null){
             ConsumerOrder consumerOrder = BeanUtils.copy(orderModel, ConsumerOrder.class);
             dataModel.coOrder = consumerOrder;
+            // 计算手续费：手续费=订单交易的数量*具体手续费
+            String serviceCharge = StringUtil.getMultiply(orderModel.getTradeNum(), StringUtil.getBigDecimalDivide(consumerModel.getRatio(), String.valueOf(100)));
+            dataModel.coOrder.serviceCharge = serviceCharge;
+            // 预付的总钻石=交易数量+手续费
+            String totalCost = StringUtil.getBigDecimalAdd(orderModel.getTradeNum(), serviceCharge);
+            dataModel.coOrder.totalCost = totalCost;
+            if (!StringUtils.isBlank(consumerModel.getDayMasonry())){
+                dataModel.coOrder.dayMasonry = consumerModel.getDayMasonry();
+            }
+            if (!StringUtils.isBlank(consumerModel.getRatio())){
+                dataModel.coOrder.ratio = consumerModel.getRatio();
+            }
         }
+
         dataModel.setStime(stime);
         dataModel.setToken(token);
         dataModel.setSign(sign);
@@ -1256,7 +1282,7 @@ public class PublicMethod {
      * @param requestOrder - 订单信息
      * @param memberId - 用户ID
     //     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成 --这里查询状态为1的
-     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
+//     * @param sortType - 排序类型：1按照时间降序排，2按照时间升序，3按照交易数量降序，4按照数量升序，5按照单价降序，6按照单价升序
      * @return
      * @author yoko
      * @date 2019/11/26 21:31

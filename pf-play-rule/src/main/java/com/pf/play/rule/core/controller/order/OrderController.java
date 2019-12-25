@@ -16,6 +16,7 @@ import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.common.utils.constant.PfErrorCode;
 import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.controller.price.VirtualCoinPriceController;
+import com.pf.play.rule.core.model.consumer.ConsumerModel;
 import com.pf.play.rule.core.model.order.OrderModel;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceDto;
 import com.pf.play.rule.core.model.price.VirtualCoinPriceModel;
@@ -249,14 +250,17 @@ public class OrderController {
             token = requestOrder.getToken();
             // 校验ctime
             // 校验sign
-
+            // 查询用户的基本信息
+            ConsumerModel consumerQuery = PublicMethod.assembleConsumerQuery(memberId);
+            ConsumerModel consumerModel = ComponentUtil.consumerFixedService.getConsumer(consumerQuery);
+            PublicMethod.checkConsumerByOrderQuery(consumerModel);
             // 订单详情
             OrderModel orderQuery = PublicMethod.assembleOrderInfoQuery(requestOrder);
             OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(stime, token, secretKeySign); // stime+token+秘钥=sign
-            String strData = PublicMethod.assembleOrderInfoResult(stime, token, sign, orderModel);
+            String strData = PublicMethod.assembleOrderInfoResult(stime, token, sign, orderModel, consumerModel);
             // 数据加密
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();

@@ -33,6 +33,10 @@ public class ConsumerOrder implements Serializable {
 
     public String sellFixedNum;
 
+    public String totalCost;
+    public String dayMasonry;
+    public String ratio;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -184,5 +188,29 @@ public class ConsumerOrder implements Serializable {
 
     public void setSellFixedNum(String sellFixedNum) {
         this.sellFixedNum = sellFixedNum;
+    }
+
+    public String getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(String totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public String getDayMasonry() {
+        return dayMasonry;
+    }
+
+    public void setDayMasonry(String dayMasonry) {
+        this.dayMasonry = dayMasonry;
+    }
+
+    public String getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(String ratio) {
+        this.ratio = ratio;
     }
 }

@@ -594,10 +594,10 @@ public class PublicMethod {
     */
     public static VirtualCoinPriceModel assembleVirtualCoinPriceQuery(){
         // 获取昨天的时间
-        VirtualCoinPriceModel resBen = new VirtualCoinPriceModel();
-        resBen.setCurdayStart(DateUtil.getIntYesterday());
-        resBen.setCurdayEnd(DateUtil.getDayNumber(new Date()));
-        return resBen;
+        VirtualCoinPriceModel resBean = new VirtualCoinPriceModel();
+        resBean.setCurdayStart(DateUtil.getIntYesterday());
+        resBean.setCurdayEnd(DateUtil.getDayNumber(new Date()));
+        return resBean;
     }
 
 
@@ -742,15 +742,15 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderQuery(RequestOrder requestOrder, long memberId, int ownType){
-        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
-        resBen.setMemberId(memberId);
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
         if (!StringUtils.isBlank(requestOrder.getPhoneNum())){
-            resBen.setInviteCode(requestOrder.getPhoneNum());
+            resBean.setInviteCode(requestOrder.getPhoneNum());
         }
-        resBen.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
-        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
-        resBen.setOwnType(ownType);
-        return resBen;
+        resBean.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        resBean.setOwnType(ownType);
+        return resBean;
     }
 
 
@@ -845,13 +845,13 @@ public class PublicMethod {
      * @date 2019/11/26 11:19
      */
     public static OrderModel assembleAddOrderData(RequestOrder requestOrder, long memberId, String orderNo){
-        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
-        resBen.setMemberId(memberId);
-        resBen.setOrderNo(orderNo);
-        resBen.setCurday(DateUtil.getDayNumber(new Date()));
-        resBen.setCurhour(DateUtil.getHour(new Date()));
-        resBen.setCurminute(DateUtil.getCurminute(new Date()));
-        return resBen;
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
+        resBean.setOrderNo(orderNo);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
     }
 
 
@@ -894,9 +894,9 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderInfoQuery(RequestOrder requestOrder){
-        OrderModel resBen = new OrderModel();
-        resBen.setOrderNo(requestOrder.getOrderNo());
-        return resBen;
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(requestOrder.getOrderNo());
+        return resBean;
     }
 
 
@@ -913,12 +913,12 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleBuySellOrderQuery(RequestOrder requestOrder, long memberId, int orderTradeStatus, int orderStatus, int sortType){
-        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
-        resBen.setMemberId(memberId);
-        resBen.setOrderTradeStatus(orderTradeStatus);
-        resBen.setOrderStatus(orderStatus);
-        resBen.setSortType(sortType);
-        return resBen;
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        resBean.setOrderStatus(orderStatus);
+        resBean.setSortType(sortType);
+        return resBean;
     }
 
 
@@ -1061,11 +1061,11 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleCancelOrderQuery(RequestOrder requestOrder, long memberId, int orderStatus, int sortType){
-        OrderModel resBen = BeanUtils.copy(requestOrder, OrderModel.class);
-        resBen.setMemberId(memberId);
-        resBen.setOrderStatus(orderStatus);
-        resBen.setSortType(sortType);
-        return resBen;
+        OrderModel resBean = BeanUtils.copy(requestOrder, OrderModel.class);
+        resBean.setMemberId(memberId);
+        resBean.setOrderStatus(orderStatus);
+        resBean.setSortType(sortType);
+        return resBean;
     }
 
 
@@ -1458,13 +1458,13 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderQueryByTrade(RequestTrade requestTrade, long memberId, int ownType){
-        OrderModel resBen = new OrderModel();
-        resBen.setMemberId(memberId);
-        resBen.setOrderNo(requestTrade.getOrderNo());
-        resBen.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
-        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
-        resBen.setOwnType(ownType);
-        return resBen;
+        OrderModel resBean = new OrderModel();
+        resBean.setMemberId(memberId);
+        resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        resBean.setOwnType(ownType);
+        return resBean;
     }
 
     /**
@@ -1761,12 +1761,12 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderQueryByConfirmPay(RequestTrade requestTrade, long memberId, int orderTradeStatus){
-        OrderModel resBen = new OrderModel();
-        resBen.setMemberId(memberId);
-        resBen.setOrderNo(requestTrade.getOrderNo());
-        resBen.setOrderTradeStatus(orderTradeStatus);
-        resBen.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
-        return resBen;
+        OrderModel resBean = new OrderModel();
+        resBean.setMemberId(memberId);
+        resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+        return resBean;
     }
 
 
@@ -1853,11 +1853,11 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderUpByConfirmReceipt(RequestTrade requestTrade, int orderTradeStatus, int orderStatus){
-        OrderModel resBen = new OrderModel();
-        resBen.setOrderNo(requestTrade.getOrderNo());
-        resBen.setOrderTradeStatus(orderTradeStatus);
-        resBen.setOrderStatus(orderStatus);
-        return resBen;
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        resBean.setOrderStatus(orderStatus);
+        return resBean;
     }
 
     /**
@@ -2415,13 +2415,13 @@ public class PublicMethod {
      * @date 2019/12/5 15:01
      */
     public static AppealModel assembleAppealQuery(RequestAppeal requestAppeal, long memberId, int type){
-        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
+        AppealModel resBean = BeanUtils.copy(requestAppeal, AppealModel.class);
         if(type == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
-            resBen.setMemberId(memberId);
+            resBean.setMemberId(memberId);
         }else {
-            resBen.setInvolveMemberId(memberId);
+            resBean.setInvolveMemberId(memberId);
         }
-        return resBen;
+        return resBean;
     }
 
 
@@ -2546,9 +2546,9 @@ public class PublicMethod {
      * @date 2019/12/5 15:01
      */
     public static AppealModel assembleAppealUpdateActive(RequestAppeal requestAppeal, long memberId){
-        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
-        resBen.setMemberId(memberId);
-        return resBen;
+        AppealModel resBean = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBean.setMemberId(memberId);
+        return resBean;
     }
 
 
@@ -2614,9 +2614,9 @@ public class PublicMethod {
      * @date 2019/12/5 15:01
      */
     public static AppealModel assembleAppealUpdatePassive(RequestAppeal requestAppeal, long memberId){
-        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
-        resBen.setInvolveMemberId(memberId);
-        return resBen;
+        AppealModel resBean = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBean.setInvolveMemberId(memberId);
+        return resBean;
     }
 
 
@@ -2668,9 +2668,9 @@ public class PublicMethod {
      * @date 2019/11/22 18:01
      */
     public static OrderModel assembleOrderQueryByAppeal(String orderNo){
-        OrderModel resBen = new OrderModel();
-        resBen.setOrderNo(orderNo);
-        return resBen;
+        OrderModel resBean = new OrderModel();
+        resBean.setOrderNo(orderNo);
+        return resBean;
     }
 
     /**
@@ -2766,19 +2766,19 @@ public class PublicMethod {
      * @date 2019/12/6 16:02
      */
     public static AppealModel assembleAppealAddData(RequestAppeal requestAppeal, TradeModel tradeModel, long memberId, int identityType){
-        AppealModel resBen = BeanUtils.copy(requestAppeal, AppealModel.class);
-        resBen.setOrderId(tradeModel.getOrderId());
-        resBen.setMemberId(memberId);
-        resBen.setIdentityType(identityType);
+        AppealModel resBean = BeanUtils.copy(requestAppeal, AppealModel.class);
+        resBean.setOrderId(tradeModel.getOrderId());
+        resBean.setMemberId(memberId);
+        resBean.setIdentityType(identityType);
         if (identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE){
             // 申诉人如果是买家；则涉及的用户ID是卖家（反驳人）
-            resBen.setInvolveMemberId(tradeModel.getSellMemberId());
+            resBean.setInvolveMemberId(tradeModel.getSellMemberId());
         }else if(identityType == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
             // 申诉人如果是卖家；则涉及的用户ID是买家（反驳人）
-            resBen.setInvolveMemberId(tradeModel.getBuyMemberId());
+            resBean.setInvolveMemberId(tradeModel.getBuyMemberId());
         }
-        resBen.setCurday(DateUtil.getDayNumber(new Date()));
-        return resBen;
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        return resBean;
     }
 
 
@@ -3174,6 +3174,26 @@ public class PublicMethod {
         if (StringUtils.isBlank(aliOrder)){
             throw new ServiceException(PfErrorCode.ENUM_ERROR.U00004.geteCode(), PfErrorCode.ENUM_ERROR.U00004.geteDesc());
         }
+    }
+
+    /**
+     * @Description: 组装阿里支付请求的纪录数据
+     * @param alipayModel - 阿里支付的数据
+     * @param aliOrder - 阿里支付宝请求之后返回的订单串
+     * @return
+     * @author yoko
+     * @date 2019/12/26 14:42
+    */
+    public static AlipayModel assembleAlipayModel(AlipayModel alipayModel, String aliOrder){
+        AlipayModel resBean = new AlipayModel();
+        resBean = alipayModel;
+        if (!StringUtils.isBlank(aliOrder)){
+            resBean.setAliOrder(aliOrder);
+        }
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
     }
 
 

@@ -33,6 +33,7 @@ public class ComponentUtil {
     public static SynchroService synchroService;
     public static RegionService regionService;
     public static StreamConsumerService streamConsumerService;
+    public static AlipayService alipayService;
 
 //    public static AipRequestInfoService aipRequestInfoService;
 //    public static AipResultInfoService aipResultInfoService;

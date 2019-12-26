@@ -103,7 +103,7 @@ public class AlipayController {
             data = StringUtil.decoderBase64(jsonData);
             requestAlipay  = JSON.parseObject(data, RequestAlipay.class);
             // check校验数据、校验用户是否登录、获得用户ID
-            memberId = PublicMethod.checkAlipayData(requestAlipay);
+//            memberId = PublicMethod.checkAlipayData(requestAlipay);
             token = requestAlipay.getToken();
             // 校验ctime
             // 校验sign
@@ -119,6 +119,11 @@ public class AlipayController {
             AlipayModel alipayModel = PublicMethod.assembleAlipayData(requestAlipay, sgid, totalAmount);
             String aliOrder = Alipay.createAlipaySend(alipayModel, alipayNotifyUrl);
             PublicMethod.checkAliOrder(aliOrder);
+            // 添加请求阿里支付的纪录
+            AlipayModel addAlipayModel = PublicMethod.assembleAlipayModel(alipayModel, aliOrder);
+            ComponentUtil.alipayService.add(addAlipayModel);
+
+
             // 组装返回客户端的数据
             long stime = System.currentTimeMillis();
             String sign = SignUtil.getSgin(aliOrder, stime, token, secretKeySign); // aliOrder+stime+token+秘钥=sign

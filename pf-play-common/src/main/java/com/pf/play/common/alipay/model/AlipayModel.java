@@ -39,6 +39,32 @@ public class AlipayModel {
      */
     public String productCode;
 
+    /**
+     * 订单状态：1正常，2超时，3完成交易
+     */
+    public Integer outTradeStatus;
+
+    /**
+     * 创建日期：存的日期格式20160530
+     */
+    public Integer curday;
+
+    /**
+     * 创建所属小时：24小时制
+     */
+    public Integer curhour;
+
+    /**
+     * 创建所属分钟：60分钟制
+     */
+    public Integer curminute;
+
+    /**
+     * 阿里返回的订单串
+     */
+    public String aliOrder;
+
+
 
     public AlipayModel(){
 
@@ -92,4 +118,44 @@ public class AlipayModel {
         this.productCode = productCode;
     }
 
+
+    public Integer getOutTradeStatus() {
+        return outTradeStatus;
+    }
+
+    public void setOutTradeStatus(Integer outTradeStatus) {
+        this.outTradeStatus = outTradeStatus;
+    }
+
+    public Integer getCurday() {
+        return curday;
+    }
+
+    public void setCurday(Integer curday) {
+        this.curday = curday;
+    }
+
+    public Integer getCurhour() {
+        return curhour;
+    }
+
+    public void setCurhour(Integer curhour) {
+        this.curhour = curhour;
+    }
+
+    public Integer getCurminute() {
+        return curminute;
+    }
+
+    public void setCurminute(Integer curminute) {
+        this.curminute = curminute;
+    }
+
+    public String getAliOrder() {
+        return aliOrder;
+    }
+
+    public void setAliOrder(String aliOrder) {
+        this.aliOrder = aliOrder;
+    }
 }

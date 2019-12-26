@@ -118,7 +118,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETACTIVEDATA.getDesc(), null, data, strData, null);
@@ -197,7 +197,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETPASSIVEDATA.getDesc(), null, data, strData, null);
@@ -275,7 +275,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPACTIVE.getDesc(), null, data, strData, null);
@@ -352,7 +352,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_UPPASSIVE.getDesc(), null, data, strData, null);
@@ -454,7 +454,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_ADDDATA.getDesc(), null, data, strData, null);
@@ -532,7 +532,7 @@ public class AppealController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAppeal, ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.APPEAL_GETINFODATA.getDesc(), null, data, strData, null);

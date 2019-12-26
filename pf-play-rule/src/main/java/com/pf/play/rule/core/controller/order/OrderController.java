@@ -119,7 +119,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETDATA.getDesc(), null, data, strData, null);
@@ -195,7 +195,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_ADDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_ADDDATA.getDesc(), null, data, strData, null);
@@ -266,7 +266,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETINFODATA.getDesc(), null, data, strData, null);
@@ -336,7 +336,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETBUYDATA.getDesc(), null, data, strData, null);
@@ -405,7 +405,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETCANCELDATA.getDesc(), null, data, strData, null);
@@ -485,7 +485,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_UPCANCELDATA.getDesc(), null, data, strData, null);
@@ -568,7 +568,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDINFODATA.getDesc(), null, data, strData, null);
@@ -653,7 +653,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETUNPAIDDATA.getDesc(), null, data, strData, null);
@@ -737,7 +737,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEINFODATA.getDesc(), null, data, strData, null);
@@ -822,7 +822,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETRECEIVABLEDATA.getDesc(), null, data, strData, null);
@@ -900,7 +900,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHINFODATA.getDesc(), null, data, strData, null);
@@ -979,7 +979,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETFINISHDATA.getDesc(), null, data, strData, null);
@@ -1056,7 +1056,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEINFODATA.getDesc(), null, data, strData, null);
@@ -1134,7 +1134,7 @@ public class OrderController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestOrder, ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getType(),
                     ServerConstant.InterfaceEnum.ORDER_GETOVERTIMEDATA.getDesc(), null, data, strData, null);

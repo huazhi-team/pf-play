@@ -103,7 +103,7 @@ public class AlipayController {
             data = StringUtil.decoderBase64(jsonData);
             requestAlipay  = JSON.parseObject(data, RequestAlipay.class);
             // check校验数据、校验用户是否登录、获得用户ID
-//            memberId = PublicMethod.checkAlipayData(requestAlipay);
+            memberId = PublicMethod.checkAlipayData(requestAlipay);
             token = requestAlipay.getToken();
             // 校验ctime
             // 校验sign
@@ -133,7 +133,7 @@ public class AlipayController {
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
             // 用户注册完毕则直接让用户处于登录状态
-            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
+//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAlipay, ServerConstant.InterfaceEnum.ALIPAY_SENDALI.getType(),
                     ServerConstant.InterfaceEnum.ALIPAY_SENDALI.getDesc(), null, data, strData, null);

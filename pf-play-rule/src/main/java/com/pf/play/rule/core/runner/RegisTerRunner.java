@@ -46,12 +46,12 @@ public class RegisTerRunner implements ApplicationRunner {
 //            }
 //        }.start();
 
-//        new Thread() {
-//            public void run() {
-//                log.debug("更新经验值信息！");
-//                ComponentUtil.taskService.openUpdateTask();
-//            }
-//        }.start();
+        new Thread() {
+            public void run() {
+                log.debug("更新经验值信息！");
+                ComponentUtil.taskService.openUpdateTask();
+            }
+        }.start();
 
 //        log.debug("执行等级同步给qhr！");
 

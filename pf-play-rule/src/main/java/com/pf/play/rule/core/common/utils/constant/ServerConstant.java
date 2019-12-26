@@ -251,7 +251,40 @@ public class ServerConstant {
         TRADE_CONFIRMPAY(34, "TradeController.confirmPay", "买家确认支付"),
         TRADE_CONFIRMRPT(35, "TradeController.confirmRpt", "卖家确认已收款"),
 
-        ALIPAY_SENDALI(36, "AlipayController.sendAli", "阿里支付：生成订单码")
+        ALIPAY_SENDALI(36, "AlipayController.sendAli", "阿里支付：生成订单码"),
+
+        REGISTER_USERINFO(37, "RegisterController.userInfo", "用户信息注册"),
+        REGISTER_PHONE(38, "RegisterController.phoneRegister", "用户手机排线注册"),
+        REGISTER_PHONE_VERIFICATION(39, "RegisterController.getPhoneVerification", "获取短信验证码信息"),
+
+        LOGIN_USERINFO(40, "LoginController.userInfo", "用户登录"),
+        LOGIN_SIGNOUT(41, "LoginController.signOut", "用户退登"),
+
+        SYNCHR_FABULOUS(42, "SynchronousController.clickFabulous", "用户用户点赞统计"),
+        SYNCHR_GOODS(43, "SynchronousController.goods", "用户查看商品统计"),
+        SYNCHR_MEMBERINFO(44, "SynchronousController.getMemberInfo", "用户同步资源信息给qhr"),
+        SYNCHR_GIFTS(45, "SynchronousController.sendGifts", "用户打赏给其他用户"),
+
+        TASK_RECEIVE_LIST(46, "TaskController.queryReceiveTaskList", "领取任务列表详情"),
+        TASK_HAVATASK(47, "TaskController.myTask", "当前拥有的任务"),
+        TASK_TASKHISTORY(48, "TaskController.userTaskHistory", "我的历史任务"),
+        TASK_EXERECEIVE(49, "TaskController.exeReceiveTask", "任务管理-领取任务功能"),
+        TASK_GIVELIST(50, "TaskController.queryGiveTaskList", "获取奖励任务大派送列表"),
+        TASK_EXEGIVE(51, "TaskController.exeGiveTask", "任务大派送-任务领取"),
+
+        MY_MASONRY(52, "UserController.myMasonry", "我的资产信息"),
+        MY_FRIENDS(53, "UserController.myFriends", "我的好友"),
+        MY_EMPIRICVALUE(54, "UserController.myEmpiricValue", "我的经验值"),
+        MY_VITALITYVALUE(55, "UserController.myVitalityValue", "我的活跃值"),
+        MY_USERINFO(56, "UserController.queryUserInfo", "查询用户基本信息"),
+        MY_EDITUSERINFO(57, "UserController.editUserInfo", "用户信息编辑"),
+        MY_RECEIVETASKREWARD(58, "UserController.userReceiveTaskReward", "领取任务奖励"),
+        MY_TODAYTASK(59, "UserController.myTodayTask", "今日任务状态"),
+        MY_EXETODAYTASK(60, "UserController.exeTodayTask", "今日任务领取"),
+//        my_ReceiveTaskReward(58, "TaskController.exeGiveTask", "任务大派送-任务领取"),
+
+
+//        TASK_TODAYINFO(52, "TaskController.todayTaskInfo", ""),
 
 
         ;

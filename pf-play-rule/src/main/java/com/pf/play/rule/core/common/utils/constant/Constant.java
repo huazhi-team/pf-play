@@ -72,9 +72,7 @@ public class Constant {
     public  static  int  CODE_ERROR_TYPE1    =  1 ; //显示给前端
     public  static  int  CODE_ERROR_TYPE2    =  2 ; //不显示显示给前端
 
-    public  static  long  TOKEN_EXPIRE_S    =  1296000L ;
-
-
+    public  static  long  TOKEN_EXPIRE_S    =604800L ;
     /*********** 经验值类型 **********/
     public  static  int  EMPIRIC_TYPE1    =  1 ; //实名制
     public  static  int  EMPIRIC_TYPE2    =  2 ; //初级任务
@@ -84,6 +82,10 @@ public class Constant {
     public  static  int  EMPIRIC_TYPE6    =  6 ; //王者任务
     public  static  int  EMPIRIC_TYPE7    =  7 ; //至尊任务
 
-
+    /*********** 活力值处理类型 **********/
+    public  static  int  ACTIVE_VALUE_TYPE1    =  1 ; //实名制
+    public  static  int  ACTIVE_VALUE_TYPE2    =  2 ; //初级任务
+    public  static  int  ACTIVE_VALUE_TYPE3    =  3 ; //中级任务
+    public  static  int  ACTIVE_VALUE_TYPE4    =  4 ; //高级任务
 
 }

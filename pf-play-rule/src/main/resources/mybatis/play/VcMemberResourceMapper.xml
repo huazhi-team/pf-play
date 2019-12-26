@@ -448,7 +448,7 @@
     all_team_people=all_team_people+1
     where 1=1
     <if test="idList != null and idList.size()>0">
-      member_id   in
+      and  member_id   in
       <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
         #{item}
       </foreach>
@@ -461,7 +461,7 @@
     team_people = team_people+1,
     where 1=1
     <if test="idList != null and idList.size()>0">
-      member_id   in
+      and member_id   in
       <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
         #{item}
       </foreach>

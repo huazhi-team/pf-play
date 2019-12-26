@@ -1,6 +1,8 @@
 package com.pf.play.rule.core.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.JsonResult;
+import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.register.PhoneRegister;
 import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
@@ -9,13 +11,17 @@ import com.pf.play.model.protocol.response.uesr.LoginResp;
 import com.pf.play.model.protocol.response.uesr.RegisterResp;
 import com.pf.play.model.protocol.response.uesr.UserInfoResp;
 import com.pf.play.rule.LoginMethod;
+import com.pf.play.rule.PublicMethod;
 import com.pf.play.rule.RegisterMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
+import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.VcMember;
+import com.pf.play.rule.core.model.region.RegionModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +47,17 @@ public class RegisterController {
     private static Logger log = LoggerFactory.getLogger(RegisterController.class);
 
     @PostMapping("/userInfo")
-    public JsonResult<Object> register(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq ){
+    public JsonResult<Object> register(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq )throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+
         try{
             log.info("----------:进来啦!");
-//            JsonResult.successResult(null);
-
-
-
-//            RegisterReq registerReq1  = new RegisterReq();
             boolean  flag  = TaskMethod.checkRegisterParameter(registerReq);
             if(!flag){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
@@ -69,12 +78,22 @@ public class RegisterController {
             ComponentUtil.redisService.set(userInfoResp.getToken(),userInfoResp.getMemberId()+"");
 
             ComponentUtil.userInfoSevrice.userSynchronousQhr(userInfoResp.getMemberId(),userInfoResp.getToken());
+
+
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, registerReq, ServerConstant.InterfaceEnum.REGISTER_USERINFO.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_USERINFO.getDesc(), null, JSON.toJSONString(registerReq), JSON.toJSONString(loginResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
+
             return JsonResult.successResult(loginResp);
 
 
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, registerReq, ServerConstant.InterfaceEnum.REGISTER_USERINFO.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_USERINFO.getDesc(), null, JSON.toJSONString(registerReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -82,7 +101,14 @@ public class RegisterController {
 
 
     @PostMapping("/phoneRegister")
-    public JsonResult<Object> phoneRegister(HttpServletRequest request, HttpServletResponse response, PhoneRegister phoneRegister ){
+    public JsonResult<Object> phoneRegister(HttpServletRequest request, HttpServletResponse response, PhoneRegister phoneRegister )throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:phoneRegister");
             boolean  chechFlag = RegisterMethod.cheackPhoneDeployOk(phoneRegister);
@@ -115,10 +141,19 @@ public class RegisterController {
 //            LoginResp loginResp  = LoginMethod.changLoginResp(userInfoResp);
             PhoneRegisterResp registerResp = new PhoneRegisterResp();
             registerResp.setState(1);
+
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, phoneRegister, ServerConstant.InterfaceEnum.REGISTER_PHONE.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE.getDesc(), null, JSON.toJSONString(phoneRegister), JSON.toJSONString(registerResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
+
             return JsonResult.successResult(registerResp);
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, phoneRegister, ServerConstant.InterfaceEnum.REGISTER_PHONE.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE.getDesc(), null, JSON.toJSONString(phoneRegister), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -126,8 +161,15 @@ public class RegisterController {
 
 
     @PostMapping("/getPhoneVerification")
-    public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, PhoneVerificationReq req){
+    public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, PhoneVerificationReq req)throws Exception{
         JsonResult<Object>     result  = null;
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:进来啦!");
             boolean  flag  = TaskMethod.checkPhoneVerification(req);
@@ -145,10 +187,16 @@ public class RegisterController {
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.R000004.geteCode(),ErrorCode.ENUM_ERROR.R000004.geteDesc());
             }
 
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, req, ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getDesc(), null, JSON.toJSONString(req), JSON.toJSONString(registerResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(registerResp);
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, req, ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getType(),
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getDesc(), null, JSON.toJSONString(req), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }

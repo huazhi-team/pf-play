@@ -551,15 +551,17 @@ public class TaskMethod {
             flag = false;
         }else if(StringUtils.isBlank(registerReq.getWxName())){
             flag = false;
-        }else  if(StringUtils.isBlank(registerReq.getMemberAdd())){
+        }
+        else  if(StringUtils.isBlank(registerReq.getMemberAdd())){
             flag = false;
         }
 //        else if(StringUtils.isBlank(registerReq.getWxRefresh())){
 //            flag = false;
 //        }
-        else  if(StringUtils.isBlank(registerReq.getInviteCode())){
-            flag = false;
-        }else  if(StringUtils.isBlank(registerReq.getTimeStamp())){
+//        else  if(StringUtils.isBlank(registerReq.getInviteCode())){
+//            flag = false;
+//        }
+        else  if(StringUtils.isBlank(registerReq.getTimeStamp())){
             flag = false;
         }
         return  flag;
@@ -1033,10 +1035,10 @@ public class TaskMethod {
      * @author long
      * @date 2019/12/11 20:37
      */
-    public static  UvitalityValueList   updateUvitalityValueList(UvitalityValueList  uvitalityValueList){
+    public static  UvitalityValueList   updateUvitalityValueList(UvitalityValueList  uvitalityValueList,Integer type){
         UvitalityValueList  uvitalityValueList1 =  new UvitalityValueList();
         uvitalityValueList1.setId(uvitalityValueList.getId());
-        uvitalityValueList1.setIsCount(2);
+        uvitalityValueList1.setIsCount(type);
         return  uvitalityValueList1;
     }
 
@@ -1597,5 +1599,16 @@ public class TaskMethod {
         return   vcMemberResource;
     }
 
-
+    /**
+     * @Description: 结果转换出去
+     * @param result
+     * @return com.pf.play.model.protocol.response.task.ExeReceiveTaskResp
+     * @author long
+     * @date 2019/12/26 10:48
+     */
+    public static ExeReceiveTaskResp  toExeReceiveTaskResp(boolean  result){
+        ExeReceiveTaskResp  receiveTaskResp =  new ExeReceiveTaskResp();
+        receiveTaskResp.setResult(result);
+        return  receiveTaskResp;
+    }
 }

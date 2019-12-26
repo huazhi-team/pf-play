@@ -1,6 +1,8 @@
 package com.pf.play.rule.core.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.JsonResult;
+import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.CommonReq;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
 import com.pf.play.model.protocol.request.uesr.UpdateUserReq;
@@ -15,13 +17,17 @@ import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
 import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
 import com.pf.play.model.protocol.response.uesr.MyVitalityResp;
 import com.pf.play.rule.MyMethod;
+import com.pf.play.rule.PublicMethod;
 import com.pf.play.rule.TaskMethod;
 import com.pf.play.rule.core.common.exception.ExceptionMethod;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
+import com.pf.play.rule.core.common.utils.constant.ServerConstant;
 import com.pf.play.rule.core.model.*;
+import com.pf.play.rule.core.model.region.RegionModel;
+import com.pf.play.rule.core.model.stream.StreamConsumerModel;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,12 +68,20 @@ public class UserController {
      *  服务端加密字段:stime+token+秘钥=sign
      */
     @PostMapping("/myMasonry")
-    public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+    public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+
         try{
             log.info("----------:masonryInfo!");
 
 
-            Integer  memberId = 0 ;
+            memberId = 0 ;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
@@ -86,9 +100,15 @@ public class UserController {
                 list =new  ArrayList();
             }
             MyMasonryResp  myMasonryResp = MyMethod.toMyMasonryResp(list,vcMemberResource1,uMasonrySummary);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_MASONRY.getType(),
+                    ServerConstant.InterfaceEnum.MY_MASONRY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(myMasonryResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(myMasonryResp);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_MASONRY.getType(),
+                    ServerConstant.InterfaceEnum.MY_MASONRY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -104,12 +124,18 @@ public class UserController {
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
     @PostMapping("/myFriends")
-    public JsonResult<Object> myFriends(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> myFriends(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:myTeam!");
             List<MyFriendsResp>   list  = null;
-            Integer   memberId =0;
+            memberId =0;
             Integer   superiorId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
@@ -123,9 +149,15 @@ public class UserController {
 
             }
             MyFriendsResp myFriendsResp   =  ComponentUtil.userInfoSevrice.toMyFriensResp(memberId,superiorId);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_FRIENDS.getType(),
+                    ServerConstant.InterfaceEnum.MY_FRIENDS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(myFriendsResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(myFriendsResp);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_FRIENDS.getType(),
+                    ServerConstant.InterfaceEnum.MY_FRIENDS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -141,12 +173,18 @@ public class UserController {
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
     @PostMapping("/myEmpiricValue")
-    public JsonResult<Object> myEmpiricValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> myEmpiricValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:myEmpiricValue!");
             List<MyFriendsResp>   list  = null;
-            Integer   memberId =0;
+            memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
@@ -164,9 +202,15 @@ public class UserController {
             }else{
                   myEmpiricalResp = MyMethod.toMyEmpiricalResp(vcMemberResource.getEmpiricalValue(),empiricalList,vcMemberResource1);
             }
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getType(),
+                    ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(myEmpiricalResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(myEmpiricalResp);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getType(),
+                    ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -183,12 +227,18 @@ public class UserController {
      */
 //    @PostMapping("/myVitalityValue")
     @PostMapping("/myVitalityValue")
-    public JsonResult<Object> myVitalityValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> myVitalityValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:myVitalityValue!");
             List<MyFriendsResp>   list  = null;
-            Integer   memberId =0;
+            memberId =0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
@@ -210,11 +260,16 @@ public class UserController {
             MyVitalityResp myVitalityResp   =null;
 
             myVitalityResp = MyMethod.toMyVitalityResp(vcMember2.getPushPeople(),vcMemberResource,  vitalityList );
-
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getType(),
+                    ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(myVitalityResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(myVitalityResp);
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getType(),
+                    ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -230,12 +285,18 @@ public class UserController {
      * 必填字段:{"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111","wxOpenId":"1"}
      */
     @PostMapping("/queryUserInfo")
-    public JsonResult<Object> queryUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> queryUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:queryUserInfo!");
             List<MyFriendsResp>   list  = null;
-            Integer   memberId =0;
+            memberId =0;
 
             boolean flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
@@ -254,10 +315,16 @@ public class UserController {
             if(vcMember==null){
                 throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
             }
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.TASK_EXEGIVE.getType(),
+                    ServerConstant.InterfaceEnum.TASK_EXEGIVE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(vcMemberResource), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(MyMethod.toMyUserInfoResp(vcMember,vcMemberResource));
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_USERINFO.getType(),
+                    ServerConstant.InterfaceEnum.MY_USERINFO.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -273,12 +340,18 @@ public class UserController {
      * @date 2019/11/28 16:41
      */
     @PostMapping("/editUserInfo")
-    public JsonResult<Object> editUserInfo(HttpServletRequest request, HttpServletResponse response, UpdateUserReq updateUserReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> editUserInfo(HttpServletRequest request, HttpServletResponse response, UpdateUserReq updateUserReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:editUserInfo!");
             List<MyFriendsResp>   list  = null;
-            Integer   memberId =0;
+            memberId =0;
 
 //            boolean  flag =  MyMethod.checkUqdateUser(updateUserReq);
 //            if(!flag){
@@ -307,16 +380,37 @@ public class UserController {
 
             //同步给动态信息
             ComponentUtil.userInfoSevrice.userSynchronousQhr(memberId,updateUserReq.getToken());
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, updateUserReq, ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getType(),
+                    ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getDesc(), null, JSON.toJSONString(updateUserReq), JSON.toJSONString(giveTaskResultResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(giveTaskResultResp);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, updateUserReq, ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getType(),
+                    ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getDesc(), null, JSON.toJSONString(updateUserReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
-
+    /**
+     * @Description: 领取任务奖励
+     * @param request
+    * @param response
+    * @param commonReq
+     * @return com.pf.play.common.utils.JsonResult<java.lang.Object>
+     * @author long
+     * @date 2019/12/24 14:39
+     */
     @PostMapping("/userReceiveTaskReward")
-    public JsonResult<Object> userReceiveTaskReward(HttpServletRequest request, HttpServletResponse response, CommonReq commonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> userReceiveTaskReward(HttpServletRequest request, HttpServletResponse response, CommonReq commonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+
         try{
             LoginReq loginReq1 = new LoginReq();
             loginReq1.setWxOpenId("slllsdjdjsa");
@@ -325,9 +419,15 @@ public class UserController {
 //            if(null==list||list.size()==0){
 //                list =new  ArrayList();
 //            }
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, commonReq, ServerConstant.InterfaceEnum.TASK_EXEGIVE.getType(),
+                    ServerConstant.InterfaceEnum.TASK_EXEGIVE.getDesc(), null, JSON.toJSONString(commonReq), JSON.toJSONString(loginReq1), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(null);
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, commonReq, ServerConstant.InterfaceEnum.MY_RECEIVETASKREWARD.getType(),
+                    ServerConstant.InterfaceEnum.MY_RECEIVETASKREWARD.getDesc(), null, JSON.toJSONString(commonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -343,11 +443,18 @@ public class UserController {
      * @date 2019/12/13 18:56
      */
     @PostMapping("/myTodayTask")
-    public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+    public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
             log.info("----------:myTodayTask!");
             TodayTaskResp   todayTaskResp  = new TodayTaskResp();
-            Integer   memberId = 0;
+            memberId = 0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
@@ -369,11 +476,16 @@ public class UserController {
             UdailyTaskStat udailyTaskStat =  ComponentUtil.taskService.getMemberUDailyTaskStat(memberId);
 
             todayTaskResp = TaskMethod.changTodayTaskResp(uTaskHaveMax,uMasonryListLog,udailyTaskStat,uTaskHave);
-
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_TODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_TODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(todayTaskResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(todayTaskResp);
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_TODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_TODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
@@ -390,12 +502,19 @@ public class UserController {
      * @date 2019/12/13 18:56
      */
     @PostMapping("/exeTodayTask")
-    public JsonResult<Object> exeTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
-        JsonResult<Object>     result  = null;
+    public JsonResult<Object> exeTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getSgid();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+
         try{
             log.info("----------:exeTodayTask!");
             TodayTaskResp   todayTaskResp  = new TodayTaskResp();
-            Integer   memberId = 0;
+            memberId = 0;
             boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
             if(flag){
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
@@ -424,17 +543,23 @@ public class UserController {
             }
             ExeTodayTaskResp  exeTodayTaskResp =new ExeTodayTaskResp();
             exeTodayTaskResp.setMasonry(masonry);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(exeTodayTaskResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(exeTodayTaskResp);
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }
 
 
     @PostMapping("/test")
-    public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq){
+    public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
         JsonResult<Object>     result  = null;
         try{
             ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,"1","1");

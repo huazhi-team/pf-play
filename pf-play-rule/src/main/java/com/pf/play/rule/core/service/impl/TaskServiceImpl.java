@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -507,18 +508,21 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Override
     public void openUpdateTask() {
         while (true){
+            UvitalityValueList uVitalityValueList = new UvitalityValueList();
+            List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
             try{
-                UvitalityValueList uVitalityValueList = new UvitalityValueList();
-                List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
+
                 if(list.size()>0){
                     uVitalityValueList = list.get(0);
-                    UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList);
+                    UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList, 2);
                     uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
                     ComponentUtil.taskService.activeValueUpdateUserInfo(uVitalityValueList);
                 }else{
                     Thread.sleep(20000);
                 }
             }catch (Exception e){
+                UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList,Constant.ACTIVE_VALUE_TYPE3);
+                uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
                 e.printStackTrace();
             }
 
@@ -631,6 +635,11 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             vcMemberResourceMapper.updateByPrimaryKey(vcMemberResource);
         }
 
+
+
+
+        UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList,Constant.ACTIVE_VALUE_TYPE4);
+        uvitalityValueListMapper.updateByPrimaryKeySelective(uvitalityValueList);
 
 
         //筛选用户有哪些需要变更的

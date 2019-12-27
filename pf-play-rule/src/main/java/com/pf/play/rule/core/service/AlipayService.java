@@ -1,5 +1,6 @@
 package com.pf.play.rule.core.service;
 
+import com.pf.play.common.alipay.model.AlipayNotifyModel;
 import com.pf.play.rule.core.common.service.BaseService;
 
 /**
@@ -9,4 +10,13 @@ import com.pf.play.rule.core.common.service.BaseService;
  * @Version 1.0
  */
 public interface AlipayService<T> extends BaseService<T> {
+
+    /**
+     * @Description: 添加阿里支付宝订单结果数据
+     * @param model - 订单回调的数据
+     * @return int
+     * @author yoko
+     * @date 2019/12/27 15:56
+    */
+    public int addAlipayNotify(AlipayNotifyModel model);
 }

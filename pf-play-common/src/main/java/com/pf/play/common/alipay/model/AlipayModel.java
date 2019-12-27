@@ -8,6 +8,11 @@ package com.pf.play.common.alipay.model;
  */
 public class AlipayModel {
     /**
+     * 主键ID
+     */
+    public Long id;
+
+    /**
      * 订单内容；
      * 我是测试数据
      */
@@ -63,6 +68,11 @@ public class AlipayModel {
      * 阿里返回的订单串
      */
     public String aliOrder;
+
+    /**
+     * 用户ID
+     */
+    public Long memberId;
 
 
 
@@ -157,5 +167,13 @@ public class AlipayModel {
 
     public void setAliOrder(String aliOrder) {
         this.aliOrder = aliOrder;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 }

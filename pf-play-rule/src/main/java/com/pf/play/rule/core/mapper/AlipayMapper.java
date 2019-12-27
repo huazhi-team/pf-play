@@ -1,5 +1,6 @@
 package com.pf.play.rule.core.mapper;
 
+import com.pf.play.common.alipay.model.AlipayNotifyModel;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,4 +12,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AlipayMapper<T> extends BaseDao<T> {
+
+    /**
+     * @Description: 添加阿里支付宝订单结果数据
+     * @param model - 订单回调的数据
+     * @return int
+     * @author yoko
+     * @date 2019/12/27 15:56
+     */
+    public int addAlipayNotify(AlipayNotifyModel model);
 }

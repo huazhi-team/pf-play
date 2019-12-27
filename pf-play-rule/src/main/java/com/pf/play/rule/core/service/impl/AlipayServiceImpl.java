@@ -1,5 +1,6 @@
 package com.pf.play.rule.core.service.impl;
 
+import com.pf.play.common.alipay.model.AlipayNotifyModel;
 import com.pf.play.rule.core.common.dao.BaseDao;
 import com.pf.play.rule.core.common.service.impl.BaseServiceImpl;
 import com.pf.play.rule.core.mapper.AlipayMapper;
@@ -29,5 +30,10 @@ public class AlipayServiceImpl<T> extends BaseServiceImpl<T> implements AlipaySe
 
     public BaseDao<T> getDao() {
         return alipayMapper;
+    }
+
+    @Override
+    public int addAlipayNotify(AlipayNotifyModel model) {
+        return alipayMapper.addAlipayNotify(model);
     }
 }

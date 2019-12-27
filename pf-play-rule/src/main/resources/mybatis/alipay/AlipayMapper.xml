@@ -7,7 +7,7 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.body,a.subject,a.out_trade_no,a.timeout_express,a.total_amount,a.product_code,a.ali_order,a.out_trade_status,a.curday,a.curhour,a.curminute,
+        a.id,a.member_id,a.body,a.subject,a.out_trade_no,a.timeout_express,a.total_amount,a.product_code,a.ali_order,a.out_trade_status,a.curday,a.curhour,a.curminute,
         a.create_time,a.update_time,a.yn
     </sql>
 
@@ -89,6 +89,9 @@
         <!--</selectKey>-->
         insert into tb_pf_alipay
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="memberId != null and memberId != '' " >
+                member_id,
+            </if>
             <if test="body != null and body != '' " >
                 body,
             </if>
@@ -126,6 +129,9 @@
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="memberId != null and memberId != '' " >
+                <![CDATA[  #{memberId}, ]]>
+            </if>
             <if test="body != null and body != '' " >
                 <![CDATA[  #{body}, ]]>
             </if>
@@ -203,6 +209,186 @@
         </trim>
         <include refid="Example_Where_Clause_id"/>
     </update>
+
+
+
+
+    <!-- 添加阿里支付宝订单结果数据 -->
+    <insert id="addAlipayNotify" parameterType="com.pf.play.common.alipay.model.AlipayNotifyModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_pf_alipay_notify
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appId != null and appId != '' " >
+                app_id,
+            </if>
+            <if test="authAppId != null and authAppId != '' " >
+                auth_app_id,
+            </if>
+            <if test="body != null and body != '' " >
+                body,
+            </if>
+            <if test="buyerId != null and buyerId != '' " >
+                buyer_id,
+            </if>
+            <if test="buyerLogonId != null and buyerLogonId != '' " >
+                buyer_logon_id,
+            </if>
+            <if test="buyerPayAmount != null and buyerPayAmount != '' " >
+                buyer_pay_amount,
+            </if>
+            <if test="dataCharset != null and dataCharset != '' " >
+                data_charset,
+            </if>
+            <if test="fundBillList != null and fundBillList != '' " >
+                fund_bill_list,
+            </if>
+            <if test="gmtCreate != null and gmtCreate != '' " >
+                gmt_create,
+            </if>
+            <if test="gmtPayment != null and gmtPayment != '' " >
+                gmt_payment,
+            </if>
+            <if test="invoiceAmount != null and invoiceAmount != '' " >
+                invoice_amount,
+            </if>
+            <if test="notifyId != null and notifyId != '' " >
+                notify_id,
+            </if>
+            <if test="notifyTime != null and notifyTime != '' " >
+                notify_time,
+            </if>
+            <if test="notifyType != null and notifyType != '' " >
+                notify_type,
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                out_trade_no,
+            </if>
+            <if test="pointAmount != null and pointAmount != '' " >
+                point_amount,
+            </if>
+            <if test="receiptAmount != null and receiptAmount != '' " >
+                receipt_amount,
+            </if>
+            <if test="sellerEmail != null and sellerEmail != '' " >
+                seller_email,
+            </if>
+            <if test="sellerId != null and sellerId != '' " >
+                seller_id,
+            </if>
+            <if test="subject != null and subject != '' " >
+                `subject`,
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                total_amount,
+            </if>
+            <if test="tradeNo != null and tradeNo != '' " >
+                trade_no,
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                trade_status,
+            </if>
+            <if test="dataVersion != null and dataVersion != '' " >
+                data_version,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appId != null and appId != '' " >
+                <![CDATA[  #{appId}, ]]>
+            </if>
+            <if test="authAppId != null and authAppId != '' " >
+                <![CDATA[  #{authAppId}, ]]>
+            </if>
+            <if test="body != null and body != '' " >
+                <![CDATA[  #{body}, ]]>
+            </if>
+            <if test="buyerId != null and buyerId != '' " >
+                <![CDATA[  #{buyerId}, ]]>
+            </if>
+            <if test="buyerLogonId != null and buyerLogonId != '' " >
+                <![CDATA[  #{buyerLogonId}, ]]>
+            </if>
+            <if test="buyerPayAmount != null and buyerPayAmount != '' " >
+                <![CDATA[  #{buyerPayAmount}, ]]>
+            </if>
+            <if test="dataCharset != null and dataCharset != '' " >
+                <![CDATA[  #{dataCharset}, ]]>
+            </if>
+            <if test="fundBillList != null and fundBillList != '' " >
+                <![CDATA[  #{fundBillList}, ]]>
+            </if>
+            <if test="gmtCreate != null and gmtCreate != '' " >
+                <![CDATA[  #{gmtCreate}, ]]>
+            </if>
+            <if test="gmtPayment != null and gmtPayment != '' " >
+                <![CDATA[  #{gmtPayment}, ]]>
+            </if>
+            <if test="invoiceAmount != null and invoiceAmount != '' " >
+                <![CDATA[  #{invoiceAmount}, ]]>
+            </if>
+            <if test="notifyId != null and notifyId != '' " >
+                <![CDATA[  #{notifyId}, ]]>
+            </if>
+            <if test="notifyTime != null and notifyTime != '' " >
+                <![CDATA[  #{notifyTime}, ]]>
+            </if>
+            <if test="notifyType != null and notifyType != '' " >
+                <![CDATA[  #{notifyType}, ]]>
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                <![CDATA[  #{outTradeNo}, ]]>
+            </if>
+            <if test="pointAmount != null and pointAmount != '' " >
+                <![CDATA[  #{pointAmount}, ]]>
+            </if>
+            <if test="receiptAmount != null and receiptAmount != '' " >
+                <![CDATA[  #{receiptAmount}, ]]>
+            </if>
+            <if test="sellerEmail != null and sellerEmail != '' " >
+                <![CDATA[  #{sellerEmail}, ]]>
+            </if>
+            <if test="sellerId != null and sellerId != '' " >
+                <![CDATA[  #{sellerId}, ]]>
+            </if>
+            <if test="subject != null and subject != '' " >
+                <![CDATA[  #{subject}, ]]>
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                <![CDATA[  #{totalAmount}, ]]>
+            </if>
+            <if test="tradeNo != null and tradeNo != '' " >
+                <![CDATA[  #{tradeNo}, ]]>
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                <![CDATA[  #{tradeStatus}, ]]>
+            </if>
+            <if test="dataVersion != null and dataVersion != '' " >
+                <![CDATA[  #{dataVersion}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
 
 
 

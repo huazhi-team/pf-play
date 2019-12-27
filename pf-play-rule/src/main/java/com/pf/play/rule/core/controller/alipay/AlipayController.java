@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.pf.play.common.alipay.Alipay;
 import com.pf.play.common.alipay.model.AlipayModel;
+import com.pf.play.common.alipay.model.AlipayNotifyModel;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.common.utils.SignUtil;
 import com.pf.play.common.utils.StringUtil;
@@ -120,7 +121,7 @@ public class AlipayController {
             String aliOrder = Alipay.createAlipaySend(alipayModel, alipayNotifyUrl);
             PublicMethod.checkAliOrder(aliOrder);
             // 添加请求阿里支付的纪录
-            AlipayModel addAlipayModel = PublicMethod.assembleAlipayModel(alipayModel, aliOrder);
+            AlipayModel addAlipayModel = PublicMethod.assembleAlipayModel(alipayModel, aliOrder, memberId);
             ComponentUtil.alipayService.add(addAlipayModel);
 
 
@@ -132,8 +133,6 @@ public class AlipayController {
             String encryptionData = StringUtil.mergeCodeBase64(strData);
             ResponseEncryptionJson resultDataModel = new ResponseEncryptionJson();
             resultDataModel.jsonData = encryptionData;
-            // 用户注册完毕则直接让用户处于登录状态
-//            ComponentUtil.redisService.set(token, String.valueOf(memberId), FIFTEEN_MIN, TimeUnit.SECONDS);
             // 添加流水
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, requestAlipay, ServerConstant.InterfaceEnum.ALIPAY_SENDALI.getType(),
                     ServerConstant.InterfaceEnum.ALIPAY_SENDALI.getDesc(), null, data, strData, null);
@@ -190,6 +189,8 @@ public class AlipayController {
             //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
             String resultData = JSON.toJSONString(params);// 阿里返回的数据
             log.info(String.format("the AlipayController.notify() , the resultData=%s ", resultData));
+            AlipayNotifyModel alipayNotifyModel = PublicMethod.assembleAlipayNotify(params);
+            ComponentUtil.alipayService.addAlipayNotify(alipayNotifyModel);
             boolean flag = AlipaySignature.rsaCheckV1(params, Alipay.ALIPAY_PUBLIC_KEY, "UTF-8","RSA2");
             log.info(String.format("the AlipayController.notify() , the flag=%s ", flag));
             // 返回数据给客户端

@@ -197,6 +197,10 @@ public class VcMember {
 
 
     /***
+     * 是否支付 1、未支付  2是已支付
+     */
+    private Integer isPay;
+    /***
      * 直推总人数
      */
     private Integer pushPeople;
@@ -467,5 +471,13 @@ public class VcMember {
 
     public void setPayPassword(String payPassword) {
         this.payPassword = payPassword;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 }

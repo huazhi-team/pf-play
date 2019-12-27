@@ -6,12 +6,11 @@
     member_id, owner_member_id, member_add, nickname, password, member_code, member_type, 
      invite_code, trading_address, is_certification,
     create_time, is_active, login_time, is_sett, extension_member_id,device_id,superior_id,extension_member_id,
-    sex,birthday,province,city
+    sex,birthday,province,city,is_pay
   </sql>
 
   <sql id="Base_Column_ListTwo" >
-    a.member_id, a.owner_member_id, a.member_add, a.nickname, a.password, a.member_code, a.member_type
-
+    a.member_id, a.owner_member_id, a.member_add, a.nickname, a.password, a.member_code, a.member_type,a.is_pay
   </sql>
 
   <select id="selectByPrimaryKey" resultType="com.pf.play.rule.core.model.VcMember" >

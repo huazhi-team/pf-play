@@ -21,6 +21,7 @@ public class MyUserInfoResp {
     private Integer isCertif;
     private String  inviteCode;
     private Integer isPayWord;
+    private Integer isPay;
 
     public String getNickname() {
         return nickname;
@@ -132,5 +133,13 @@ public class MyUserInfoResp {
 
     public void setIsPayWord(Integer isPayWord) {
         this.isPayWord = isPayWord;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 }

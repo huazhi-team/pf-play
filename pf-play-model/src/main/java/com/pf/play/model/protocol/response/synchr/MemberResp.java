@@ -12,7 +12,7 @@ public class MemberResp {
      *
      * @mbggenerated
      */
-    private Float dayMasonry;
+    private Double dayMasonry;
 
     /**
      * 达人等级
@@ -28,11 +28,11 @@ public class MemberResp {
      */
     private Integer empiricalLevel;
 
-    public Float getDayMasonry() {
+    public Double getDayMasonry() {
         return dayMasonry;
     }
 
-    public void setDayMasonry(Float dayMasonry) {
+    public void setDayMasonry(Double dayMasonry) {
         this.dayMasonry = dayMasonry;
     }
 

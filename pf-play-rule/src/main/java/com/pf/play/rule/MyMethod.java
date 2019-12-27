@@ -261,6 +261,7 @@ public class MyMethod {
         myUserInfoResp.setEmpiricalValue(vcMemberResource.getEmpiricalValue());
         myUserInfoResp.setIsCertif(vcMember.getIsCertification());
         myUserInfoResp.setInviteCode(vcMember.getInviteCode());
+        myUserInfoResp.setIsPay(vcMember.getIsPay());
         if(!StringUtils.isBlank(vcMember.getPayPassword())){
             myUserInfoResp.setIsPayWord(2);
         }else{

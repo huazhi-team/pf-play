@@ -84,7 +84,7 @@ public class TradeController {
     @RequestMapping(value = "/getTradeRule", method = {RequestMethod.POST})
 //    public JsonResult<Object> getTradeRule(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getTradeRule(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -181,7 +181,7 @@ public class TradeController {
     @RequestMapping(value = "/getTradeTime", method = {RequestMethod.POST})
 //    public JsonResult<Object> getTradeTime(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getTradeTime(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -252,7 +252,7 @@ public class TradeController {
     @RequestMapping(value = "/getTradeData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getTradeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getTradeData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -346,7 +346,7 @@ public class TradeController {
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
 //    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -452,7 +452,7 @@ public class TradeController {
     @RequestMapping(value = "/confirmPay", method = {RequestMethod.POST})
 //    public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> confirmPay(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -537,7 +537,7 @@ public class TradeController {
     @RequestMapping(value = "/confirmRpt", method = {RequestMethod.POST})
 //    public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> confirmReceipt(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

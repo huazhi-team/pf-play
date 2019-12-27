@@ -81,7 +81,7 @@ public class VirtualCoinPriceController {
     @RequestMapping(value = "/getData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

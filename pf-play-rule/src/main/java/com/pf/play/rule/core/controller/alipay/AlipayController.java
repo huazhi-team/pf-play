@@ -89,7 +89,7 @@ public class AlipayController {
     @RequestMapping(value = "/sendAli", method = {RequestMethod.POST})
 //    public JsonResult<Object> sendAli(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> sendAli(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -165,7 +165,7 @@ public class AlipayController {
     @RequestMapping(value = "/notify", method = {RequestMethod.POST})
 //    public JsonResult<Object> notify(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> notify(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String ip = StringUtil.getIpAddress(request);
         RequestAlipay requestAlipay = new RequestAlipay();
@@ -189,9 +189,11 @@ public class AlipayController {
             //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
             String resultData = JSON.toJSONString(params);// 阿里返回的数据
             log.info(String.format("the AlipayController.notify() , the resultData=%s ", resultData));
-            AlipayNotifyModel alipayNotifyModel = PublicMethod.assembleAlipayNotify(params);
-            ComponentUtil.alipayService.addAlipayNotify(alipayNotifyModel);
             boolean flag = AlipaySignature.rsaCheckV1(params, Alipay.ALIPAY_PUBLIC_KEY, "UTF-8","RSA2");
+            if (flag){
+                AlipayNotifyModel alipayNotifyModel = PublicMethod.assembleAlipayNotify(params);
+                ComponentUtil.alipayService.addAlipayNotify(alipayNotifyModel);
+            }
             log.info(String.format("the AlipayController.notify() , the flag=%s ", flag));
             // 返回数据给客户端
             return JsonResult.successResult(null, cgid, sgid);

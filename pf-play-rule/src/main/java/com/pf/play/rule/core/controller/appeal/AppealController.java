@@ -86,7 +86,7 @@ public class AppealController {
     @RequestMapping(value = "/getActiveData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getActiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getActiveData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -164,7 +164,7 @@ public class AppealController {
     @RequestMapping(value = "/getPassiveData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getPassiveData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getPassiveData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -243,7 +243,7 @@ public class AppealController {
     @RequestMapping(value = "/upActive", method = {RequestMethod.POST})
 //    public JsonResult<Object> upActive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upActive(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -320,7 +320,7 @@ public class AppealController {
     @RequestMapping(value = "/upPassive", method = {RequestMethod.POST})
 //    public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upPassive(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -398,7 +398,7 @@ public class AppealController {
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
 //    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -500,7 +500,7 @@ public class AppealController {
     @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

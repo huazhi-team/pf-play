@@ -81,7 +81,7 @@ public class ConsumerController {
     @RequestMapping(value = "/upFirstPayCode", method = {RequestMethod.POST})
 //    public JsonResult<Object> upFirstPayCode(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upFirstPayCode(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -152,7 +152,7 @@ public class ConsumerController {
     @RequestMapping(value = "/upPayCode", method = {RequestMethod.POST})
 //    public JsonResult<Object> upPayCode(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upPayCode(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -230,7 +230,7 @@ public class ConsumerController {
     @RequestMapping(value = "/getFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> getFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -308,7 +308,7 @@ public class ConsumerController {
     @RequestMapping(value = "/addFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> addFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> addFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -391,7 +391,7 @@ public class ConsumerController {
     @RequestMapping(value = "/upFixed", method = {RequestMethod.POST})
 //    public JsonResult<Object> upFixed(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upFixed(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -469,7 +469,7 @@ public class ConsumerController {
     @RequestMapping(value = "/getRatio", method = {RequestMethod.POST})
 //    public JsonResult<Object> getRatio(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getRatio(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -539,7 +539,7 @@ public class ConsumerController {
     @RequestMapping(value = "/getBasic", method = {RequestMethod.POST})
 //    public JsonResult<Object> getBasic(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getBasic(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -619,7 +619,7 @@ public class ConsumerController {
 //    @RequestMapping(value = "/certification", method = {RequestMethod.POST})
 ////    public JsonResult<Object> certification(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
 //    public JsonResult<Object> certification(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-//        String sgid = ComponentUtil.redisIdService.getSgid();
+//        String sgid = ComponentUtil.redisIdService.getNewId();
 //        String cgid = "";
 //        String token;
 //        String ip = StringUtil.getIpAddress(request);

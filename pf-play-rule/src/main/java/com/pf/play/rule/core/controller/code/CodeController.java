@@ -77,7 +77,7 @@ public class CodeController {
     @RequestMapping(value = "/getCd", method = {RequestMethod.POST})
 //    public JsonResult<Object> getCd(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getCd(HttpServletRequest request, HttpServletResponse response,@RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

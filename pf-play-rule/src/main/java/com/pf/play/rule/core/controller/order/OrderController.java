@@ -87,7 +87,7 @@ public class OrderController {
     @RequestMapping(value = "/getData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -157,7 +157,7 @@ public class OrderController {
     @RequestMapping(value = "/addData", method = {RequestMethod.POST})
 //    public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> addData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -181,7 +181,7 @@ public class OrderController {
             // 校验sign
 
             // 获取订单号
-            String orderNo = ComponentUtil.redisIdService.getOrderNo();
+            String orderNo = ComponentUtil.redisIdService.getNewId();
             // 新增订单号
             OrderModel orderAdd = PublicMethod.assembleAddOrderData(requestOrder, memberId, orderNo);
             ComponentUtil.orderService.add(orderAdd);
@@ -231,7 +231,7 @@ public class OrderController {
     @RequestMapping(value = "/getInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -304,7 +304,7 @@ public class OrderController {
     @RequestMapping(value = "/getBuyData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getBuyData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getBuyData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -373,7 +373,7 @@ public class OrderController {
     @RequestMapping(value = "/getCancelData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getCancelData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -448,7 +448,7 @@ public class OrderController {
     @RequestMapping(value = "/upCancelData", method = {RequestMethod.POST})
 //    public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> upCancelData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -530,7 +530,7 @@ public class OrderController {
     @RequestMapping(value = "/getUnpaidInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getUnpaidInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -615,7 +615,7 @@ public class OrderController {
     @RequestMapping(value = "/getUnpaidData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getUnpaidData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -699,7 +699,7 @@ public class OrderController {
     @RequestMapping(value = "/getReceivableInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getReceivableInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -784,7 +784,7 @@ public class OrderController {
     @RequestMapping(value = "/getReceivableData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getReceivableData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getReceivableData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -868,7 +868,7 @@ public class OrderController {
     @RequestMapping(value = "/getFinishInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getFinishInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -947,7 +947,7 @@ public class OrderController {
     @RequestMapping(value = "/getFinishData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getFinishData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getFinishData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -1024,7 +1024,7 @@ public class OrderController {
     @RequestMapping(value = "/getOverTimeInfoData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getOverTimeInfoData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getOverTimeInfoData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -1102,7 +1102,7 @@ public class OrderController {
     @RequestMapping(value = "/getOverTimeData", method = {RequestMethod.POST})
 //    public JsonResult<Object> getOverTimeData(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestEncryptionJson requestData) throws Exception{
     public JsonResult<Object> getOverTimeData(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsonData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

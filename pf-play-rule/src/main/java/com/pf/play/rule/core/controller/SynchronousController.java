@@ -53,7 +53,7 @@ public class SynchronousController {
      */
     @PostMapping("/clickFabulous")
     public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -93,7 +93,7 @@ public class SynchronousController {
      */
     @PostMapping("/goods")
     public JsonResult<Object> goods(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -139,7 +139,7 @@ public class SynchronousController {
      */
     @PostMapping("/getMemberInfo")
     public JsonResult<Object> goods(HttpServletRequest request, HttpServletResponse response, QhrReq qhrReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -182,7 +182,7 @@ public class SynchronousController {
      */
     @PostMapping("/sendGifts")
     public JsonResult<Object> sendGifts(HttpServletRequest request, HttpServletResponse response, SendGiftResp sendGiftResp)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

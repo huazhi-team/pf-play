@@ -44,7 +44,7 @@ public class LoginController {
 
     @PostMapping("/userInfo")
     public JsonResult<Object> getUserInfo(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -79,7 +79,7 @@ public class LoginController {
 
     @PostMapping("/signOut")
     public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, UserCommonReq updateUserReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

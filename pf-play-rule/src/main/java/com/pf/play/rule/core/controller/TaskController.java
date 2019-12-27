@@ -56,7 +56,7 @@ public class TaskController {
      */
     @PostMapping("/queryMemberReceiveTaskList")
     public JsonResult<Object> queryReceiveTaskList(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -102,7 +102,7 @@ public class TaskController {
      */
     @PostMapping("/userHavaTask")
     public JsonResult<Object> myTask(HttpServletRequest request, HttpServletResponse response,UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -149,7 +149,7 @@ public class TaskController {
      */
     @PostMapping("/userTaskHistory")
     public JsonResult<Object> userTaskHistory(HttpServletRequest request, HttpServletResponse response,UserCommonReq  userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -195,7 +195,7 @@ public class TaskController {
      */
     @PostMapping("/exeReceiveTask")
     public JsonResult<Object> exeReceiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -261,7 +261,7 @@ public class TaskController {
      */
     @PostMapping("/giveTaskList")
     public JsonResult<Object> queryGiveTaskList(HttpServletRequest request, HttpServletResponse response,UserCommonReq  userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -309,7 +309,7 @@ public class TaskController {
      */
     @PostMapping("/exeGiveTask")
     public JsonResult<Object> exeGiveTask(HttpServletRequest request, HttpServletResponse response,TaskReq  taskReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

@@ -69,7 +69,7 @@ public class UserController {
      */
     @PostMapping("/myMasonry")
     public JsonResult<Object> myMasonry(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -125,7 +125,7 @@ public class UserController {
      */
     @PostMapping("/myFriends")
     public JsonResult<Object> myFriends(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -174,7 +174,7 @@ public class UserController {
      */
     @PostMapping("/myEmpiricValue")
     public JsonResult<Object> myEmpiricValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -228,7 +228,7 @@ public class UserController {
 //    @PostMapping("/myVitalityValue")
     @PostMapping("/myVitalityValue")
     public JsonResult<Object> myVitalityValue(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -286,7 +286,7 @@ public class UserController {
      */
     @PostMapping("/queryUserInfo")
     public JsonResult<Object> queryUserInfo(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -341,7 +341,7 @@ public class UserController {
      */
     @PostMapping("/editUserInfo")
     public JsonResult<Object> editUserInfo(HttpServletRequest request, HttpServletResponse response, UpdateUserReq updateUserReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -403,7 +403,7 @@ public class UserController {
      */
     @PostMapping("/userReceiveTaskReward")
     public JsonResult<Object> userReceiveTaskReward(HttpServletRequest request, HttpServletResponse response, CommonReq commonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -444,7 +444,7 @@ public class UserController {
      */
     @PostMapping("/myTodayTask")
     public JsonResult<Object> myTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -503,7 +503,7 @@ public class UserController {
      */
     @PostMapping("/exeTodayTask")
     public JsonResult<Object> exeTodayTask(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -558,21 +558,41 @@ public class UserController {
     }
 
 
-    @PostMapping("/test")
+    @PostMapping("/myRealName")
     public JsonResult<Object> test(HttpServletRequest request, HttpServletResponse response, UserCommonReq userCommonReq)throws Exception{
-        JsonResult<Object>     result  = null;
+        String sgid = ComponentUtil.redisIdService.getNewId();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+
         try{
-            ComponentUtil.redisService.hmSet(CacheKey.LEVEL0,"1","1");
-            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,"1"));
+            log.info("----------:exeTodayTask!");
+            TodayTaskResp   todayTaskResp  = new TodayTaskResp();
+            memberId = 0;
+            boolean  flag = TaskMethod.checkTokenAndWxOpenid(userCommonReq);
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+            if(memberId==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteCode(),ErrorCode.ENUM_ERROR.PARAMETER_ERROR.geteDesc());
+            }
 
-//            ComponentUtil.redisService.deHmSet(CacheKey.LEVEL0,"1");
-//            System.out.println(ComponentUtil.redisService.hmGet(CacheKey.LEVEL0,"1"));
-//            ComponentUtil.userInfoSevrice.toRealName(2);
-
+//
+//            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
+//                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(exeTodayTaskResp), null);
+//            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
             return JsonResult.successResult(null);
+
         }catch (Exception e){
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
     }

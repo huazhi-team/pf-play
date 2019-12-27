@@ -49,7 +49,7 @@ public class RegisTerRunner implements ApplicationRunner {
 //        new Thread() {
 //            public void run() {
 //                log.debug("更新经验值信息！");
-//                ComponentUtil.taskService.openUpdateTask();
+                ComponentUtil.taskService.openUpdateTask();
 //            }
 //        }.start();
 

@@ -48,7 +48,7 @@ public class RegisterController {
 
     @PostMapping("/userInfo")
     public JsonResult<Object> register(HttpServletRequest request, HttpServletResponse response, RegisterReq registerReq )throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -102,7 +102,7 @@ public class RegisterController {
 
     @PostMapping("/phoneRegister")
     public JsonResult<Object> phoneRegister(HttpServletRequest request, HttpServletResponse response, PhoneRegister phoneRegister )throws Exception{
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);
@@ -162,8 +162,7 @@ public class RegisterController {
 
     @PostMapping("/getPhoneVerification")
     public JsonResult<Object> getPhoneVerification(HttpServletRequest request, HttpServletResponse response, PhoneVerificationReq req)throws Exception{
-        JsonResult<Object>     result  = null;
-        String sgid = ComponentUtil.redisIdService.getSgid();
+        String sgid = ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String token;
         String ip = StringUtil.getIpAddress(request);

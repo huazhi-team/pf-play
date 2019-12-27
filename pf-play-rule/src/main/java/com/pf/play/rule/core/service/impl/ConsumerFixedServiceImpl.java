@@ -95,4 +95,5 @@ public class ConsumerFixedServiceImpl<T> extends BaseServiceImpl<T> implements C
     public List<ConsumerModel> getConsumerByDarenLevel(int darenLevel) {
         return consumerFixedMapper.getConsumerByDarenLevel(darenLevel);
     }
+
 }

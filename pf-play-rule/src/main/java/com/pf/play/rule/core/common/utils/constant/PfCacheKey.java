@@ -66,4 +66,9 @@ public interface PfCacheKey {
      */
     String SELL_ORDER_SEND_MSG = "-11";
 
+    /**
+     * task跑阿里支付宝订单同步数据时：锁住这条任务
+     */
+    String LOCK_TASK_ALIPAY_NOTIFY = "-12";
+
 }

@@ -80,4 +80,5 @@ public interface ConsumerFixedService<T> extends BaseService<T> {
      * @date 2019/12/23 17:05
     */
     public List<ConsumerModel> getConsumerByDarenLevel(int darenLevel);
+
 }

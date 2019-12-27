@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pf.play.rule.core.mapper.TaskHodgepodgeMapper">
+
+
+    <!-- 定义数据库基本列,只适用代替单表的-阿里数据同步*-->
+    <sql id="Base_Column_List_Notify">
+        a.id,a.app_id,a.auth_app_id,a.body,a.buyer_id,a.buyer_logon_id,a.buyer_pay_amount,a.data_charset,a.fund_bill_list,a.gmt_create,
+        a.gmt_payment,a.invoice_amount,a.notify_id,a.notify_time,a.notify_type,a.out_trade_no,a.point_amount,a.receipt_amount,a.seller_email,
+        a.seller_id,a.subject,a.total_amount,a.trade_no,a.trade_status,a.data_version,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
+        a.create_time,a.update_time,a.yn,
+        b.member_id
+    </sql>
+
+    <!-- 查询条件-阿里数据同步 -->
+    <sql id="Example_Where_Clause_Notify">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
+            and a.trade_status = 'TRADE_SUCCESS'
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+
+    <!-- 根据条件查询阿里订单同步数据需要跑task的数据：runStatus属于初始化值 -->
+    <select id="getTaskAlipayNotify" parameterType="Object" resultType="com.pf.play.rule.core.model.task.TaskAlipayNotifyModel">
+        select
+        <include refid="Base_Column_List_Notify" />
+        from tb_pf_alipay_notify a left join tb_pf_alipay b on a.out_trade_no = b.out_trade_no
+        <include refid="Example_Where_Clause_Notify"/>
+        limit #{limitNum}
+    </select>
+
+
+
+    <!-- 更新基本信息 -->
+    <update id="updateTaskAlipayNotifyStatus" parameterType="Object">
+        UPDATE tb_pf_alipay_notify a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="runNum != null and runNum != '' " >
+                a.run_num = #{runNum},
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                a.run_status = #{runStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+    <!-- 更新用户是否支付实名制费用- 1、未支付  2、是已支付 -->
+    <update id="updateConsumerIsPay" parameterType="Object">
+        update vc_member a
+        set a.is_pay = #{isPay}
+        where 1=1
+        and a.member_id = #{memberId}
+    </update>
+
+
+
+</mapper>

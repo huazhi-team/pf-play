@@ -100,6 +100,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private AlipayService alipayService;
 
+    @Autowired
+    private TaskHodgepodgeService taskHodgepodgeService;
+
     Thread runThread = null;
 
 
@@ -138,6 +141,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.regionService = regionService;
         ComponentUtil.streamConsumerService = streamConsumerService;
         ComponentUtil.alipayService = alipayService;
+        ComponentUtil.taskHodgepodgeService = taskHodgepodgeService;
 
 
         runThread = new RunThread();

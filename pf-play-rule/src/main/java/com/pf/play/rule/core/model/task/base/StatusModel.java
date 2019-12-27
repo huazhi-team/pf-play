@@ -57,6 +57,7 @@ public class StatusModel implements Serializable {
     private Integer curdayEnd;
 
 
+
     public Long getId() {
         return id;
     }
@@ -152,4 +153,5 @@ public class StatusModel implements Serializable {
     public void setAppealStatus(Integer appealStatus) {
         this.appealStatus = appealStatus;
     }
+
 }

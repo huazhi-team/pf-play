@@ -34,9 +34,8 @@ public class ComponentUtil {
     public static RegionService regionService;
     public static StreamConsumerService streamConsumerService;
     public static AlipayService alipayService;
+    public static TaskHodgepodgeService taskHodgepodgeService;
 
-//    public static AipRequestInfoService aipRequestInfoService;
-//    public static AipResultInfoService aipResultInfoService;
 
 
 

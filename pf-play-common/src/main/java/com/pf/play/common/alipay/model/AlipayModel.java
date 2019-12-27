@@ -74,6 +74,20 @@ public class AlipayModel {
      */
     public Long memberId;
 
+    /**
+     * 运行次数
+     */
+    public Integer runNum;
+
+    /**
+     * 运行计算状态：：0初始化，1锁定，2计算失败，3计算成功
+     */
+    public Integer runStatus;
+
+    public Integer curdayStart;
+
+    public Integer curdayEnd;
+
 
 
     public AlipayModel(){
@@ -175,5 +189,45 @@ public class AlipayModel {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getRunNum() {
+        return runNum;
+    }
+
+    public void setRunNum(Integer runNum) {
+        this.runNum = runNum;
+    }
+
+    public Integer getRunStatus() {
+        return runStatus;
+    }
+
+    public void setRunStatus(Integer runStatus) {
+        this.runStatus = runStatus;
+    }
+
+    public Integer getCurdayStart() {
+        return curdayStart;
+    }
+
+    public void setCurdayStart(Integer curdayStart) {
+        this.curdayStart = curdayStart;
+    }
+
+    public Integer getCurdayEnd() {
+        return curdayEnd;
+    }
+
+    public void setCurdayEnd(Integer curdayEnd) {
+        this.curdayEnd = curdayEnd;
     }
 }

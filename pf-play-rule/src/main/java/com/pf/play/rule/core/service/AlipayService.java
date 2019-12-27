@@ -19,4 +19,6 @@ public interface AlipayService<T> extends BaseService<T> {
      * @date 2019/12/27 15:56
     */
     public int addAlipayNotify(AlipayNotifyModel model);
+
+
 }

@@ -1,167 +1,173 @@
-package com.pf.play.common.alipay.model;
+package com.pf.play.rule.core.model.task;
 
 /**
  * @Description 阿里支付宝订单结果同步的实体Bean
  * @Author yoko
- * @Date 2019/12/27 15:08
+ * @Date 2019/12/27 22:14
  * @Version 1.0
  */
-public class AlipayNotifyModel {
+public class TaskAlipayNotifyModel {
+
     /**
      * 主键ID
      */
-    public Long id;
+    private Long id;
 
     /**
      * 会员id
      */
-    public String appId;
+    private String appId;
 
     /**
      * 认证的应用ID
      */
-    public String authAppId;
+    private String authAppId;
 
     /**
      * 订单类容体
      */
-    public String body;
+    private String body;
 
     /**
      * 买家ID
      */
-    public String buyerId;
+    private String buyerId;
 
     /**
      * 买家登录的ID
      */
-    public String buyerLogonId;
+    private String buyerLogonId;
 
     /**
      * 买家付款金额
      */
-    public String buyerPayAmount;
+    private String buyerPayAmount;
 
     /**
      * 字符集编码
      */
-    public String dataCharset;
+    private String dataCharset;
 
     /**
      * 资金清单
      */
-    public String fundBillList;
+    private String fundBillList;
 
     /**
      * 订单的创建时间
      */
-    public String gmtCreate;
+    private String gmtCreate;
 
     /**
      * 订单的支付时间
      */
-    public String gmtPayment;
+    private String gmtPayment;
 
     /**
      * 发票金额
      */
-    public String invoiceAmount;
+    private String invoiceAmount;
 
     /**
      * 同步的ID（防重码）
      */
-    public String notifyId;
+    private String notifyId;
 
     /**
      * 同步的时间
      */
-    public String notifyTime;
+    private String notifyTime;
 
     /**
      * 同步的类型
      */
-    public String notifyType;
+    private String notifyType;
 
     /**
      * 交易订单号
      */
-    public String outTradeNo;
+    private String outTradeNo;
 
     /**
      * 点数
      */
-    public String pointAmount;
+    private String pointAmount;
 
     /**
      * 收款金额
      */
-    public String receiptAmount;
+    private String receiptAmount;
 
     /**
      * 卖家邮箱
      */
-    public String sellerEmail;
+    private String sellerEmail;
 
     /**
      * 卖家ID
      */
-    public String sellerId;
+    private String sellerId;
 
     /**
      * 主题
      */
-    public String subject;
+    private String subject;
 
     /**
      * 总金额
      */
-    public String totalAmount;
+    private String totalAmount;
 
     /**
      * 支付宝外部订单编号
      */
-    public String tradeNo;
+    private String tradeNo;
 
     /**
      * 交易的状态
      */
-    public String tradeStatus;
+    private String tradeStatus;
 
     /**
      * 版本号
      */
-    public String dataVersion;
+    private String dataVersion;
 
 
     /**
      * 创建日期：存的日期格式20160530
      */
-    public Integer curday;
+    private Integer curday;
 
     /**
      * 创建所属小时：24小时制
      */
-    public Integer curhour;
+    private Integer curhour;
 
     /**
      * 创建所属分钟：60分钟制
      */
-    public Integer curminute;
+    private Integer curminute;
 
     /**
      * 创建时间
      */
-    public String createTime;
+    private String createTime;
 
     /**
      * 更新时间
      */
-    public String updateTime;
+    private String updateTime;
 
     /**
      * 是否有效：0有效，1无效/删除
      */
-    public Integer yn;
+    private Integer yn;
+
+    /**
+     * 用户ID
+     */
+    private Long memberId;
 
     public Long getId() {
         return id;
@@ -411,4 +417,11 @@ public class AlipayNotifyModel {
         this.yn = yn;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
 }

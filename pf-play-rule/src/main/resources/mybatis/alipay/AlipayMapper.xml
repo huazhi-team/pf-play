@@ -11,6 +11,7 @@
         a.create_time,a.update_time,a.yn
     </sql>
 
+
     <!-- 查询条件 -->
     <sql id="Example_Where_Clause">
         where 1=1
@@ -21,19 +22,23 @@
             <if test="outTradeNo != null and outTradeNo != '' " >
                 and a.out_trade_no = #{outTradeNo}
             </if>
-            <if test="outTradeStatus != null and outTradeStatus != '' " >
-                and a.out_trade_status = #{outTradeStatus}
-            </if>
             <if test="curday != null and curday != '' " >
                 and a.curday = #{curday}
             </if>
             <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
                 and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
             </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
             and a.yn = 0
 
         </trim>
     </sql>
+
 
     <!-- 查询条件_id -->
     <sql id="Example_Where_Clause_id">

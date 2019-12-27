@@ -78,4 +78,6 @@ public interface ConsumerFixedMapper<T> extends BaseDao<T> {
      * @date 2019/12/23 17:05
      */
     public List<ConsumerModel> getConsumerByDarenLevel(int darenLevel);
+
+
 }

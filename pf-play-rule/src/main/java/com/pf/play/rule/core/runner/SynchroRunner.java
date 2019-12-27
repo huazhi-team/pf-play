@@ -27,7 +27,17 @@ public class SynchroRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         /****************  初始化信息 ************/
 
-        log.debug("更新用户活力值明细表！");
-//        ComponentUtil.taskService.openUpdateTask();
+        log.debug("更新task状态");
+
+        try{
+            new Thread() {
+                public void run() {
+                    log.debug("更新经验值信息！");
+                    ComponentUtil.taskService.updateHaveState();
+                }
+            }.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

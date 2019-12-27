@@ -107,7 +107,7 @@ public class UserController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_MASONRY.getType(),
-                    ServerConstant.InterfaceEnum.MY_MASONRY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_MASONRY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -156,7 +156,7 @@ public class UserController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_FRIENDS.getType(),
-                    ServerConstant.InterfaceEnum.MY_FRIENDS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_FRIENDS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -209,7 +209,7 @@ public class UserController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getType(),
-                    ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_EMPIRICVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -268,7 +268,7 @@ public class UserController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getType(),
-                    ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_VITALITYVALUE.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -323,7 +323,7 @@ public class UserController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_USERINFO.getType(),
-                    ServerConstant.InterfaceEnum.MY_USERINFO.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_USERINFO.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -387,7 +387,7 @@ public class UserController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, updateUserReq, ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getType(),
-                    ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getDesc(), null, JSON.toJSONString(updateUserReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_EDITUSERINFO.getDesc(), null, JSON.toJSONString(updateUserReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -426,7 +426,7 @@ public class UserController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, commonReq, ServerConstant.InterfaceEnum.MY_RECEIVETASKREWARD.getType(),
-                    ServerConstant.InterfaceEnum.MY_RECEIVETASKREWARD.getDesc(), null, JSON.toJSONString(commonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_RECEIVETASKREWARD.getDesc(), null, JSON.toJSONString(commonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -484,7 +484,7 @@ public class UserController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_TODAYTASK.getType(),
-                    ServerConstant.InterfaceEnum.MY_TODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_TODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -551,7 +551,7 @@ public class UserController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
-                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

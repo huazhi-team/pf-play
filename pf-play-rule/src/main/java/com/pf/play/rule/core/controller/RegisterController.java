@@ -91,7 +91,7 @@ public class RegisterController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, registerReq, ServerConstant.InterfaceEnum.REGISTER_USERINFO.getType(),
-                    ServerConstant.InterfaceEnum.REGISTER_USERINFO.getDesc(), null, JSON.toJSONString(registerReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.REGISTER_USERINFO.getDesc(), null, JSON.toJSONString(registerReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
 
             return JsonResult.failedResult(map.get("message"),map.get("code"));
@@ -151,7 +151,7 @@ public class RegisterController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, phoneRegister, ServerConstant.InterfaceEnum.REGISTER_PHONE.getType(),
-                    ServerConstant.InterfaceEnum.REGISTER_PHONE.getDesc(), null, JSON.toJSONString(phoneRegister), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE.getDesc(), null, JSON.toJSONString(phoneRegister), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
 
             return JsonResult.failedResult(map.get("message"),map.get("code"));
@@ -195,7 +195,7 @@ public class RegisterController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, req, ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getType(),
-                    ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getDesc(), null, JSON.toJSONString(req), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.REGISTER_PHONE_VERIFICATION.getDesc(), null, JSON.toJSONString(req), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

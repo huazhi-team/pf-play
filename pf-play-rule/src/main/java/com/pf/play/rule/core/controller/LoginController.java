@@ -79,7 +79,6 @@ public class LoginController {
 
     @PostMapping("/signOut")
     public JsonResult<Object> signOut(HttpServletRequest request, HttpServletResponse response, UserCommonReq updateUserReq)throws Exception{
-        JsonResult<Object>     result  = null;
         String sgid = ComponentUtil.redisIdService.getSgid();
         String cgid = "";
         String token;

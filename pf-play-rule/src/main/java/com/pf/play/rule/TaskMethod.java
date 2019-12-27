@@ -1611,4 +1611,32 @@ public class TaskMethod {
         receiveTaskResp.setResult(result);
         return  receiveTaskResp;
     }
+
+    /**
+     * @Description: 更新用户信息
+     * @param
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/27 9:38
+     */
+    public static UTaskHave  updateUTaskHave(){
+        UTaskHave  uTaskHave =  new UTaskHave();
+        uTaskHave.setEndTime(new Date());
+        return  uTaskHave;
+    }
+
+    /**
+     * @Description: TODO
+     * @param list
+    * @param currentState
+     * @return com.pf.play.rule.core.model.UTaskHave
+     * @author long
+     * @date 2019/12/27 13:42
+     */
+    public static UTaskHave  updateUTaskHave(List<Long>  list,Integer currentState){
+        UTaskHave  uTaskHave =  new UTaskHave();
+        uTaskHave.setIdList(list);
+        uTaskHave.setCurrentState(currentState);
+        return  uTaskHave;
+    }
 }

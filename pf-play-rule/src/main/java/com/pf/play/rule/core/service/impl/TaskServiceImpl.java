@@ -12,17 +12,14 @@ import com.pf.play.rule.core.common.utils.constant.*;
 import com.pf.play.rule.core.mapper.*;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.service.TaskService;
-import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
 import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -1043,5 +1040,28 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Override
     public int insertUMasonryListLog(UMasonryListLog listLog) {
         return uMasonryListLogMapper.insertSelective(listLog);
+    }
+
+    @Override
+    public void updateHaveState(){
+        while (true){
+            try{
+                UTaskHave  uTaskHave =TaskMethod.updateUTaskHave();
+                List<UTaskHave> list1 =uTaskHaveMapper.selectInvalid(uTaskHave);
+                if(list1.size()==0){
+                    Thread.sleep(Constant.UPDATE_TASK_TIME);
+                    continue;
+                }
+                List<Long>  list = new ArrayList<>();
+                for(UTaskHave uTaskHave1:list1){
+                    list.add(uTaskHave1.getId());
+                }
+
+                UTaskHave  d = TaskMethod.updateUTaskHave(list,Constant.CURRENT_STATE_TYPE3);
+                uTaskHaveMapper.updateCurrentStateInvalid(d);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -112,8 +112,6 @@ public class SynchroServiceImpl<T> extends BaseServiceImpl<T> implements Synchro
 
     @Override
     public int addMemberResource(Integer sendMemberId, Integer receiptMemberId, Double masonry) {
-//        UMasonryListLog
-//        Double   masonry
         Double    proced =0D;
         List<SysTypeDictionary>  procedTypeList = RegisterSingleton.getInstance().getProcedType();
         if(procedTypeList.size()==0){

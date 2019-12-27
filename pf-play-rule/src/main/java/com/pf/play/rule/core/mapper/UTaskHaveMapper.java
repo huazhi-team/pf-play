@@ -32,4 +32,12 @@ public interface UTaskHaveMapper<T> extends BaseDao<T> {
 
     //每次用户修改完，是否需要到期或者完成
     int updateCurrentState(UTaskHave record);
+
+    //查询是否有过期的任务列表
+    List<UTaskHave> selectInvalid(UTaskHave record);
+
+    //修改过期的列表状态
+    int updateCurrentStateInvalid(UTaskHave record);
+
+
 }

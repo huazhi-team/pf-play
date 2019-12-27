@@ -98,6 +98,11 @@ public interface TaskService  <T> extends BaseService<T> {
 
     int        insertUMasonryListLog(UMasonryListLog listLog);
 
+
+    void       updateHaveState() ;
+
+
+
 //    void   vitalitySettlement();
 
 }

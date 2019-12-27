@@ -85,7 +85,7 @@ public class TaskController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.TASK_RECEIVE_LIST.getType(),
-                    ServerConstant.InterfaceEnum.TASK_RECEIVE_LIST.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_RECEIVE_LIST.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -132,7 +132,7 @@ public class TaskController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.TASK_HAVATASK.getType(),
-                    ServerConstant.InterfaceEnum.TASK_HAVATASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_HAVATASK.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -178,7 +178,7 @@ public class TaskController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.TASK_TASKHISTORY.getType(),
-                    ServerConstant.InterfaceEnum.TASK_TASKHISTORY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_TASKHISTORY.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -242,7 +242,7 @@ public class TaskController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e,1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, taskReq, ServerConstant.InterfaceEnum.TASK_EXERECEIVE.getType(),
-                    ServerConstant.InterfaceEnum.TASK_EXERECEIVE.getDesc(), null, JSON.toJSONString(taskReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_EXERECEIVE.getDesc(), null, JSON.toJSONString(taskReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
 
             return JsonResult.failedResult(map.get("message"),map.get("code"));
@@ -291,7 +291,7 @@ public class TaskController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e,1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.TASK_GIVELIST.getType(),
-                    ServerConstant.InterfaceEnum.TASK_GIVELIST.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_GIVELIST.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
 
             return JsonResult.failedResult(map.get("message"),map.get("code"));
@@ -345,7 +345,7 @@ public class TaskController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, taskReq, ServerConstant.InterfaceEnum.TASK_EXEGIVE.getType(),
-                    ServerConstant.InterfaceEnum.TASK_EXEGIVE.getDesc(), null, JSON.toJSONString(taskReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.TASK_EXEGIVE.getDesc(), null, JSON.toJSONString(taskReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

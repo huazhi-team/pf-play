@@ -88,4 +88,13 @@ public class Constant {
     public  static  int  ACTIVE_VALUE_TYPE3    =  3 ; //中级任务
     public  static  int  ACTIVE_VALUE_TYPE4    =  4 ; //高级任务
 
+
+    /*********** 更新task 定时器任务 **********/
+    public  static  int  UPDATE_TASK_TIME    =  2160000 ; //更新task 定时器任务
+
+    /*********** 用户任务拥有表task 状态 **********/
+    public  static  int  CURRENT_STATE_TYPE1    =  1 ;
+    public  static  int  CURRENT_STATE_TYPE2    =  2 ;
+    public  static  int  CURRENT_STATE_TYPE3    =  3 ;
+
 }

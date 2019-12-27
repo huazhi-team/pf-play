@@ -76,7 +76,7 @@ public class SynchronousController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.SYNCHR_FABULOUS.getType(),
-                    ServerConstant.InterfaceEnum.SYNCHR_FABULOUS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.SYNCHR_FABULOUS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -122,7 +122,7 @@ public class SynchronousController {
         }catch (Exception e){
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, userCommonReq, ServerConstant.InterfaceEnum.SYNCHR_GOODS.getType(),
-                    ServerConstant.InterfaceEnum.SYNCHR_GOODS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.SYNCHR_GOODS.getDesc(), null, JSON.toJSONString(userCommonReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -165,7 +165,7 @@ public class SynchronousController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, qhrReq, ServerConstant.InterfaceEnum.SYNCHR_MEMBERINFO.getType(),
-                    ServerConstant.InterfaceEnum.SYNCHR_MEMBERINFO.getDesc(), null, JSON.toJSONString(qhrReq), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.SYNCHR_MEMBERINFO.getDesc(), null, JSON.toJSONString(qhrReq), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }
@@ -194,23 +194,23 @@ public class SynchronousController {
             int   flag1 =  ComponentUtil.synchroService.checkSendInfo(sendGiftResp.getSendMemberId(),
                                                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getPayPw());
             if(flag1==-1){
-                return JsonResult.failedResult("密码错误",00001+"");
+                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
             }
 
             if(flag1!=0){
-                return JsonResult.failedResult("验证信息不通过",00002+"");
+                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteDesc());
             }
 
             Boolean flag = ComponentUtil.synchroService.chechMemberResource(sendGiftResp.getSendMemberId(),sendGiftResp.getMasonryCount());
             if(!flag){
-                return JsonResult.failedResult("验证金额不通过",00003+"");
+                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteDesc());
             }
 
             int  count = ComponentUtil.synchroService.addMemberResource(sendGiftResp.getSendMemberId(),
                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getMasonryCount());
 
             if(count==0){
-                return JsonResult.failedResult("交易手续费未部署",00004+"");
+                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteDesc());
             }
 
             ExeReceiveTaskResp receiveTaskResp = TaskMethod.toExeReceiveTaskResp(true);
@@ -222,7 +222,7 @@ public class SynchronousController {
             e.printStackTrace();
             Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
             StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, sendGiftResp, ServerConstant.InterfaceEnum.SYNCHR_GIFTS.getType(),
-                    ServerConstant.InterfaceEnum.SYNCHR_GIFTS.getDesc(), null, JSON.toJSONString(sendGiftResp), JSON.toJSONString(null), null);
+                    ServerConstant.InterfaceEnum.SYNCHR_GIFTS.getDesc(), null, JSON.toJSONString(sendGiftResp), JSON.toJSONString(null), map);
             ComponentUtil.streamConsumerService.addError(streamConsumerModel);
             return JsonResult.failedResult(map.get("message"),map.get("code"));
         }

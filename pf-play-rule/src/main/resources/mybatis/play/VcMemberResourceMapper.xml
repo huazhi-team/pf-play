@@ -346,7 +346,7 @@
         day_masonry = day_masonry-#{dayMasonry},
         charm_value = charm_value+#{charmValue},
         is_business = 2
-                where  member_id = #{memberId}
+        where  member_id = #{memberId}
   </update>
 
   <!--减少自身砖石 -->

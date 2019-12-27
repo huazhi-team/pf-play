@@ -254,6 +254,12 @@ public class UserInfoModel {
      * @mbggenerated
      */
     private Integer isLevel5;
+    /**
+     * 是否支付了  1、未是否 2 是已支付
+     *
+     * @mbggenerated
+     */
+    private Integer isPay;
 
     /**
      * 支付密码
@@ -555,5 +561,13 @@ public class UserInfoModel {
 
     public void setPayPassword(String payPassword) {
         this.payPassword = payPassword;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 }

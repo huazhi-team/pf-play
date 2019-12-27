@@ -18,6 +18,7 @@
        a.member_add,
        a.nickname,
        a.sex,
+       a.is_pay,
        a.birthday,
        a.province,
        a.city,

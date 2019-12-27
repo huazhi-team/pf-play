@@ -16,6 +16,7 @@ public class LoginResp {
     private   String   province;
     private   String   city;
     private   String   inviteCode;
+    private   Integer   isPay;
 
     public String getNickname() {
         return nickname;
@@ -87,5 +88,13 @@ public class LoginResp {
 
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 }

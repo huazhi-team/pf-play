@@ -118,6 +118,12 @@ public class UserInfoResp {
      * @mbggenerated
      */
     private Integer loginTime;
+    /**
+     * 是否支付过了
+     *
+     * @mbggenerated
+     */
+    private Integer isPay;
 
     /***
      * 机器id
@@ -565,5 +571,13 @@ public class UserInfoResp {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 }

@@ -48,6 +48,11 @@ public class OrderModel extends BasePage implements Serializable {
     private Integer orderTradeStatus;
 
     /**
+     * 是否是初始化：大于零则表示属于初始化，初始化数据就是在查询订单状态orderTradeStatus时，默认值=0
+     */
+    private Integer isInit;
+
+    /**
      * 订单状态：1正常，2取消，3完成交易
      */
     private Integer orderStatus;
@@ -545,5 +550,13 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setBuyFixedNum(String buyFixedNum) {
         this.buyFixedNum = buyFixedNum;
+    }
+
+    public Integer getIsInit() {
+        return isInit;
+    }
+
+    public void setIsInit(Integer isInit) {
+        this.isInit = isInit;
     }
 }

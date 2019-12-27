@@ -189,14 +189,14 @@ public class AlipayController {
             //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
             //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
             String resultData = JSON.toJSONString(params);// 阿里返回的数据
-            log.info(String.format("the AlipayController.sendAli() , the resultData=%s ", resultData));
+            log.info(String.format("the AlipayController.notify() , the resultData=%s ", resultData));
             boolean flag = AlipaySignature.rsaCheckV1(params, Alipay.ALIPAY_PUBLIC_KEY, "UTF-8","RSA2");
-            log.info(String.format("the AlipayController.sendAli() , the flag=%s ", flag));
+            log.info(String.format("the AlipayController.notify() , the flag=%s ", flag));
             // 返回数据给客户端
             return JsonResult.successResult(null, cgid, sgid);
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
-            log.error(String.format("this AlipayController.sendAli() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, request.getQueryString()));
+            log.error(String.format("this AlipayController.notify() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, request.getQueryString()));
             e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"), cgid, sgid);
         }

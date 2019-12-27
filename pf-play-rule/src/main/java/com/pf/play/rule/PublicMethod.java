@@ -748,8 +748,13 @@ public class PublicMethod {
             resBean.setInviteCode(requestOrder.getPhoneNum());
         }
         resBean.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBean.setIsInit(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE); // 添加这个条件表示：SQL语句条件加上order_trade_status = 0
         resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
-        resBean.setOwnType(ownType);
+        if(requestOrder.getOrderType() != null){
+            resBean.setOwnType(requestOrder.getOrderType());
+        }else {
+            resBean.setOwnType(ownType);
+        }
         return resBean;
     }
 
@@ -1462,6 +1467,7 @@ public class PublicMethod {
         resBean.setMemberId(memberId);
         resBean.setOrderNo(requestTrade.getOrderNo());
         resBean.setOrderTradeStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+        resBean.setIsInit(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
         resBean.setOrderStatus(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
         resBean.setOwnType(ownType);
         return resBean;
@@ -1477,6 +1483,9 @@ public class PublicMethod {
     public static void checkOrderBySell(OrderModel orderModel) throws Exception{
         if (orderModel == null){
             throw new ServiceException(PfErrorCode.ENUM_ERROR.T00006.geteCode(), PfErrorCode.ENUM_ERROR.T00006.geteDesc());
+        }
+        if (orderModel.getOrderTradeStatus() != ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
+            throw new ServiceException(PfErrorCode.ENUM_ERROR.T00031.geteCode(), PfErrorCode.ENUM_ERROR.T00031.geteDesc());
         }
     }
 

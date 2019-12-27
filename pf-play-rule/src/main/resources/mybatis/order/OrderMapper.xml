@@ -68,6 +68,10 @@
             <if test="nickname != null and nickname != '' " >
                 and b.nickname = #{nickname}
             </if>
+            <!-- 由于0的值，没办法做为空判断，所以弄了一个isInit字段来进行判断 -->
+            <if test="isInit != null and isInit != '' " >
+                and a.order_trade_status = 0
+            </if>
             <!-- 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时 -->
             and a.is_overtime = 1
             and a.yn = 0

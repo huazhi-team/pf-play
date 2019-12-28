@@ -52,7 +52,8 @@ public class TaskHodgepodge {
      * @author yoko
      * @date 2019/12/27 21:30
     */
-    @Scheduled(cron = "1 * * * * ?")
+//    @Scheduled(cron = "1 * * * * ?")
+    @Scheduled(fixedDelay = 1000) // 每秒执行
     public void taskAlipay() throws Exception{
         log.info("TaskHodgepodge.taskAlipay()------------------进来了!");
         // 查询要跑的数据

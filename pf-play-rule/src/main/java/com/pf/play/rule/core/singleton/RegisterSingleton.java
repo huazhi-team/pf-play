@@ -36,6 +36,7 @@ public class RegisterSingleton {
     public Integer realNameCycle ;
     public Double realNameReward ;
     public Double initEmpiricalValue ;
+    public String ip ;
 
     public List<SysTypeDictionary> commenType ;
     public List<SysTypeDictionary> masonryType ;
@@ -124,5 +125,13 @@ public class RegisterSingleton {
 
     public void setInitEmpiricalValue(Double initEmpiricalValue) {
         this.initEmpiricalValue = initEmpiricalValue;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

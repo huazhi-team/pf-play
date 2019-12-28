@@ -61,6 +61,8 @@ public class CommonServiceImpl<T> extends BaseServiceImpl<T> implements CommonSe
                 RegisterSingleton.getInstance().setRealNameCycle(Integer.parseInt(sysTypeDictionary.getValue()));
             }else if(sysTypeDictionary.getTypeValue().equals("9")){
                 RegisterSingleton.getInstance().setInitEmpiricalValue(Double.valueOf(sysTypeDictionary.getValue()));
+            }else if(sysTypeDictionary.getTypeValue().equals("10")){
+                RegisterSingleton.getInstance().setIp(sysTypeDictionary.getValue());
             }
         }
         RegisterSingleton.getInstance().setMasonryType(masonryType);

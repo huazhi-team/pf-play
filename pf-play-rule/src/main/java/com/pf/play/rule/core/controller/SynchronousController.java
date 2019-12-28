@@ -20,6 +20,7 @@ import com.pf.play.rule.core.model.VcMember;
 import com.pf.play.rule.core.model.VcMemberResource;
 import com.pf.play.rule.core.model.region.RegionModel;
 import com.pf.play.rule.core.model.stream.StreamConsumerModel;
+import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +148,10 @@ public class SynchronousController {
         Integer memberId = 0;
         RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
+
+            if(!RegisterSingleton.getInstance().getIp().equals(ip)){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS5.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS5.geteDesc());
+            }
             log.info("----------:getMemberInfo!");
             boolean   cheakFlag  = SynchroMethod.cheakIsMemberId(qhrReq.getMemberId());
             if (!cheakFlag){
@@ -190,27 +195,34 @@ public class SynchronousController {
         Integer memberId = 0;
         RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
         try{
+            if(!RegisterSingleton.getInstance().getIp().equals(ip)){
+                    throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS5.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS5.geteDesc());
+            }
             log.info("----------:sendGifts!");
             int   flag1 =  ComponentUtil.synchroService.checkSendInfo(sendGiftResp.getSendMemberId(),
                                                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getPayPw());
             if(flag1==-1){
-                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+//                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
             }
 
             if(flag1!=0){
-                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteDesc());
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+//                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS2.geteDesc());
             }
 
             Boolean flag = ComponentUtil.synchroService.chechMemberResource(sendGiftResp.getSendMemberId(),sendGiftResp.getMasonryCount());
             if(!flag){
-                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteDesc());
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+//                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS3.geteDesc());
             }
 
             int  count = ComponentUtil.synchroService.addMemberResource(sendGiftResp.getSendMemberId(),
                     sendGiftResp.getReceiptMemberId(),sendGiftResp.getMasonryCount());
 
             if(count==0){
-                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteDesc());
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteDesc());
+//                return JsonResult.failedResult(ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteDesc());
             }
 
             ExeReceiveTaskResp receiveTaskResp = TaskMethod.toExeReceiveTaskResp(true);

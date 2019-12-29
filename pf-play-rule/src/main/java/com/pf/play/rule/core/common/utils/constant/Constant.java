@@ -56,9 +56,9 @@ public class Constant {
     public  static  int  TASK_TYPE_EXISTING   =  2 ;
 
     /***********同步用户详细信息**********/
-    public  static  String    USER_SYNCHRONOUS_URL="http://114.55.67.167:9093/qhr/api/syncUserInfo";
+    public  static  String    USER_SYNCHRONOUS_URL="http://47.111.243.241:9093/qhr/api/syncUserInfo";
     /***********同步上下级信息详细信息**********/
-    public  static  String    PRARENT_SYNCHRONOUS_URL="http://114.55.67.167:9093/qhr/api/syncPrarentId";
+    public  static  String    PRARENT_SYNCHRONOUS_URL="http://47.111.243.241:9093/qhr/api/syncPrarentId";
     /*********** 比例信息 **********/
     public  static  Double    ACTIVE_VALUE_MASONRY =  0.4 ;
 

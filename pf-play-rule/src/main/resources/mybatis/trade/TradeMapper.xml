@@ -426,6 +426,9 @@
             <if test="sellMemberId != null and sellMemberId != '' " >
                 a.receive_time = NOW(),
             </if>
+            <if test="isSysReceive != null and isSysReceive != '' " >
+                a.is_sys_receive = #{isSysReceive},
+            </if>
             a.update_time = NOW()
         </trim>
         where 1=1

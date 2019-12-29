@@ -1852,16 +1852,16 @@ public class PublicMethod {
 
     /**
      * @Description: 组装查询要更新的订单状态
-     * @param requestTrade - 查询的基本信息
+     * @param orderNo - 订单号
      * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成
      * @param orderStatus - 订单状态：1正常，2取消，3完成交易
      * @return OrderModel
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleOrderUpByConfirmReceipt(RequestTrade requestTrade, int orderTradeStatus, int orderStatus){
+    public static OrderModel assembleOrderUpByConfirmReceipt(String orderNo, int orderTradeStatus, int orderStatus){
         OrderModel resBean = new OrderModel();
-        resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderNo(orderNo);
         resBean.setOrderTradeStatus(orderTradeStatus);
         resBean.setOrderStatus(orderStatus);
         return resBean;
@@ -1878,6 +1878,21 @@ public class PublicMethod {
     public static OrderModel assembleOrderQueryByConfirmRpt(RequestTrade requestTrade, int orderTradeStatus){
         OrderModel resBean = new OrderModel();
         resBean.setOrderNo(requestTrade.getOrderNo());
+        resBean.setOrderTradeStatus(orderTradeStatus);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装查询订单信息的查询条件
+     * @param orderId - 订单号主键ID
+     * @param orderTradeStatus - 订单交易状态：0初始化，1锁定，2确认付款，3完成
+     * @return OrderModel
+     * @author yoko
+     * @date 2019/12/3 21:03
+     */
+    public static OrderModel assembleOrderQueryByConfirmRpt(long orderId, int orderTradeStatus){
+        OrderModel resBean = new OrderModel();
+        resBean.setId(orderId);
         resBean.setOrderTradeStatus(orderTradeStatus);
         return resBean;
     }
@@ -1902,16 +1917,18 @@ public class PublicMethod {
      * @param orderId - 订单号的主键ID
      * @param tradeStatus - 交易状态（更改后）
      * @param oldStatus - 交易状态（更改前）
+     * @param isSysReceive - 是否属于系统自动(程序运算)确认收款：1卖家自动确认收款，2程序运算确认收款
      * @return com.pf.play.rule.core.model.trade.TradeModel
      * @author yoko
      * @date 2019/12/3 16:03
      */
-    public static TradeModel assembleUpTradeStatusByConfirmReceipt(long orderId, long memberId, int tradeStatus, int oldStatus){
+    public static TradeModel assembleUpTradeStatusByConfirmReceipt(long orderId, long memberId, int tradeStatus, int oldStatus, int isSysReceive){
         TradeModel resBean = new TradeModel();
         resBean.setOrderId(orderId);
         resBean.setSellMemberId(memberId);
         resBean.setTradeStatus(tradeStatus);
         resBean.setOldStatus(oldStatus);
+        resBean.setIsSysReceive(isSysReceive);
         return resBean;
     }
 

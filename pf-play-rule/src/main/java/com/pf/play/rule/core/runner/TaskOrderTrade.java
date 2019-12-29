@@ -105,15 +105,37 @@ public class TaskOrderTrade {
                     // 判断卖家需要确认收款是否超时
                     int differMinute = DateUtil.dateSubtractBySystemTime(data.getPayTime());
                     if (differMinute >= Integer.parseInt(sellOverTime.getStgValue())){
-                        // 卖家超时：A.纪录卖家超时违约。 B.修改订单交易流水超时状态。 C.订单交易流水的runStatus状态更新成完成。 D.对于卖家的钻石目前还没有合适的处理方式（目前会进行人工处理：因为买家可以造假）
+                        // （已经有变更与卖家点击确认收款-功能、流程相同：变成成）卖家超时：A.纪录卖家超时违约。 B.修改订单交易流水超时状态。 C.订单交易流水的runStatus状态更新成完成。 D.对于卖家的钻石目前还没有合适的处理方式（目前会进行人工处理：因为买家可以造假）
 
                         // 组装违约纪录数据
                         OrderViolateModel orderViolateModel = PublicMethod.assembleOrderViolateData(data, data.getSellMemberId(), ServerConstant.ViolateTypeEnum.SELL_RECEIVABLE.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE, null, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
-                        // 组装订单交易流水超时的数据
-                        TradeModel tradeModel = PublicMethod.assemblerTradeDataByUpdateOverTime(data);
+                        ComponentUtil.orderViolateService.add(orderViolateModel);
+//                        // 组装订单交易流水超时的数据
+//                        TradeModel tradeModel = PublicMethod.assemblerTradeDataByUpdateOverTime(data);
+//                        // 组装更改运行状态的数据
+//                        StatusModel statusModel = PublicMethod.assembleUpdateStatusModel(data.getId(), ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
+//                        ComponentUtil.taskOrderTradeService.taskActoinBySell(orderViolateModel, tradeModel, statusModel);
+
+                        // 首先根据订单号查询是否有此订单信息
+                        OrderModel orderQuery = PublicMethod.assembleOrderQueryByConfirmRpt(data.getOrderId(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+                        OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
+                        // 整改成与卖家点击确认收款-功能、流程相同
+                        TradeModel tradeQuery = PublicMethod.assembleTradeQueryByConfirmReceipt(orderModel.getId(), data.getSellMemberId(), ServerConstant.TradeStatusEnum.PAY.getType());
+                        TradeModel tradeModel = (TradeModel) ComponentUtil.tradeService.findByObject(tradeQuery);
+                        // 组装卖家要扣除在冻结的钻石个数
+                        ConsumerModel sellConsumerModel = PublicMethod.assembleSellConsumerSubtractMasonry(tradeModel);
+                        // 组装买家要加的钻石个数
+                        ConsumerModel buyConsumerModel = PublicMethod.assembleBuyConsumerAddMasonry(tradeModel);
+                        // 更新订单流水：A.订单交易状态更新成完成. B.订单状态更新成交易完成
+                        // 更新订单交易流水：A.交易状态更新成确认已收款（卖家确认）
+                        // 卖家冻结钻石扣除、买家钻石加上
+                        TradeModel upTradeModel = PublicMethod.assembleUpTradeStatusByConfirmReceipt(orderModel.getId(), data.getSellMemberId(), ServerConstant.TradeStatusEnum.MAKE_COLLECTIONS.getType(),
+                                ServerConstant.TradeStatusEnum.PAY.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+                        OrderModel upOrderModel = PublicMethod.assembleOrderUpByConfirmReceipt(orderModel.getOrderNo(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
+                        ComponentUtil.tradeService.tradeFinish(upTradeModel, upOrderModel, sellConsumerModel, buyConsumerModel);
                         // 组装更改运行状态的数据
                         StatusModel statusModel = PublicMethod.assembleUpdateStatusModel(data.getId(), ServerConstant.PUBLIC_CONSTANT.RUN_STATUS_THREE);
-                        ComponentUtil.taskOrderTradeService.taskActoinBySell(orderViolateModel, tradeModel, statusModel);
+                        ComponentUtil.taskOrderTradeService.update(statusModel);
                     }else{
                         // 判断买家确认支付后的时间是否与系统时间相差超过10分钟
                         if (differMinute >= TEN_MIN){

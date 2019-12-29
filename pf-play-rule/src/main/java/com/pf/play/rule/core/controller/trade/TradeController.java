@@ -571,8 +571,9 @@ public class TradeController {
             // 更新订单流水：A.订单交易状态更新成完成. B.订单状态更新成交易完成
             // 更新订单交易流水：A.交易状态更新成确认已收款（卖家确认）
             // 卖家冻结钻石扣除、买家钻石加上
-            TradeModel upTradeModel = PublicMethod.assembleUpTradeStatusByConfirmReceipt(orderModel.getId(), memberId, ServerConstant.TradeStatusEnum.MAKE_COLLECTIONS.getType(), ServerConstant.TradeStatusEnum.PAY.getType());
-            OrderModel upOrderModel = PublicMethod.assembleOrderUpByConfirmReceipt(requestTrade, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
+            TradeModel upTradeModel = PublicMethod.assembleUpTradeStatusByConfirmReceipt(orderModel.getId(), memberId, ServerConstant.TradeStatusEnum.MAKE_COLLECTIONS.getType(),
+                    ServerConstant.TradeStatusEnum.PAY.getType(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            OrderModel upOrderModel = PublicMethod.assembleOrderUpByConfirmReceipt(requestTrade.getOrderNo(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
             ComponentUtil.tradeService.tradeFinish(upTradeModel, upOrderModel, sellConsumerModel, buyConsumerModel);
 
             // 组装返回客户端的数据

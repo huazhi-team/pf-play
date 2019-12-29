@@ -231,6 +231,11 @@ public class TradeModel extends BasePage implements Serializable {
      */
     private Integer oldStatus;
 
+    /**
+     * 是否属于系统自动(程序运算)确认收款：1卖家自动确认收款，2程序运算确认收款
+     */
+    private Integer isSysReceive;
+
     public Long getId() {
         return id;
     }
@@ -566,5 +571,13 @@ public class TradeModel extends BasePage implements Serializable {
 
     public void setOldStatus(Integer oldStatus) {
         this.oldStatus = oldStatus;
+    }
+
+    public Integer getIsSysReceive() {
+        return isSysReceive;
+    }
+
+    public void setIsSysReceive(Integer isSysReceive) {
+        this.isSysReceive = isSysReceive;
     }
 }

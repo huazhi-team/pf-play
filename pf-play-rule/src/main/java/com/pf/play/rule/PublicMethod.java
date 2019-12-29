@@ -2670,13 +2670,15 @@ public class PublicMethod {
     /**
      * @Description: 组装查询订单的查询条件
      * @param orderNo - 订单号
+     * @param isAll - 大于0：查询所有数据<p>针对SQL：为空则SQL条件默认加上is_overtime = 1；不为空则SQL条件不需要加上is_overtime = 1</p>
      * @return OrderModel
      * @author yoko
      * @date 2019/11/22 18:01
      */
-    public static OrderModel assembleOrderQueryByAppeal(String orderNo){
+    public static OrderModel assembleOrderQueryByAppeal(String orderNo, int isAll){
         OrderModel resBean = new OrderModel();
         resBean.setOrderNo(orderNo);
+        resBean.setIsAll(isAll);
         return resBean;
     }
 

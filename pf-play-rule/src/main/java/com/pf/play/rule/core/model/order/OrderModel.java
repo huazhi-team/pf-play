@@ -220,6 +220,13 @@ public class OrderModel extends BasePage implements Serializable {
      */
     private String buyFixedNum;
 
+    /**
+     * 查询所有数据
+     * 针对SQL：为空则SQL条件默认加上is_overtime = 1
+     * 不为空则SQL条件不需要加上is_overtime = 1
+     */
+    private Integer isAll;
+
     public Long getId() {
         return id;
     }
@@ -558,5 +565,13 @@ public class OrderModel extends BasePage implements Serializable {
 
     public void setIsInit(Integer isInit) {
         this.isInit = isInit;
+    }
+
+    public Integer getIsAll() {
+        return isAll;
+    }
+
+    public void setIsAll(Integer isAll) {
+        this.isAll = isAll;
     }
 }

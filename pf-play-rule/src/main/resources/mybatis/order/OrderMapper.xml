@@ -73,7 +73,9 @@
                 and a.order_trade_status = 0
             </if>
             <!-- 订单是否超时（用户未及时支付金额给卖家）：1未超时，2超时 -->
-            and a.is_overtime = 1
+            <if test="isAll == null or isAll == '' " >
+                and a.is_overtime = 1
+            </if>
             and a.yn = 0
         </trim>
     </sql>

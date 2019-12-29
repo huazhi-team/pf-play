@@ -419,7 +419,7 @@ public class AppealController {
             // 校验sign
 
             // 首先根据订单号查询是否有此订单信息
-            OrderModel orderQuery = PublicMethod.assembleOrderQueryByAppeal(requestAppeal.getOrderNo());
+            OrderModel orderQuery = PublicMethod.assembleOrderQueryByAppeal(requestAppeal.getOrderNo(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
             OrderModel orderModel = (OrderModel) ComponentUtil.orderService.findByObject(orderQuery);
             PublicMethod.checkOrderByAppeal(orderModel);
 

@@ -388,4 +388,12 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         boolean  flag =TaskMethod.isCharmValue(resource,task);
         return flag;
     }
+
+    @Override
+    public VcMember getResourceInfo(String phone) {
+        VcMember   vcMember  =  new  VcMember();
+        vcMember.setMemberCode("C"+phone);
+        VcMember   rsVcMember = vcMemberMapper.selectByMemberId(vcMember);
+        return rsVcMember;
+    }
 }

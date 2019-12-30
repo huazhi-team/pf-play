@@ -281,6 +281,7 @@ public class ServerConstant {
         MY_RECEIVETASKREWARD(58, "UserController.userReceiveTaskReward", "领取任务奖励"),
         MY_TODAYTASK(59, "UserController.myTodayTask", "今日任务状态"),
         MY_EXETODAYTASK(60, "UserController.exeTodayTask", "今日任务领取"),
+        MY_GIVE(61, "UserController.myGive", "赠送好友"),
 //        my_ReceiveTaskReward(58, "TaskController.exeGiveTask", "任务大派送-任务领取"),
 
 

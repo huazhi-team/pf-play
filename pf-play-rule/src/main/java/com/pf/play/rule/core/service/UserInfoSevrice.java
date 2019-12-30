@@ -63,4 +63,5 @@ public interface UserInfoSevrice  <T> extends BaseService<T> {
 
     boolean   isCharmValueOk(Integer  memberId,Integer  task);
 
+    VcMember  getResourceInfo(String phone);
 }

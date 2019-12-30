@@ -8,6 +8,7 @@ import com.pf.play.model.protocol.request.uesr.PhoneVerificationReq;
 import com.pf.play.model.protocol.request.uesr.RegisterReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.task.*;
+import com.pf.play.model.protocol.response.uesr.MyGiveResp;
 import com.pf.play.rule.core.common.exception.ServiceException;
 import com.pf.play.rule.core.common.utils.constant.CacheKey;
 import com.pf.play.rule.core.common.utils.constant.Constant;
@@ -598,6 +599,28 @@ public class TaskMethod {
         if(StringUtils.isBlank(userCommonReq.getToken())){
             flag = false;
         }else if(StringUtils.isBlank(userCommonReq.getWxOpenId())){
+            flag = false;
+        }
+        return flag;
+    }
+
+    /**
+     * @Description: 赠送信息
+     * @param myGiveResp
+     * @return boolean
+     * @author long
+     * @date 2019/12/30 15:37
+     */
+    public  static  boolean    checkGive(MyGiveResp myGiveResp){
+
+        boolean    flag = true ;
+        if(StringUtils.isBlank(myGiveResp.getToken())){
+            flag = false;
+        }else if(StringUtils.isBlank(myGiveResp.getWxOpenId())){
+            flag = false;
+        }else if(StringUtils.isBlank(myGiveResp.getPayPw())){
+            flag = false;
+        }else if(StringUtils.isBlank(myGiveResp.getPhone())){
             flag = false;
         }
         return flag;
@@ -1657,4 +1680,19 @@ public class TaskMethod {
         }
         return  rsList;
     }
+
+    /**
+     * @Description: TODO
+     * @param myGiveResp
+     * @return com.pf.play.model.protocol.request.uesr.UserCommonReq
+     * @author long
+     * @date 2019/12/30 15:25
+     */
+    public static UserCommonReq   toUserCommonReq(MyGiveResp myGiveResp){
+        UserCommonReq  userCommonReq= new  UserCommonReq();
+        userCommonReq.setToken(myGiveResp.getToken());
+        userCommonReq.setWxOpenId(myGiveResp.getWxOpenId());
+        return  userCommonReq;
+    }
+
 }

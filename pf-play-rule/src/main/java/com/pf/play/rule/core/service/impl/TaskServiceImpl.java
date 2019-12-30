@@ -265,7 +265,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
     @Override
     public List<DisTaskType> queryReceiveTask(Integer memberid) {
         List<DisTaskType>  list  = TaskSingleton.getInstance().getDisTaskTypeList();
-        List<UTaskHave>  haveList =uTaskHaveMapper.selectValidTask(memberid);
+        List<UTaskHave>  haveList =uTaskHaveMapper.selectValidTask(memberid);//拥有的id
         VcMemberResource vc =TaskMethod.changvcMemberResource(memberid);
         VcMemberResource rsVc =vcMemberResourceMapper.selectByPrimaryKey(vc);
         if(rsVc==null){

@@ -4,18 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.pf.play.common.utils.JsonResult;
 import com.pf.play.common.utils.StringUtil;
 import com.pf.play.model.protocol.request.CommonReq;
+import com.pf.play.model.protocol.request.give.SendGiftResp;
 import com.pf.play.model.protocol.request.uesr.LoginReq;
 import com.pf.play.model.protocol.request.uesr.UpdateUserReq;
 import com.pf.play.model.protocol.request.uesr.UserCommonReq;
 import com.pf.play.model.protocol.response.my.Empirical;
 import com.pf.play.model.protocol.response.my.Vitality;
+import com.pf.play.model.protocol.response.task.ExeReceiveTaskResp;
 import com.pf.play.model.protocol.response.task.ExeTodayTaskResp;
 import com.pf.play.model.protocol.response.task.GiveTaskResultResp;
 import com.pf.play.model.protocol.response.task.TodayTaskResp;
-import com.pf.play.model.protocol.response.uesr.MyEmpiricalResp;
-import com.pf.play.model.protocol.response.uesr.MyFriendsResp;
-import com.pf.play.model.protocol.response.uesr.MyMasonryResp;
-import com.pf.play.model.protocol.response.uesr.MyVitalityResp;
+import com.pf.play.model.protocol.response.uesr.*;
 import com.pf.play.rule.MyMethod;
 import com.pf.play.rule.PublicMethod;
 import com.pf.play.rule.TaskMethod;
@@ -597,5 +596,60 @@ public class UserController {
         }
     }
 
+
+    @PostMapping("/myGive")
+    public JsonResult<Object> myGive(HttpServletRequest request, HttpServletResponse response, MyGiveResp myGiveResp)throws Exception{
+        String sgid = ComponentUtil.redisIdService.getNewId();
+        String cgid = "";
+        String token;
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        Integer memberId = 0;
+
+        RegionModel regionModel = PublicMethod.assembleRegionModel(ip);
+        try{
+            log.info("----------:myGive!");
+            UserCommonReq userCommonReq =TaskMethod.toUserCommonReq(myGiveResp);
+            boolean  flag = TaskMethod.checkGive(myGiveResp);
+            if(flag){
+                memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
+            }
+            VcMember vcMember = ComponentUtil.userInfoSevrice.getResourceInfo(myGiveResp.getPhone());
+            int   flag1 =  ComponentUtil.synchroService.checkSendInfo(memberId,
+                    vcMember.getMemberId(),myGiveResp.getPayPw());
+            if(flag1==-1){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+            }
+
+            if(flag1!=0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+            }
+
+            flag = ComponentUtil.synchroService.chechMemberResource(memberId,myGiveResp.getMasonryCount());
+            if(!flag){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+            }
+
+            int  count = ComponentUtil.synchroService.addMemberResource(memberId,
+                    vcMember.getMemberId(),myGiveResp.getMasonryCount());
+
+            if(count==0){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS4.geteDesc());
+            }
+            ExeReceiveTaskResp receiveTaskResp = TaskMethod.toExeReceiveTaskResp(true);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, myGiveResp, ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getType(),
+                    ServerConstant.InterfaceEnum.MY_EXETODAYTASK.getDesc(), null, JSON.toJSONString(myGiveResp), JSON.toJSONString(receiveTaskResp), null);
+            ComponentUtil.streamConsumerService.addVisit(streamConsumerModel);
+            return JsonResult.successResult(receiveTaskResp);
+        }catch (Exception e){
+            e.printStackTrace();
+            Map<String,String> map= ExceptionMethod.getException(e, Constant.CODE_ERROR_TYPE1);
+            StreamConsumerModel streamConsumerModel = PublicMethod.assembleStream(sgid, cgid, memberId, regionModel, myGiveResp, ServerConstant.InterfaceEnum.MY_GIVE.getType(),
+                    ServerConstant.InterfaceEnum.MY_GIVE.getDesc(), null, JSON.toJSONString(myGiveResp), JSON.toJSONString(null), map);
+            ComponentUtil.streamConsumerService.addError(streamConsumerModel);
+
+            return JsonResult.failedResult(map.get("message"),map.get("code"));
+        }
+    }
 
 }

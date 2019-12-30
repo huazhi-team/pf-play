@@ -431,7 +431,13 @@
   </select>
 
 
-
+  <select id="selectByphone" resultType="com.pf.play.rule.core.model.VcMember" >
+    select
+    <include refid="Base_Column_List" />
+    from vc_member
+    where 1=1
+    and member_code = #{MemberCode}
+  </select>
 
 
 

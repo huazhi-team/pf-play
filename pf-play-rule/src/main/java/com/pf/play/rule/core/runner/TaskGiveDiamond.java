@@ -29,7 +29,7 @@ import java.util.List;
  *     2.查询策略里面手续费的百分之多少分给用户
  *     3.根据达人等级查询出相对应的用户
  *     4.具体赠送用户钻石、并且把赠送纪录插入到表u_masonry_list_log中
- *     赠送用户的钻石算法：昨天收取的手续费X要分出的钻石比例（策略里面配置）X达人等级分出的占比/达人等级的人数=要赠送的钻石数
+ *     赠送用户的钻石算法：昨天收取的手续费X要分出的钻石比例（策略里面配置）X百分之五十X达人等级分出的占比/达人等级的人数=要赠送的钻石数
  * </p>
  * @Author yoko
  * @Date 2019/12/23 14:20
@@ -40,14 +40,15 @@ import java.util.List;
 public class TaskGiveDiamond {
     private final static Logger log = LoggerFactory.getLogger(TaskGiveDiamond.class);
 
-//    @Scheduled(cron = "0 0 1 * * ?")
-    @Scheduled(cron = "9 * * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
+//    @Scheduled(cron = "1 * * * * ?")
     public void giveDiamond(){
         try{
             // 昨天
             int yesterDay = DateUtil.getIntYesterday();
             String oneDayServiceCharge = ComponentUtil.tradeService.getOneDayServiceCharge(yesterDay);
             log.info("-----------------oneDayServiceCharge:" + oneDayServiceCharge);
+//            oneDayServiceCharge = "10000";
             if (!StringUtils.isBlank(oneDayServiceCharge)){
                 if (Double.parseDouble(oneDayServiceCharge) > ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO){
                     // 手续费分出给用户的比例
@@ -56,6 +57,8 @@ public class TaskGiveDiamond {
                     // 具体要分的钻石=手续费X手续费分出给用户的比例
                     String stgRatio = StringUtil.getBigDecimalDivide(strategyModel.getStgValue(), String.valueOf(100));
                     String giveServiceChargeNum = StringUtil.getMultiply(oneDayServiceCharge, stgRatio);
+                    // 这个钱还需要乘以百分之五十（新加规定）
+                    giveServiceChargeNum = StringUtil.getMultiply(giveServiceChargeNum, "0.5");
                     // 等级达人分配的奖励比例
                     List<DisVitalityValue> disVitalityValueList = EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
                     for (DisVitalityValue disVitalityValue : disVitalityValueList){
@@ -86,7 +89,7 @@ public class TaskGiveDiamond {
         }catch (Exception e){
             e.printStackTrace();
         }
-
+        log.info("-----------------TaskGiveDiamond.giveDiamond()-结束");
 
     }
 }

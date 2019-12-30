@@ -89,7 +89,7 @@ public class LoginServiceImpl<T> extends BaseServiceImpl<T> implements LoginServ
             if(StringUtils.isBlank(loginReq.getWxOpenId())){
                 return false;
             }
-        }else if(loginReq.getLoginType()==1){
+        }else if(loginReq.getLoginType()==2){
             if(StringUtils.isBlank(loginReq.getPassword())||StringUtils.isBlank(loginReq.getPhone())){
                 return false;
             }

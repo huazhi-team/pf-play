@@ -142,7 +142,8 @@ public class LoginMethod {
         new Thread() {
             public void run() {
                 try{
-                    HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
+                    String synchroToken = ComponentUtil.loadConstant.synchroToken;
+                    HttpGetUtil.sendPost(synchroToken,param);
                 }catch (Exception e ){
                     e.printStackTrace();
                 }

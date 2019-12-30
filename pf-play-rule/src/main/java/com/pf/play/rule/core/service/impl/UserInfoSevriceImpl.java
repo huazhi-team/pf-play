@@ -268,7 +268,9 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
 
 
             /*************/
-            LoginMethod.asyncLogin(Constant.USER_SYNCHRONOUS_URL, param);
+//            Constant  constant= new Constant();
+            String synchroTokenUrl = ComponentUtil.loadConstant.synchroToken;
+            LoginMethod.asyncLogin(synchroTokenUrl, param);
             flag=true;
 //            String   rs = HttpGetUtil.sendPost(Constant.USER_SYNCHRONOUS_URL,param);
 //            SynchronousReq req =JSON.parseObject(rs, SynchronousReq.class);
@@ -288,7 +290,10 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         List<Integer> idList    =  new ArrayList<>();
         for(VcMember vcMember:list){
             String   param   =  SynchroMethod.toSyncPrarentId(vcMember);
-            String   codeInfo =  HttpGetUtil.send(Constant.PRARENT_SYNCHRONOUS_URL,param);
+
+
+            String synchroRelationURL = ComponentUtil.loadConstant.synchroRelation;
+            String   codeInfo =  HttpGetUtil.send(synchroRelationURL,param);
             PrarentResult prarentResult  = JSON.parseObject(codeInfo, PrarentResult.class);
             if(!StringUtils.isBlank(prarentResult.getErrcode())&&prarentResult.getErrcode().equals("0")){
                 idList.add(vcMember.getMemberId());

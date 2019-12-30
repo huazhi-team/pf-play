@@ -3,6 +3,7 @@ package com.pf.play.rule.util;
 
 import com.pf.play.rule.core.common.redis.RedisIdService;
 import com.pf.play.rule.core.common.redis.RedisService;
+import com.pf.play.rule.core.common.utils.constant.LoadConstant;
 import com.pf.play.rule.core.service.*;
 
 /**
@@ -11,6 +12,7 @@ import com.pf.play.rule.core.service.*;
 public class ComponentUtil {
     public static RedisIdService redisIdService;
     public static RedisService redisService;
+    public static LoadConstant loadConstant;
     public static TaskService taskService;
     public static RegisterService registerService;
     public static GenerateService generateService;

@@ -3,6 +3,7 @@ package com.pf.play.rule.core.runner;
 import com.pf.play.common.utils.CRC32Util;
 import com.pf.play.rule.core.common.redis.RedisIdService;
 import com.pf.play.rule.core.common.redis.RedisService;
+import com.pf.play.rule.core.common.utils.constant.LoadConstant;
 import com.pf.play.rule.core.service.*;
 import com.pf.play.rule.util.ComponentUtil;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 
 @Component
@@ -27,6 +30,9 @@ public class AutowireRunner implements ApplicationRunner {
 
     @Value("${sp.send.url}")
     private String spSendUrl;
+
+    @Resource
+    private LoadConstant loadConstant;
 
     @Autowired
     private RedisIdService redisIdService;
@@ -118,6 +124,7 @@ public class AutowireRunner implements ApplicationRunner {
         log.info("AutowireRunner ...");
         ComponentUtil.redisIdService = redisIdService;
         ComponentUtil.redisService = redisService;
+        ComponentUtil.loadConstant = loadConstant;
 //        ComponentUtil.appService = appService;
         ComponentUtil.taskService = taskService;
         ComponentUtil.registerService = registerService;
@@ -146,7 +153,7 @@ public class AutowireRunner implements ApplicationRunner {
 
         runThread = new RunThread();
         runThread.start();
-        CRC32Util.getCRC32("sssss");
+//        CRC32Util.getCRC32("sssss");
 //        List<AppModel> dataList = ComponentUtil.appService.getListApp(new AppModel());
 //        for (AppModel dataModel : dataList){
 //            log.info("id:" + dataModel.getId());
@@ -172,6 +179,10 @@ public class AutowireRunner implements ApplicationRunner {
         @Override
         public void run() {
             log.info("启动啦............");
+            String synchroToken = ComponentUtil.loadConstant.synchroToken;
+            String synchroRelation = ComponentUtil.loadConstant.synchroRelation;
+            log.info("synchroToken:" + synchroToken);
+            log.info("synchroRelation:" + synchroRelation);
         }
 
 

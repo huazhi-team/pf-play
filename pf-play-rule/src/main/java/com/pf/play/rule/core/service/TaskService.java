@@ -101,6 +101,10 @@ public interface TaskService  <T> extends BaseService<T> {
 
     void       updateHaveState() ;
 
+    void       levelHandle(Integer  memberId);
+
+    void       updateMyLevel(Integer  memberId);
+
 
 
 //    void   vitalitySettlement();

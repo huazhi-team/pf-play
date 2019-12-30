@@ -929,17 +929,16 @@ public class TaskMethod {
         Integer   level  =  0  ;
         List<DisVitalityValue>   list  =  EmpiricalVitalitySingleton.getInstance().getDisVitalityValue();
         for(DisVitalityValue  disVitalityValue:list){
-
-            if(queryVcMember.getDarenLevel()==0){
+            if (disVitalityValue.getDarenLevel()==0){
                 continue;
             }
-
-            if(disVitalityValue.getPushNumber()>queryVcMember.getPushPeople()||
-                    disVitalityValue.getTeamVitalitNum()>queryVcMember.getTeamActive()||
-                        disVitalityValue.getAllianceVitalitNum()>queryVcMember.getAllianceActive()){
+            if(disVitalityValue.getPushNumber()<=queryVcMember.getPushPeople()&&disVitalityValue.getTeamVitalitNum()<=queryVcMember.getTeamActive()&&
+                        disVitalityValue.getAllianceVitalitNum()<=queryVcMember.getAllianceActive()){
+                level++;
+            }else{
                 break;
             }
-            level++;
+
         }
         return level;
     }
@@ -1638,5 +1637,24 @@ public class TaskMethod {
         uTaskHave.setIdList(list);
         uTaskHave.setCurrentState(currentState);
         return  uTaskHave;
+    }
+
+    /**
+     * @Description: 组合list 信息
+     * @param list
+    * @param listTwo
+     * @return java.util.List<java.lang.Integer>
+     * @author long
+     * @date 2019/12/29 0:23
+     */
+    public static List<Integer>  addList(List<Integer>  list,List<Integer>  listTwo){
+        List<Integer>  rsList = new ArrayList<>();
+        for(Integer integer:list){
+            rsList.add(integer);
+        }
+        for(Integer integer:listTwo){
+            rsList.add(integer);
+        }
+        return  rsList;
     }
 }

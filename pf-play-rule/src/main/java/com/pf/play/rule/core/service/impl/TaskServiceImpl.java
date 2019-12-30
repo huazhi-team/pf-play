@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description TODO
@@ -508,7 +505,6 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             UvitalityValueList uVitalityValueList = new UvitalityValueList();
             List<UvitalityValueList>  list = uvitalityValueListMapper.selectNeedHandle();
             try{
-
                 if(list.size()>0){
                     uVitalityValueList = list.get(0);
                     UvitalityValueList uvitalityValueList = TaskMethod.updateUvitalityValueList(uVitalityValueList, 2);
@@ -603,11 +599,13 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             uqdateCount = ComponentUtil.taskService.myActiveValueUpdateResource(updateMyResource,Constant.TASK_TYPE13,uVitalityValueList.getActiveValue());
         }
 
+
 //        ComponentUtil.transactionalService.updateMyActiveValue(updateMyResource,vcMember);
         if(uqdateCount==0){
             throw  new ServiceException(ErrorCode.ENUM_ERROR.T000001.geteCode(),ErrorCode.ENUM_ERROR.T000001.geteDesc());
         }
 
+        ComponentUtil.taskService.levelHandle(vcMember1.getMemberId());
         //团队活力值的  需要修改的总体的一个list
         List<Integer>    updateList =   TaskMethod.getSuperiorIdList(vcMember1);
 
@@ -620,16 +618,17 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
             ComponentUtil.transactionalService.updataActiveValue(rsVcMemberResource,updateVcMember);
 
+//            ComponentUtil.taskService.levelHandle(memberId);//更新等级情况
             VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
             Integer  level  =  TaskMethod.getLevel(rsVcMemberUpdate); //条件满足等级
 
-            if(level==rsVcMemberUpdate.getDarenLevel()){
-                continue;
-            }else{
-                memberIdLevel = ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
-            }
+//            if(level==rsVcMemberUpdate.getDarenLevel()){
+//                continue;
+//            }else{
+            memberIdLevel = ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
+//            }
             VcMemberResource  vcMemberResource = TaskMethod.updateResourceLevel(rsVcMemberUpdate.getMemberId(),memberIdLevel);
-            vcMemberResourceMapper.updateByPrimaryKey(vcMemberResource);
+            vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource);
         }
 
 
@@ -710,7 +709,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public Integer CheckCondition(Integer level, Integer currentLevel, Integer memberId) {
-        while(level!=currentLevel){
+        while(level!=0){
             if(level==1){
                 boolean  flag = ComponentUtil.taskService.checkLevel1(memberId,currentLevel);
                 if(flag){
@@ -763,8 +762,12 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }
         List<VcMember>    listAll = vcMemberMapper.selectByPid(vcMember);
         List<Integer> idList2 = TaskMethod.removeHeroes(listAll,listHero);
+        if(idList2.size()==0){
+            return false ;
+        }
 
         VcMemberResource  resource =TaskMethod.quertLevel(idList2,1);
+
         List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
         if(listRs.size()!=0){
             rsFlag=true;
@@ -783,6 +786,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
             return false ;
         }
 
+        List<Integer>     allLiat = null;
+
+
         List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
         List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
@@ -790,7 +796,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
         List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,1);
 
-        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,2);
+        allLiat = TaskMethod.addList(idList,list);
+
+        VcMemberResource  resource =TaskMethod.quertLevel(allLiat,2);
         List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
         if(listRs.size()!=0){
             rsFlag=true;
@@ -808,6 +816,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         if(listHero.size()<1){
             return false ;
         }
+        List<Integer>     allLiat = null;
 
         List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
@@ -816,7 +825,9 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
         List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,2);
 
-        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,3);
+        allLiat = TaskMethod.addList(idList,list);
+        allLiat = TaskMethod.addList(allLiat,memberIdList);
+        VcMemberResource  resource =TaskMethod.quertLevel(allLiat,3);
         List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
         if(listRs.size()!=0){
             rsFlag=true;
@@ -838,13 +849,16 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }
         List<Integer>   idList = TaskMethod.removeHeroes(listAll,listHero);
 
+        List<Integer>     allLiat = null;
+
         VcMember    vcMembertwo    =TaskMethod.toIdList(idList);
         List<VcMember>    twoList  =  vcMemberMapper.selectLevel2Above(vcMembertwo);
 
         List<Integer>  list  =TaskMethod.toQueryMemberList(twoList);
         List<Integer>  memberIdList =ComponentUtil.taskService.getLevelMemberId(list,3);
-
-        VcMemberResource  resource =TaskMethod.quertLevel(memberIdList,4);
+        allLiat = TaskMethod.addList(idList,list);
+        allLiat = TaskMethod.addList(allLiat,memberIdList);
+        VcMemberResource  resource =TaskMethod.quertLevel(allLiat,4);
         List<VcMemberResource>   listRs = vcMemberResourceMapper.selectMemberIdLevel(resource);
         if(listRs.size()!=0){
             rsFlag=true;
@@ -968,13 +982,15 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
     @Override
     public List<Integer> getLevelMemberId(List<Integer> memberList, Integer generationNum) {
+        List<Integer>  rsList =  new ArrayList<>();
         List<Integer>  list =  memberList;
         for(int  i=1;i<generationNum;i++){
             VcMember    vcMemberThree    =TaskMethod.toIdList(list);
             List<VcMember>    threeList  =  vcMemberMapper.selectIdListAll(vcMemberThree);
             list = TaskMethod.toQueryMemberList(threeList);
+            rsList=TaskMethod.addList(rsList,list);
         }
-        return list;
+        return rsList;
     }
 
     /**
@@ -1063,5 +1079,23 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void levelHandle(Integer memberId) {
+        VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(memberId);
+        VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
+
+        Integer         level      =   TaskMethod.getLevel(rsVcMemberUpdate); //条件满足等级
+        Integer    memberIdLevel   =   ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
+//        if(level!=memberIdLevel){
+        VcMemberResource  vcMemberResource = TaskMethod.updateResourceLevel(rsVcMemberUpdate.getMemberId(),memberIdLevel);
+        vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource);
+//        }
+    }
+
+    @Override
+    public void updateMyLevel(Integer memberId) {
+
     }
 }

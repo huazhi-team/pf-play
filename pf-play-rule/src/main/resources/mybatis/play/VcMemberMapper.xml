@@ -323,7 +323,7 @@
 
 
   <select id="selectIsLevel2Where" resultType="com.pf.play.rule.core.model.VcMember" >
-        select member_id from  vc_member  a
+        select a.member_id from  vc_member  a
 		inner  JOIN  vc_member_resource  b
 		on  a.member_id =b.member_id
 		where   1=1
@@ -389,15 +389,15 @@
 
 
   <select id="selectLevel2Above" resultType="com.pf.play.rule.core.model.VcMember"  parameterType="Object" >
-        select member_id
+        select a.member_id
         from  vc_member  a  inner JOIN  vc_member_resource b
         on   a.member_id=b.member_id
         where    1=1
         <if test="superiorId != null" >
-          and  b.daren_level > =#{darenLevel},
+          and  b.daren_level > =#{darenLevel}
         </if>
         <if test="idList != null and idList.size()>0">
-          a.superior_id   in
+         and  a.superior_id   in
           <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
             #{item}
           </foreach>
@@ -411,7 +411,7 @@
                 from  vc_member
                 where  1=1
                 <if test="idList != null and idList.size()>0">
-                  superior_id   in
+                  and superior_id   in
                   <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
                     #{item}
                   </foreach>

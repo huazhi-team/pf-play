@@ -353,6 +353,27 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
         UEmpiricalValueList  uEmpiricalValueList =  MyMethod.insertUEmpiricalValueList(memberId,rsVcMember.getSuperiorId(),Constant.EMPIRIC_TYPE1,RegisterSingleton.getInstance().getInitEmpiricalValue());
         VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
         ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource,uEmpiricalValueList,vcMemberResourceId);
+
+        if(resource1.getPushPeople()==19){
+
+            VcMemberResource   queryVcMemberResource   =   TaskMethod.changvcMemberResource(resource1.getMemberId());
+            VcMemberResource      rsVcMemberUpdate     =   vcMemberResourceMapper.selectByPrimaryKey(queryVcMemberResource);
+            Integer  level  =  TaskMethod.getLevel(rsVcMemberUpdate); //条件满足等级
+            Integer    memberIdLevel = ComponentUtil.taskService.CheckCondition(level,rsVcMemberUpdate.getDarenLevel(),rsVcMemberUpdate.getMemberId());
+
+            if(level!=memberIdLevel){
+                VcMemberResource  vcMemberResource1 = TaskMethod.updateResourceLevel(rsVcMemberUpdate.getMemberId(),memberIdLevel);
+                vcMemberResourceMapper.updateByPrimaryKeySelective(vcMemberResource1);
+            }else{
+                List<Integer>    updateList =   TaskMethod.getSuperiorIdList(rsVcMember);
+                for(Integer  toMemberId : updateList){
+                    ComponentUtil.taskService.levelHandle(toMemberId);//更新等级情况
+                }
+//                rsVcMember.getExtensionMemberId();
+            }
+
+        }
+
     }
 
     @Override

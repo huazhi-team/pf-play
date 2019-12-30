@@ -154,15 +154,15 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         String strWx = (String)ComponentUtil.redisService.get(wxOpenidKeyCache);
         String strPhone = (String)ComponentUtil.redisService.get(phoneKeyCache);
         String strDid = (String)ComponentUtil.redisService.get(deviceidKeyCache);
-//        if (strWx != null){
-//            return false;
-//        }
-//        if (strPhone != null){
-//            return false;
-//        }
-//        if (strDid != null){
-//            return false;
-//        }
+        if (strWx != null){
+            return false;
+        }
+        if (strPhone != null){
+            return false;
+        }
+        if (strDid != null){
+            return false;
+        }
         RegisterResp  registerResp = new  RegisterResp();
         //验证码的组合方式   电话号 + 时间戳；
         String  verKey  = registerReq.getPhone() + registerReq.getTimeStamp();
@@ -185,12 +185,12 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
             return false;
         }
         /*********   DeviceId  是否被注册 ********/
-//        VcMember vcMember = new VcMember();
-//        vcMember.setDeviceId(registerReq.getDeviceId());
-//        VcMember  rsMember = vcMemberMapper.selectByPrimaryKey(vcMember);
-//        if(null!=rsMember){
-//            return false;
-//        }
+        VcMember vcMember = new VcMember();
+        vcMember.setDeviceId(registerReq.getDeviceId());
+        VcMember  rsMember = vcMemberMapper.selectByPrimaryKey(vcMember);
+        if(null!=rsMember){
+            return false;
+        }
         return  flag;
     }
 
@@ -272,7 +272,11 @@ public class RegisterServicelmpl<T> extends BaseServiceImpl<T> implements Regist
         }else{
             registerResp.setIsLogin(2);
         }
+
         String  amsVerification = RandomUtil.getRandom(6);
+        if (amsVerification.startsWith("0")){
+            amsVerification = amsVerification.replaceFirst("0" , "1");
+        }
         ComponentUtil.redisService.set((phone+time),amsVerification,Constant.EFFECTIVE_IDENT_CODE_TIME, TimeUnit.MINUTES);
         boolean  flag = SendSms.aliSendSms(phone,amsVerification);
         if(!flag){

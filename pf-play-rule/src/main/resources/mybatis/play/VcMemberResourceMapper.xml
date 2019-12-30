@@ -417,11 +417,11 @@
                 from  vc_member_resource
                 where 1=1
             <if test="darenLevel != null" >
-              and  daren_level >= #{darenLevel},
+              and  daren_level >= #{darenLevel}
             </if>
 
             <if test="idList != null and idList.size()>0">
-              member_id   in
+              and  member_id   in
               <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
                 #{item}
               </foreach>

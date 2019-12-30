@@ -615,6 +615,10 @@ public class UserController {
                 memberId   = ComponentUtil.userMasonryService.queryTokenMemberId(userCommonReq.getToken(), userCommonReq.getWxOpenId());
             }
             VcMember vcMember = ComponentUtil.userInfoSevrice.getResourceInfo(myGiveResp.getPhone());
+
+            if(vcMember==null){
+                throw  new ServiceException(ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteCode(),ErrorCode.ENUM_ERROR.SYNCHRONOUS1.geteDesc());
+            }
             int   flag1 =  ComponentUtil.synchroService.checkSendInfo(memberId,
                     vcMember.getMemberId(),myGiveResp.getPayPw());
             if(flag1==-1){

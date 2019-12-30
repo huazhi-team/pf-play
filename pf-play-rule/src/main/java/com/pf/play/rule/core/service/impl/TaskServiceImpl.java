@@ -407,8 +407,8 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
 
         //用户砖石明细表添加一条记录
         UMasonryListLog   uMasonryListLog = TaskMethod.changeUMasonryListLog(memberId,taskId, Constant.TASK_TYPE9,Constant.TASK_SYMBOL_TYPE2,Double.valueOf(taskType.getNeedResource()));
-        UvitalityValueList myUvitalityValueList = TaskMethod.pottingVitalityValue(memberId,Constant.REWARD_TYPE2,Constant.TASK_SYMBOL_TYPE1,myActiveValue);
-        UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(record1.getSuperiorId(),Constant.REWARD_TYPE1,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
+        UvitalityValueList myUvitalityValueList = TaskMethod.pottingVitalityValue(memberId,Constant.ACTIVE_TYPE2,Constant.TASK_SYMBOL_TYPE1,myActiveValue);
+        UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(record1.getSuperiorId(),Constant.ACTIVE_TYPE5,Constant.TASK_SYMBOL_TYPE1,upActiveValue);
         VcMemberResource insertResource = TaskMethod.changeUpdateResource(memberId,masonry,charmValue);
         UMasonrySummary uMasonrySummary = TaskMethod.updateUMasonrySummary(memberId,Constant.TASK_SYMBOL_TYPE2,masonry);
 
@@ -1008,7 +1008,7 @@ public class TaskServiceImpl<T> extends BaseServiceImpl<T> implements TaskServic
         }
         if(updateUTaskHave.size()!=0){
             for(UTaskHave uTaskHave1:updateUTaskHave){
-                UvitalityValueList uVitalityValueList =TaskMethod.pottingVitalityValue(memberId,Constant.REWARD_TASK3,Constant.TASK_SYMBOL_TYPE2,uTaskHave1.getTotalNum());
+                UvitalityValueList uVitalityValueList =TaskMethod.pottingVitalityValue(memberId,Constant.ACTIVE_TYPE8,Constant.TASK_SYMBOL_TYPE2,uTaskHave1.getTotalNum());
                 ComponentUtil.transactionalService.taskExpireUpdateInfo(uTaskHave1,uVitalityValueList);
             }
         }

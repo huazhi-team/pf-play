@@ -102,4 +102,15 @@ public class Constant {
     public  static  int  CURRENT_STATE_TYPE2    =  2 ;
     public  static  int  CURRENT_STATE_TYPE3    =  3 ;
 
+
+    /*********** 活力值处理类型 **********/
+    public  static  int  ACTIVE_TYPE1    =  1 ; //自己实名制奖励
+    public  static  int  ACTIVE_TYPE2    =  2 ; //自己购买任务
+    public  static  int  ACTIVE_TYPE3    =  3 ; //自己实名制到期
+    public  static  int  ACTIVE_TYPE4    =  4 ; //自己任务到期
+    public  static  int  ACTIVE_TYPE5    =  5 ; //直推购买任务
+    public  static  int  ACTIVE_TYPE6    =  6 ; //下级实名制奖励
+    public  static  int  ACTIVE_TYPE7    =  7 ; //下级实名制到期
+    public  static  int  ACTIVE_TYPE8    =  8 ; //自己任务到期
+
 }

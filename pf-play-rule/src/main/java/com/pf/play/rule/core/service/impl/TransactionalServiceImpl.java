@@ -182,13 +182,16 @@ public class TransactionalServiceImpl<T> extends BaseServiceImpl<T> implements T
     }
 
     @Override
-    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource,VcMemberResource uqResource,UEmpiricalValueList uEmpiricalValueList,VcMemberResource uqEmpirical) {
+    public void realNameInfo(USubReward uSubReward, VcMember updateVcMember, VcMemberResource vcMemberResource,VcMemberResource uqResource,
+                                UEmpiricalValueList uEmpiricalValueList,VcMemberResource uqEmpirical,UvitalityValueList my,UvitalityValueList uq) {
         uSubRewardMapper.insertSelective(uSubReward); //上级奖励表
         vcMemberResourceMapper.updateRealName(vcMemberResource); //修改本会员的信息
         vcMemberMapper.updateByPrimaryKeySelective(updateVcMember); //修改是否实名制了
         vcMemberResourceMapper.updateUqPeople(uqResource);//上级所有的人信息
         uEmpiricalValueListMapper.insertSelective(uEmpiricalValueList); //添加实名制明细表
         vcMemberResourceMapper.updateEmpiricalValue(uqEmpirical); //更新会员等级以及经验值
+//        uVitalityValueListMapper.insertSelective(my);       //自己加活力值明细
+        uVitalityValueListMapper.insertSelective(uq);       //上级加活力值明细
     }
 
     @Override

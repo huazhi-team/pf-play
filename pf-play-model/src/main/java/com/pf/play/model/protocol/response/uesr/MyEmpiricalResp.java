@@ -14,6 +14,8 @@ public class MyEmpiricalResp {
     private  Double  empiricalValue;
     private  Double  needVitalityValue;
     private  Integer level;
+    private  Double  mymasonry;
+    private  String  buyMoney;
     private List<Empirical>   list;
 
     public Double getEmpiricalValue() {
@@ -46,5 +48,21 @@ public class MyEmpiricalResp {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public Double getMymasonry() {
+        return mymasonry;
+    }
+
+    public void setMymasonry(Double mymasonry) {
+        this.mymasonry = mymasonry;
+    }
+
+    public String getBuyMoney() {
+        return buyMoney;
+    }
+
+    public void setBuyMoney(String buyMoney) {
+        this.buyMoney = buyMoney;
     }
 }

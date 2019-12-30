@@ -90,7 +90,7 @@ public class MyMethod {
              }
              empirical.setLevel(disEmpiricalValueLevel.getEmpiricalLevel());
              empirical.setUpgradeNum(disEmpiricalValueLevel.getUpgradeNum());
-             empirical.setTransactionFee(disEmpiricalValueLevel.getTransactionFee()+"%");
+             empirical.setTransactionFee(disEmpiricalValueLevel.getTransactionFee().intValue()+"");
              empiricals.add(empirical);
          }
          return empiricals;
@@ -147,13 +147,18 @@ public class MyMethod {
             myEmpiricalResp.setLevel(0);
             myEmpiricalResp.setNeedVitalityValue(0D);
             myEmpiricalResp.setEmpiricalValue(0D);
+            myEmpiricalResp.setMymasonry(0D);
         }else{
             for(Empirical empirical:empiricalList){
+
                 if(empirical.getLevel()==vcMemberResource1.getEmpiricalLevel()){
                     myEmpiricalResp.setNeedVitalityValue(Double.valueOf(empirical.getUpgradeNum()));
+                    myEmpiricalResp.setBuyMoney(empirical.getTransactionFee());
                     break;
                 }
+
             }
+            myEmpiricalResp.setMymasonry(vcMemberResource1.getDayMasonry());
             myEmpiricalResp.setLevel(vcMemberResource1.getEmpiricalLevel());
             myEmpiricalResp.setEmpiricalValue(vcMemberResource1.getEmpiricalValue());
         }

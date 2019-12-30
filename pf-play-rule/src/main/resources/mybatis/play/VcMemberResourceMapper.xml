@@ -458,7 +458,7 @@
   <update id="updateUqPeople" parameterType="com.pf.play.rule.core.model.VcMemberResource" >
     update vc_member_resource
     set push_people = push_people+1,
-    team_people = team_people+1,
+    team_people = team_people+1
     where 1=1
     <if test="idList != null and idList.size()>0">
       and member_id   in

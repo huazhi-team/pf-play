@@ -6,7 +6,7 @@
     member_id, owner_member_id, member_add, nickname, password, member_code, member_type, 
      invite_code, trading_address, is_certification,
     create_time, is_active, login_time, is_sett, extension_member_id,device_id,superior_id,extension_member_id,
-    sex,birthday,province,city,is_pay
+    sex,birthday,province,city,is_pay,pay_password
   </sql>
 
   <sql id="Base_Column_ListTwo" >
@@ -436,7 +436,7 @@
     <include refid="Base_Column_List" />
     from vc_member
     where 1=1
-    and member_code = #{MemberCode}
+    and member_code = #{memberCode}
   </select>
 
 

@@ -15,6 +15,7 @@ import com.pf.play.rule.core.common.utils.constant.Constant;
 import com.pf.play.rule.core.common.utils.constant.ErrorCode;
 import com.pf.play.rule.core.model.*;
 import com.pf.play.rule.core.singleton.EmpiricalVitalitySingleton;
+import com.pf.play.rule.core.singleton.RegisterSingleton;
 import com.pf.play.rule.core.singleton.TaskSingleton;
 import com.pf.play.rule.util.ComponentUtil;
 import org.apache.commons.lang.StringUtils;
@@ -1316,6 +1317,7 @@ public class TaskMethod {
     public static VcMemberResource   changRealnameResource(Integer memberId){
         VcMemberResource   vcMemberResource =  new VcMemberResource();
         vcMemberResource.setMemberId(memberId);
+        vcMemberResource.setActiveValue(RegisterSingleton.getInstance().getRealNameReward());
         vcMemberResource.setPushPeople(1);
         vcMemberResource.setUpdateTime(new Date());
         return  vcMemberResource;
@@ -1693,6 +1695,20 @@ public class TaskMethod {
         userCommonReq.setToken(myGiveResp.getToken());
         userCommonReq.setWxOpenId(myGiveResp.getWxOpenId());
         return  userCommonReq;
+    }
+
+
+    /**
+     * @Description: 当前用户魅力值是否满足要求
+     * @param vcMemberResource
+    * @param taskId
+     * @return boolean
+     * @author long
+     * @date 2019/12/17 11:33
+     */
+    public static boolean  isLevel(VcMemberResource vcMemberResource){
+
+        return   false ;
     }
 
 }

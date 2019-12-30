@@ -357,7 +357,11 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
 
         UEmpiricalValueList  uEmpiricalValueList =  MyMethod.insertUEmpiricalValueList(memberId,rsVcMember.getSuperiorId(),Constant.EMPIRIC_TYPE1,RegisterSingleton.getInstance().getInitEmpiricalValue());
         VcMemberResource  vcMemberResource  = TaskMethod.changRealnameResource(rsVcMember.getSuperiorId());
-        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource,uEmpiricalValueList,vcMemberResourceId);
+
+        //修改自己的活力值
+        UvitalityValueList myUvitalityValueList = TaskMethod.pottingVitalityValue(memberId,Constant.ACTIVE_TYPE1,Constant.TASK_SYMBOL_TYPE1,1.0);
+        UvitalityValueList uqUvitalityValueList = TaskMethod.pottingVitalityValue(rsVcMember.getSuperiorId(),Constant.ACTIVE_TYPE6,Constant.TASK_SYMBOL_TYPE1,0.05);
+        ComponentUtil.transactionalService.realNameInfo(uSubReward,updateVcMember,vcMemberResource,uqResource,uEmpiricalValueList,vcMemberResourceId,myUvitalityValueList,uqUvitalityValueList);
 
         if(resource1.getPushPeople()==19){
 
@@ -393,7 +397,7 @@ public class UserInfoSevriceImpl<T> extends BaseServiceImpl<T> implements UserIn
     public VcMember getResourceInfo(String phone) {
         VcMember   vcMember  =  new  VcMember();
         vcMember.setMemberCode("C"+phone);
-        VcMember   rsVcMember = vcMemberMapper.selectByMemberId(vcMember);
+        VcMember   rsVcMember = vcMemberMapper.selectByphone(vcMember);
         return rsVcMember;
     }
 }

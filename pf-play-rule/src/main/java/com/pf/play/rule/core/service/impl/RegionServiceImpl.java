@@ -127,7 +127,8 @@ public class RegionServiceImpl<T> extends BaseServiceImpl<T> implements RegionSe
     }
 
     private List<RegionModel> doGetAll(){
-        String key = "key";
+//        String key = "key";
+        String key = "pf_key";
         List<RegionModel> list = cache.getIfPresent(key);
         if(CollectionUtils.isEmpty(list)){
             try {
